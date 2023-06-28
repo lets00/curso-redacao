@@ -1,6 +1,12 @@
+@import url('https://fonts.googleapis.com/css2?family=League+Spartan:wght@300;400;700&family=Montserrat:wght@300;400;700&family=Open+Sans:wght@300;400;700&family=Roboto:wght@300;400;700&display=swap');
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+h1 { font-size: 52px}
+h2 { font-size: 23px}
+h3 { font-size: 18px}
+h4 { font-size: 14px}
 
 :root {
   --foreground-rgb: 0, 0, 0;
