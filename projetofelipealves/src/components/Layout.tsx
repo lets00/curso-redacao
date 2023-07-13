@@ -9,9 +9,9 @@ export default function Layout(props: any){
                 <Image src='/images/FELIPEALVESRBG2.png' width='250' height='100' alt='imagemDoCurso'/>
                 <Link href="/">Cursos</Link>
                 <Link href="quemSomos">Quem somos</Link>
-                <Link href="/correcao">Correção de redaçã o</Link>
+                <Link href="/correcao">Correção de redação</Link>
                 <Link href="/usuario/aluno" className={styles.entrar}>Entrar</Link>
-                <Link href="/" className={styles.cadastro}>Cadastrar</Link>
+                <Link href="/cadastro" className={styles.cadastro}>Cadastrar</Link>
             </div>
             <div className={styles.conteudo}>
                 {props.children}
