@@ -5,6 +5,7 @@ interface InitialSectionProps{
     img: string
     children: any
     ordem: boolean
+    className?:any
 }
 
 export default function InitialSection(props: InitialSectionProps){
@@ -12,7 +13,7 @@ export default function InitialSection(props: InitialSectionProps){
         <div className="pb-20">
             <section className={props.ordem == true ? 'flex flex-row-reverse gap-20 items-center pt-10' : 'flex flex-row gap-20 items-center pt-10'}>
             <div>
-                <h1 className="text-4xl font-LeagueSpartan">{props.titulo}</h1>
+                <h1 className={`text-4xl font-LeagueSpartan ${props.className}`}>{props.titulo}</h1>
                 <h3 className="text-2xl">{props.children}</h3>
             </div>
             <div className="flex items-center">

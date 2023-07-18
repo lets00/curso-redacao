@@ -1,3 +1,4 @@
+import InitialSection from '@/components/InitialSection'
 import Layout from '../components/Layout'
 
 export default function Home(){
@@ -5,36 +6,10 @@ export default function Home(){
     <Layout>
       <div className="grid gap-20">
 
-        <section className="flex gap-20 items-center pt-10">
-          <div className="flex items-center">
-            <div className="h-44 w-32 bg-blue-300"></div>
-            <div className="rounded-full h-72 w-72 bg-blue-300"></div>
-          </div>
-          <div>
-            <h1 className="text-5xl font-LeagueSpartan font-semibold">Sabe o que vamos estudar por aqui?</h1>
-            <h3 className="text-2xl">Olha só esses 2 jeitinhos que você pode estar estudando com a gente:</h3>
-          </div>
-        </section>
-
-        <section className="flex gap-20 items-center pt-10">
-          <div>
-            <h1 className="text-4xl font-LeagueSpartan">Redação</h1>
-            <h3 className="text-2xl">Lorem, ipsum dolor sit amet consectetur adipisicing elit. Vero doloremque veniam temporibus, impedit aut consectetur rem voluptates consequatur ipsam eos quas! Harum aliquid fugiat quia. Ipsam molestiae odit fugiat. Sunt!</h3>
-          </div>
-          <div className="flex items-center">
-            <div className="rounded-full h-72 w-72 bg-pink-300"></div>
-          </div>
-        </section>
-
-        <section className="flex gap-20 items-center pt-10">
-          <div className="flex items-center">
-            <div className="rounded-full h-72 w-72 bg-pink-300"></div>
-          </div>
-          <div>
-            <h1 className="text-4xl font-LeagueSpartan">Linguagem</h1>
-            <h3 className="text-2xl">Lorem ipsum dolor sit amet consectetur adipisicing elit. Fuga deserunt exercitationem recusandae veritatis voluptatibus aliquam eligendi cumque fugiat! Labore numquam porro nemo perspiciatis ipsum debitis explicabo totam, cumque nulla reprehenderit.</h3>
-          </div>  
-        </section>
+      <InitialSection ordem={true} titulo='Sabe o que vamos estudar por aqui?' img='/images/Estudaraqui.jpg' className='font-bold'>Olha só esses 3 jeitinhos que você pode estar estudando com a gente:</InitialSection>
+      <InitialSection ordem={false} titulo='Redação' img='/images/Redacao.jpg'>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Quos aliquid cumque iusto velit harum libero adipisci, quod nulla modi praesentium ab nobis nesciunt reprehenderit inventore, magni autem sint maxime beatae.</InitialSection>
+      <InitialSection ordem={true} titulo='Linguagem' img='/images/Linguagem.jpg'>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Quos aliquid cumque iusto velit harum libero adipisci, quod nulla modi praesentium ab nobis nesciunt reprehenderit inventore, magni autem sint maxime beatae.</InitialSection>
+      <InitialSection ordem={false} titulo='Matemática' img='/images/Matematica.jpg'>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Quos aliquid cumque iusto velit harum libero adipisci, quod nulla modi praesentium ab nobis nesciunt reprehenderit inventore, magni autem sint maxime beatae.</InitialSection>
 
         <section className="grid flex-row gap-20">
           <div className="grid justify-items-center">

@@ -29,6 +29,10 @@ export default class Aluno {
                 this.#id = id
                 }
     
+    static vazio() {
+        return new Aluno('',new Date(0),'','','','','','','','','','')
+    }
+    
     get id() {
         return this.#id
     }
@@ -59,7 +63,7 @@ export default class Aluno {
     get rg() {
         return this.#rg
     }
-    get cpfi() {
+    get cpf() {
         return this.#cpf
     }
     get pagamento() {

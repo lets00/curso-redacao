@@ -43,7 +43,7 @@ export default function Teste(props: LayoutUserProps){
                 <div className="flex flex-row w-full h-full">
                     <div className="bg-white rounded-md flex flex-col items-start justify-center px-14 gap-5">
                         <Image src='/images/FELIPEALVESRBG15.png' width='125' height='50' alt='imagemDoCurso'/>
-                        {props.usuario == 'aluno' ? aluno(): props.usuario == 'professor' ? professor() : aluno()}
+                        {props.usuario == 'aluno' ? aluno(): props.usuario == 'professor' ? professor() : root()}
                     </div>
                     <div className="bg-white rounded-md w-full m-2">{props.children}</div>
                 </div>
