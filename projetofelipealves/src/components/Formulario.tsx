@@ -54,7 +54,7 @@ export default function Formulario(props: FormularioProps){
                             dark:ring-offset-gray-800 dark:bg-gray-700 dark:border-gray-600"/>
                     <label htmlFor="default-checkbox" className="ml-2 text-sm text-gray-900 dark:text-gray-300"><a href="" className="hover:underline">Termos de uso</a></label>
                 </div>
-                <Botao className="px-11">Próximo</Botao>
+                <Botao className="px-12">Próximo</Botao>
             </div>
         </div>
     )

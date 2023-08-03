@@ -10,7 +10,7 @@ export default function Layout(props: any){
                 <Link href="/">Cursos</Link>
                 <Link href="quemSomos">Quem somos</Link>
                 <Link href="/correcao">Correção de redação</Link>
-                <Link href="/usuario/aluno" className={styles.entrar}>Entrar</Link>
+                <Link href="/login" className={styles.entrar}>Entrar</Link>
                 <Link href="/cadastro" className={styles.cadastro}>Cadastrar</Link>
             </div>
             <div className={styles.conteudo}>

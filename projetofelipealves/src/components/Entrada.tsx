@@ -1,7 +1,7 @@
 interface EntradaProps{
     texto: string
     tipo?: 'text' | 'number'
-    valor: any
+    valor?: any
     somenteLeitura?: boolean
     valorMudou?: (valor: any) => void
     placeholder?: string
