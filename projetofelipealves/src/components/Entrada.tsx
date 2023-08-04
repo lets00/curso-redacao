@@ -5,10 +5,11 @@ interface EntradaProps{
     somenteLeitura?: boolean
     valorMudou?: (valor: any) => void
     placeholder?: string
+    className?: any
 }
 export default function Entrada(props: EntradaProps){
     return (
-        <div className="flex flex-col">
+        <div className={`flex flex-col ${props.className}`}>
             <label className="font-Montserrant">
                 {props.texto}
             </label>

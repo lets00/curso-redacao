@@ -5,6 +5,7 @@ import styles from 'C:/Users/ryanp/OneDrive/Documentos/GitHub/curso-redacao/proj
 interface LayoutUserProps{
     usuario: string
     children: any
+    className?: string
 }
 
 export default function Teste(props: LayoutUserProps){
@@ -49,7 +50,7 @@ export default function Teste(props: LayoutUserProps){
                             {props.usuario == 'aluno' ? aluno(): props.usuario == 'professor' ? professor() : root()}
                         </div>
                     </div>
-                    <div className="bg-white rounded-md w-full m-2 p-6">{props.children}</div>
+                    <div className={`bg-white rounded-md w-full m-2 p-6 ${props.className}`} >{props.children}</div>
                 </div>
             </div>
         </div>

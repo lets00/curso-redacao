@@ -10,6 +10,9 @@ export default class Professor{
         this.#rg = rg
         this.#id = id
     }
+    static vazio() {
+        return new Professor('','','','')
+    }
 
     get id(){
         return this.#id
