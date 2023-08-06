@@ -9,6 +9,7 @@ import Professor from "@/core/Professor";
 import { useState } from "react";
 
 export default function Aluno() {
+
     const [openModal, setOpenModal] = useState(false)
     const [professor, setProfessor] = useState<Professor>(Professor.vazio())
 
@@ -36,7 +37,7 @@ export default function Aluno() {
         <LayoutUser usuario={'aluno'}>
             <div className="flex place-content-between">
                 <Titulo>Teste Aluno</Titulo>
-                <Botao onCLick={() => novoProfessor()} className="mx-8">Alterar algo</Botao>
+                <Botao onCLick={() => novoProfessor()} className="mx-8 px-10">Alterar algo</Botao>
             </div>
             <Tabela professores={professores} 
                     professorSelecionado={professorSelecionado}

@@ -6,6 +6,7 @@ interface LayoutUserProps{
     usuario: string
     children: any
     className?: string
+    divisoes?: boolean
 }
 
 export default function Teste(props: LayoutUserProps){
@@ -50,7 +51,9 @@ export default function Teste(props: LayoutUserProps){
                             {props.usuario == 'aluno' ? aluno(): props.usuario == 'professor' ? professor() : root()}
                         </div>
                     </div>
-                    <div className={`bg-white rounded-md w-full m-2 p-6 ${props.className}`} >{props.children}</div>
+                    {props.divisoes? 
+                     (<div className={`w-full  ${props.className}`}>{props.children}</div>):
+                     (<div className={`bg-white rounded-md w-full m-2 p-6 ${props.className}`} >{props.children}</div>)}
                 </div>
             </div>
         </div>
