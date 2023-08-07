@@ -2,8 +2,13 @@ import Formulario from "@/components/Formulario";
 import { IconeVoltar } from "@/components/Icones";
 import Image from  'next/image';
 import Link from "next/link";
+import Aluno from "@/core/Aluno";
 
 export default function Cadastro(){
+
+    const alunos = [
+        Aluno.vazio()
+    ]
 
     return (
         <div className="flex flex-row justify-center">
@@ -23,7 +28,7 @@ export default function Cadastro(){
                     </div>
                 </div>
             <div className="bg-white w-5/12 p-16 pt-20 ">
-                <Formulario/>
+                <Formulario aluno={alunos[0]}/>
             </div>
         </div>
     )
