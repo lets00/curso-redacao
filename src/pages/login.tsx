@@ -42,7 +42,7 @@ export default function(){
                     <label htmlFor="default-checkbox" className="ml-2 text-sm text-gray-900 dark:text-gray-300"><a href="" className="hover:underline text-gray-400">Mantenha-me conectado</a></label>
                 </div>
                 <div className='flex items-center gap-7 pt-10'>
-                    <Botao className="px-16 bg-blue-300" cor={'blue'}>Login</Botao>
+                    <Link href="/usuario/aluno" className="text-white py-2 rounded-md px-16 bg-blue-300">Login</Link>
                     <button className='text-gray-400 border-b border-blue-400'>Esqueci a senha</button>
                 </div>
 

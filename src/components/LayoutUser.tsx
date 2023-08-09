@@ -14,9 +14,9 @@ export default function Teste(props: LayoutUserProps){
     function aluno(){
         return (
             <>
-                <Link href="/">Materiais</Link>
+                <Link href="/usuario/aluno">Materiais</Link>
                 <Link href="/">Turmas</Link>
-                <Link href="/">Perfil</Link>
+                <Link href="/usuario/aluno/perfil">Perfil</Link>
             </>
         )
     }
