@@ -2,6 +2,7 @@ import Entrada from "./Entrada";
 import { useState } from "react";
 import Aluno from "@/core/Aluno";
 import Botao from "./Botao";
+import DatePicker from "./DatePicker";
 
 interface FormularioProps{
     aluno: Aluno
@@ -22,7 +23,7 @@ export default function Formulario(props: FormularioProps){
     return (
         <div>
             <Entrada texto="Nome" valor={nome} valorMudou={setNome} placeholder="Digite seu nome COMPLETO"/>
-            <Entrada texto="Data" valor={data} valorMudou={setData}/>
+            <DatePicker/>
             <Entrada texto="Naturalidade ( Cidade/Estado )" valor={natural} valorMudou={setNatural}/>
             <Entrada texto="Endereço ( Rua, Nº, Bairro)" valor={endereco} valorMudou={setEndereco}/>
             <Entrada texto="Número de celular (com DDD)" valor={celular} valorMudou={setCelular} placeholder="(**)****-****"/>
