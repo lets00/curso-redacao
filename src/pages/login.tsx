@@ -26,13 +26,13 @@ export default function(){
             <div className="bg-gray-700 w-1/2 p-28 flex flex-col justify-center">
                 
                 <div className="flex flex-col">
-                    <label className="font-Montserrant text-gray-300"> E-mail </label>
-                    <input className={`border-b border-gray-400 focus:outline-none py-2 px-5 mb-7 bg-transparent text-white`}
+                    <label htmlFor="email" className="font-Montserrant text-gray-300"> E-mail </label>
+                    <input type='email' id="email" name="email" className={`border-b border-gray-400 focus:outline-none py-2 px-5 mb-7 bg-transparent text-white`}
                         placeholder='Digite seu e-mail'/>
                 </div>
                 <div className="flex flex-col">
-                    <label className="font-Montserrant text-gray-300"> Senha </label>
-                    <input className={`border-b border-gray-400 focus:outline-none py-2 px-5 mb-7 bg-transparent text-white`}
+                    <label htmlFor="senha" className="font-Montserrant text-gray-300"> Senha </label>
+                    <input type='password' id="senha" name="senha" className={`border-b border-gray-400 focus:outline-none py-2 px-5 mb-7 bg-transparent text-white`}
                         placeholder='Digite sua senha'/>
                 </div>
                 <div className="flex items-center mb-6">

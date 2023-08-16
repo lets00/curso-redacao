@@ -4,7 +4,6 @@ import Modal from "@/components/Modal";
 import Tabela from "@/components/Tabela";
 import Titulo from "@/components/Titulo";
 import ModalProfessor from "@/components/modals/ModalProfessor";
-import ModalFuncionario from "@/components/modals/ModalProfessor";
 import Professor from "@/core/Professor";
 import { useState } from "react";
 
@@ -25,7 +24,6 @@ export default function Aluno() {
     function professorExcluido(professor: Professor){
     }
     function salvarProfessor(professor: Professor){
-        console.log(professor)
         setOpenModal(false)
     }
     function novoProfessor(){

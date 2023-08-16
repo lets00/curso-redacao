@@ -20,12 +20,12 @@ export default function Teste(props: LayoutUserProps){
             </>
         )
     }
-    function professor(){
+    function funcionario(){
         return (
             <>
-                <Link href="/">Cursos</Link>
-                <Link href="/">Cursos</Link>
-                <Link href="/">Cursos</Link>
+                <Link href="/">Materiais</Link>
+                <Link href="/">Turmas</Link>
+                <Link href="/usuario/funcionario/perfil">Perfil</Link>
             </>
         )
     }
@@ -43,17 +43,20 @@ export default function Teste(props: LayoutUserProps){
         <div className='flex justify-center items-center h-screen'>
             <div className='bg-slate-200 m-8 rounded-xl w-11/12 h-5/6'>
                 <div className="flex flex-row w-full h-full">
-                    <div className="bg-white rounded-md">
-                        <div className='relative my-6 mx-4 p-5'>
-                            <Image src='/images/FELIPEALVESRBG2.png' fill alt='imagemDoCurso'/>
+                    
+                    <div className="bg-white w-72 rounded-md">
+                        <div className='relative my-0 mt-3 p-5'>
+                            <Image src='/images/FELIPEALVESRBG2.png' width='200' height='100' alt='imagemDoCurso'/>
                         </div>
                         <div className='flex flex-col items-start p-14 mr-12 gap-5'>
-                            {props.usuario == 'aluno' ? aluno(): props.usuario == 'professor' ? professor() : root()}
+                            {props.usuario == 'aluno' ? aluno(): props.usuario == 'funcionario' ? funcionario() : root()}
                         </div>
                     </div>
+
                     {props.divisoes? 
                      (<div className={`w-full  ${props.className}`}>{props.children}</div>):
                      (<div className={`bg-white rounded-md w-full m-2 p-6 ${props.className}`} >{props.children}</div>)}
+
                 </div>
             </div>
         </div>

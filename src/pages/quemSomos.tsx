@@ -6,7 +6,7 @@ export default function Correcao(){
   return(
     <Layout>
       <div>
-        <InitialSection ordem={false} titulo='Quem Somos' img='/images/IMG_3824.jpg'>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Quos aliquid cumque iusto velit harum libero adipisci, quod nulla modi praesentium ab nobis nesciunt reprehenderit inventore, magni autem sint maxime beatae.</InitialSection>
+        <InitialSection ordem={false} titulo='Quem Somos' img='/images/Linguagem.jpg'>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Quos aliquid cumque iusto velit harum libero adipisci, quod nulla modi praesentium ab nobis nesciunt reprehenderit inventore, magni autem sint maxime beatae.</InitialSection>
         <InitialSection ordem={true} titulo='Wellington' img='/images/IMG_3817.jpg'>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Quos aliquid cumque iusto velit harum libero adipisci, quod nulla modi praesentium ab nobis nesciunt reprehenderit inventore, magni autem sint maxime beatae.</InitialSection>
         <InitialSection ordem={false} titulo='Felipe Alves' img='/images/IMG_3815.jpg'>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Quos aliquid cumque iusto velit harum libero adipisci, quod nulla modi praesentium ab nobis nesciunt reprehenderit inventore, magni autem sint maxime beatae.</InitialSection>
         <div className='flex flex-row rounded-xl bg-pink-500 p-20 text-white mt-16'>
