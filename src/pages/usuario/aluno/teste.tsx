@@ -1,53 +1,52 @@
-import Link from 'next/link'
-import Image from  'next/image'
-import styles from 'C:/Users/ryanp/OneDrive/Documentos/GitHub/curso-redacao/projetofelipealves/src/styles/Layout.module.css'
+import Botao from "@/components/Botao";
+import LayoutUser from "@/components/LayoutUser";
+import Modal from "@/components/Modal";
+import Tabela from "@/components/Tabela";
+import Titulo from "@/components/Titulo";
+import ModalFuncionario from "@/components/modals/ModalFuncionario";
+import Funcionario from "@/core/Funcionario";
+import { useState } from "react";
 
-interface LayoutUserProps{
-    usuario: string
-    children: any
-}
+export default function Aluno() {
 
-export default function Teste(props: LayoutUserProps){
+    const [openModal, setOpenModal] = useState(false)
+    const [funcionario, setFuncionario] = useState<Funcionario>(Funcionario.vazio())
 
-    function aluno(){
-        return (
-            <div>
-                <Link href="/">Materiais</Link>
-                <Link href="/">Turmas</Link>
-                <Link href="/">Perfil</Link>
-            </div>
-        )
+    const funcionarios = [
+        new Funcionario('Abner', "111111111", "2222222", "1111-1111", "email@gmail.com", "123", "1"),
+        new Funcionario('Junio', "333333333", "4444444", "1111-1111", "email@gmail.com", "123", "2"),
+        new Funcionario('Valdir', "555555555", "6666666", "1111-1111", "email@gmail.com", "123", "3")
+    ]
+    const dados = ['nome', 'cpf', 'rg']
+    const cabecalho = ['Nome', 'CPF', 'RG', 'Ações']
+    
+    function funcionarioSelecionado(funcionario: Funcionario){
+        setFuncionario(funcionario)
+        setOpenModal(true)
     }
-    function professor(){
-        return (
-            <div>
-                <Link href="/">Cursos</Link>
-                <Link href="/">Cursos</Link>
-                <Link href="/">Cursos</Link>
-            </div>
-        )
+    function funcionarioExcluido(funcionario: Funcionario){
     }
-    function root(){
-        return (
-            <div>
-                <Link href="/">Cursos</Link>
-                <Link href="/">Cursos</Link>
-                <Link href="/">Cursos</Link>
-            </div>
-        )
+    function salvarFuncionario(funcionario: Funcionario){
+        setOpenModal(false)
+    }
+    function novoFuncionario(){
+        setFuncionario(Funcionario.vazio())
+        setOpenModal(true)
     }
 
     return (
-        <div className='flex justify-center items-center h-screen'>
-            <div className='bg-slate-200 m-8 rounded-xl w-11/12 h-5/6'>
-                <div className="flex flex-row w-full h-full">
-                    <div className="bg-white rounded-md flex flex-col items-start justify-center px-14 gap-5">
-                        <Image src='/images/FELIPEALVESRBG15.png' width='125' height='50' alt='imagemDoCurso'/>
-                        {props.usuario == 'aluno' ? aluno(): props.usuario == 'professor' ? professor() : root()}
-                    </div>
-                    <div className="bg-white rounded-md w-full m-2">{props.children}</div>
-                </div>
+        <LayoutUser usuario={'aluno'}>
+            <div className="flex place-content-between">
+                <Titulo>Teste Aluno</Titulo>
+                <Botao onCLick={() => novoFuncionario()} className="mx-8 px-10">Alterar algo</Botao>
             </div>
-        </div>
+            <Tabela objeto={funcionarios} 
+                    propriedadesExibidas={dados}
+                    cabecalho={cabecalho}
+                    objetoSelecionado={funcionarioSelecionado}
+                    objetoExcluido={funcionarioExcluido}></Tabela>
+            <Modal isOpen={openModal} isNotOpen={() => setOpenModal(!openModal)} cor='white' titulo='Titulo'
+            subtitulo='Subtitulo'><ModalFuncionario funcionario={funcionario} funcionarioMudou={salvarFuncionario}/></Modal>
+        </LayoutUser>
     )
 }

@@ -7,9 +7,9 @@ import EntradaPerfil from "@/components/EntradaPerfil";
 
 export default function PerfilAluno() {
     const alunoTeste = new Aluno('joao', new Date(2004-10-10), 'PE', 'rua teste', '111-111', 'jasha@gmail',
-    'jose', 'maria', 'rgrgrg', 'cpfcpf', 'dia 15', "idTeste")
+    'jose', 'maria', 'rgrgrg', 'cpfcpf', 15, 'presencial - terça/tarde', '123', "idTeste")
 
-    const [modalidade, setModalidade] = useState(alunoTeste.nome ?? '')
+    const [modalidade, setModalidade] = useState(alunoTeste.turma ?? '')
     const [nome, setNome] = useState(alunoTeste.nome ?? '')
     const [celular, setCelular] = useState(alunoTeste.celular ?? '')
     const [rg, setRg] = useState(alunoTeste.rg ?? '')
@@ -32,7 +32,8 @@ export default function PerfilAluno() {
                     </div>
                     <h2 className="mt-10 ml-5 ">Nome Completo Exemplo</h2>
                     <Botao onCLick={() => salvarAluno(
-                        new Aluno(nome, alunoTeste.data, alunoTeste.natural, endereco, celular, alunoTeste.email, alunoTeste.pai, alunoTeste.mae, rg,cpf, alunoTeste.pagamento, alunoTeste.id))} 
+                        new Aluno(nome, alunoTeste.data, alunoTeste.natural, endereco, celular, alunoTeste.email, alunoTeste.pai,
+                                 alunoTeste.mae, rg,cpf, alunoTeste.pagamento, alunoTeste.turma, alunoTeste.senha, alunoTeste.id))} 
                     className="m-10 p-10 bg-blue-400" cor="blue">{editar == true ? 'Alterar':'Salvar'}</Botao>
                 </div>
             </section>

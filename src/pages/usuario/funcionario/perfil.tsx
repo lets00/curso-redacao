@@ -1,21 +1,20 @@
 import Botao from "@/components/Botao";
 import LayoutUser from "@/components/LayoutUser";
 import Image from "next/image"
-import Aluno from "@/core/Aluno";
+import Funcionario from "@/core/Funcionario";
 import { useState } from "react";
 import EntradaPerfil from "@/components/EntradaPerfil";
 
 export default function PerfilFuncionario() {
-    const alunoTeste = new Aluno('joao', new Date(2004-10-10), 'PE', 'rua teste', '111-111', 'joao@gmail',
-    'jose', 'maria', 'rgrgrg', 'cpfcpf', 'dia 15', "idTeste")
+    const funcionarioTeste = new Funcionario('Abner', "111111111", "2222222", "1111-1111", "email@gmail.com", "123", "1")
 
-    const [nome, setNome] = useState(alunoTeste.nome ?? '')
-    const [celular, setCelular] = useState(alunoTeste.celular ?? '')
-    const [cpf, setCpf] = useState(alunoTeste.cpf ?? '')
-    const [email, setEmail] = useState(alunoTeste.email ?? '')
+    const [nome, setNome] = useState(funcionarioTeste.nome ?? '')
+    const [celular, setCelular] = useState(funcionarioTeste.celular ?? '')
+    const [cpf, setCpf] = useState(funcionarioTeste.cpf ?? '')
+    const [email, setEmail] = useState(funcionarioTeste.email ?? '')
     const [editar, setEditar] = useState(true)
 
-    function salvarAluno(aluno: Aluno){
+    function salvarFuncionario(funcionario: Funcionario){
         setEditar(!editar)
     }
 
@@ -29,8 +28,8 @@ export default function PerfilFuncionario() {
                         <Image src="/images/IMG_3817.jpg" width='190' height='190' alt="imagem do curso" className="rounded-full"/>
                     </div>
                     <h2 className="mt-10 ml-5 ">Nome Completo Exemplo</h2>
-                    <Botao onCLick={() => salvarAluno(
-                        new Aluno(nome, alunoTeste.data, alunoTeste.natural, alunoTeste.endereco, celular, alunoTeste.email, alunoTeste.pai, alunoTeste.mae, alunoTeste.rg,cpf, alunoTeste.pagamento, alunoTeste.id))} 
+                    <Botao onCLick={() => salvarFuncionario(
+                        new Funcionario(nome, cpf, funcionarioTeste.rg, celular, email, funcionarioTeste.senha, funcionarioTeste.id))} 
                     className="m-10 p-10 bg-blue-400" cor="blue">{editar == true ? 'Alterar':'Salvar'}</Botao>
                 </div>
             </section>

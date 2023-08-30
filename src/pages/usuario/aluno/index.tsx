@@ -3,31 +3,34 @@ import LayoutUser from "@/components/LayoutUser";
 import Modal from "@/components/Modal";
 import Tabela from "@/components/Tabela";
 import Titulo from "@/components/Titulo";
-import ModalProfessor from "@/components/modals/ModalProfessor";
-import Professor from "@/core/Professor";
+import ModalFuncionario from "@/components/modals/ModalFuncionario";
+import Funcionario from "@/core/Funcionario";
 import { useState } from "react";
 
 export default function Aluno() {
 
     const [openModal, setOpenModal] = useState(false)
-    const [professor, setProfessor] = useState<Professor>(Professor.vazio())
+    const [funcionario, setFuncionario] = useState<Funcionario>(Funcionario.vazio())
 
-    const professores = [
-        new Professor('Abner', "111111111", "2222222", "1"),
-        new Professor('Junio', "333333333", "4444444", "2"),
-        new Professor('Valdir', "555555555", "6666666", "3")
+    const funcionarios = [
+        new Funcionario('Abner', "111111111", "2222222", "1111-1111", "email@gmail.com", "123", "1"),
+        new Funcionario('Junio', "333333333", "4444444", "1111-1111", "email@gmail.com", "123", "2"),
+        new Funcionario('Valdir', "555555555", "6666666", "1111-1111", "email@gmail.com", "123", "3")
     ]
-    function professorSelecionado(professor: Professor){
-        setProfessor(professor)
+    const dados = ['nome', 'cpf', 'rg']
+    const cabecalho = ['Nome', 'CPF', 'RG', 'Ações']
+    
+    function funcionarioSelecionado(funcionario: Funcionario){
+        setFuncionario(funcionario)
         setOpenModal(true)
     }
-    function professorExcluido(professor: Professor){
+    function funcionarioExcluido(funcionario: Funcionario){
     }
-    function salvarProfessor(professor: Professor){
+    function salvarFuncionario(funcionario: Funcionario){
         setOpenModal(false)
     }
-    function novoProfessor(){
-        setProfessor(Professor.vazio())
+    function novoFuncionario(){
+        setFuncionario(Funcionario.vazio())
         setOpenModal(true)
     }
 
@@ -35,13 +38,15 @@ export default function Aluno() {
         <LayoutUser usuario={'aluno'}>
             <div className="flex place-content-between">
                 <Titulo>Teste Aluno</Titulo>
-                <Botao onCLick={() => novoProfessor()} className="mx-8 px-10">Alterar algo</Botao>
+                <Botao onCLick={() => novoFuncionario()} className="mx-8 px-10">Alterar algo</Botao>
             </div>
-            <Tabela professores={professores} 
-                    professorSelecionado={professorSelecionado}
-                    professorExcluido={professorExcluido}></Tabela>
+            <Tabela objeto={funcionarios} 
+                    propriedadesExibidas={dados}
+                    cabecalho={cabecalho}
+                    objetoSelecionado={funcionarioSelecionado}
+                    objetoExcluido={funcionarioExcluido}></Tabela>
             <Modal isOpen={openModal} isNotOpen={() => setOpenModal(!openModal)} cor='white' titulo='Titulo'
-            subtitulo='Subtitulo'><ModalProfessor professor={professor} professorMudou={salvarProfessor}/></Modal>
+            subtitulo='Subtitulo'><ModalFuncionario funcionario={funcionario} funcionarioMudou={salvarFuncionario}/></Modal>
         </LayoutUser>
     )
 }

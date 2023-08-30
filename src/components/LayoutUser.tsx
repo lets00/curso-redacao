@@ -25,6 +25,8 @@ export default function Teste(props: LayoutUserProps){
             <>
                 <Link href="/">Materiais</Link>
                 <Link href="/">Turmas</Link>
+                <Link href="/">Live</Link>
+                <Link href="/usuario/funcionario/listarMateriais">Listar Materiais</Link>
                 <Link href="/usuario/funcionario/perfil">Perfil</Link>
             </>
         )
@@ -48,7 +50,7 @@ export default function Teste(props: LayoutUserProps){
                         <div className='relative my-0 mt-3 p-5'>
                             <Image src='/images/FELIPEALVESRBG2.png' width='200' height='100' alt='imagemDoCurso'/>
                         </div>
-                        <div className='flex flex-col items-start p-14 mr-12 gap-5'>
+                        <div className='flex flex-col items-start m-14 mr-12 gap-5'>
                             {props.usuario == 'aluno' ? aluno(): props.usuario == 'funcionario' ? funcionario() : root()}
                         </div>
                     </div>

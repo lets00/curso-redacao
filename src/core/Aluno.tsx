@@ -10,11 +10,13 @@ export default class Aluno {
     #mae: string
     #rg: string
     #cpf: string
-    #pagamento: string
+    #pagamento: number
+    #turma: string
+    #senha: string
 
     constructor(nome: string, data: Date, natural:string, endereco: string, 
                 celular: string, email: string, pai: string, mae: string, 
-                rg: string, cpf: string, pagamento: string, id: string | null = null){
+                rg: string, cpf: string, pagamento: number, turma: string, senha: string, id: string | null = null){
                 this.#nome = nome
                 this.#data = data
                 this.#natural = natural
@@ -26,11 +28,13 @@ export default class Aluno {
                 this.#rg = rg
                 this.#cpf = cpf
                 this.#pagamento = pagamento
+                this.#turma = turma
+                this.#senha = senha
                 this.#id = id
                 }
     
     static vazio() {
-        return new Aluno('',new Date(0),'','','','','','','','','','')
+        return new Aluno('',new Date(0),'','','','','','','','',0,'','')
     }
     
     get id() {
@@ -68,5 +72,11 @@ export default class Aluno {
     }
     get pagamento() {
         return this.#pagamento
+    }
+    get turma() {
+        return this.#turma
+    }
+    get senha() {
+        return this.#senha
     }
 }
