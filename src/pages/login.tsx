@@ -1,5 +1,3 @@
-import Botao from '@/components/Botao';
-import Entrada from '@/components/Entrada';
 import { IconeFechar, IconeVoltar } from '@/components/Icones';
 import Image from  'next/image';
 import Link from 'next/link';

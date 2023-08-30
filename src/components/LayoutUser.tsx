@@ -1,6 +1,5 @@
 import Link from 'next/link'
 import Image from  'next/image'
-import styles from 'C:/Users/ryanp/OneDrive/Documentos/GitHub/curso-redacao/projetofelipealves/src/styles/Layout.module.css'
 
 interface LayoutUserProps{
     usuario: string

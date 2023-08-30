@@ -19,6 +19,7 @@ export default function Formulario(props: FormularioProps){
     const [mae, setMae] = useState(props.aluno?.mae ?? '')
     const [rg, setRg] = useState(props.aluno?.rg ?? '')
     const [cpf, setCpf] = useState(props.aluno?.cpf ?? '')
+    const [senha, setSenha] = useState(props.aluno?.senha ?? '')
     
     return (
         <div>
@@ -28,6 +29,7 @@ export default function Formulario(props: FormularioProps){
             <Entrada texto="Endereço ( Rua, Nº, Bairro)" valor={endereco} valorMudou={setEndereco}/>
             <Entrada texto="Número de celular (com DDD)" valor={celular} valorMudou={setCelular} placeholder="(**)****-****"/>
             <Entrada texto="E-mail" valor={email} valorMudou={setEmail}/>
+            <Entrada texto="Senha" valor={senha} valorMudou={setSenha}/>
             <Entrada texto="Nome do Pai" valor={pai} valorMudou={setPai}/>
             <Entrada texto="Nome da Mãe" valor={mae} valorMudou={setMae}/>
             <h2 className="font-Montserrant">Documentação</h2><br />
