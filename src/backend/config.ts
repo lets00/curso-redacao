@@ -1,5 +1,6 @@
 import firebase from 'firebase';
 import 'firebase/firestore'
+import 'firebase/auth'
 
 if(!firebase.apps.length){
     firebase.initializeApp({
@@ -7,6 +8,12 @@ if(!firebase.apps.length){
         authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
         projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
     })
+} else{
+    firebase.app()
 }
+
+const database = firebase.database()
+
+export {database, firebase}
 
 export default firebase

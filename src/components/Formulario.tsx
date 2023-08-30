@@ -1,13 +1,17 @@
 import Entrada from "./Entrada";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Aluno from "@/core/Aluno";
 import Botao from "./Botao";
 import DatePicker from "./DatePicker";
+import AlunoRepositorio from "@/core/AlunoRepositorio";
+import { database } from '../backend/config'
 
 interface FormularioProps{
     aluno: Aluno
 }
-export default function Formulario(props: FormularioProps){
+
+ export default function Formulario(props: FormularioProps){
+
     const id = props.aluno?.id
     const [nome, setNome] = useState(props.aluno?.nome ?? '')
     const [data, setData] = useState(props.aluno?.data ?? '')
@@ -19,7 +23,9 @@ export default function Formulario(props: FormularioProps){
     const [mae, setMae] = useState(props.aluno?.mae ?? '')
     const [rg, setRg] = useState(props.aluno?.rg ?? '')
     const [cpf, setCpf] = useState(props.aluno?.cpf ?? '')
-    
+    const [alunos, setAlunos] = useState<Aluno[]>([])
+    const [senha, setSenha] = useState(props.aluno?.senha ?? '')
+
     return (
         <div>
             <Entrada texto="Nome" valor={nome} valorMudou={setNome} placeholder="Digite seu nome COMPLETO"/>
@@ -59,4 +65,4 @@ export default function Formulario(props: FormularioProps){
             </div>
         </div>
     )
-}
+    }

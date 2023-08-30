@@ -3,8 +3,17 @@ import Entrada from '@/components/Entrada';
 import { IconeFechar, IconeVoltar } from '@/components/Icones';
 import Image from  'next/image';
 import Link from 'next/link';
+import AuthInput from '@/components/AuthInput';
+import { useState } from 'react';
+import useAuth from '@/data/hook/useAuth';
 
-export default function(){
+export default function Login(){
+
+    const {usuario} = useAuth ()
+
+    const [email, setEmail] = useState('')
+    const [senha, setSenha] = useState('')
+
     return( 
         <div className="flex flex-row justify-center">
             <div className="flex flex-col justify-center bg-blue-400 text-white
@@ -26,9 +35,11 @@ export default function(){
             <div className="bg-gray-700 w-1/2 p-28 flex flex-col justify-center">
                 
                 <div className="flex flex-col">
+                    
                     <label className="font-Montserrant text-gray-300"> E-mail </label>
                     <input className={`border-b border-gray-400 focus:outline-none py-2 px-5 mb-7 bg-transparent text-white`}
                         placeholder='Digite seu e-mail'/>
+                        
                 </div>
                 <div className="flex flex-col">
                     <label className="font-Montserrant text-gray-300"> Senha </label>
