@@ -35,18 +35,24 @@ export default function Aluno() {
     }
 
     return (
-        <LayoutUser usuario={'aluno'}>
-            <div className="flex place-content-between">
-                <Titulo>Teste Aluno</Titulo>
-                <Botao onCLick={() => novoFuncionario()} className="mx-8 px-10">Alterar algo</Botao>
-            </div>
-            <Tabela objeto={funcionarios} 
-                    propriedadesExibidas={dados}
-                    cabecalho={cabecalho}
-                    objetoSelecionado={funcionarioSelecionado}
-                    objetoExcluido={funcionarioExcluido}></Tabela>
-            <Modal isOpen={openModal} isNotOpen={() => setOpenModal(!openModal)} cor='white' titulo='Titulo'
-            subtitulo='Subtitulo'><ModalFuncionario funcionario={funcionario} funcionarioMudou={salvarFuncionario}/></Modal>
+        <LayoutUser divisoes usuario={'aluno'}>
+
+            <section className="bg-white rounded-md w-auto h-auto m-2 mb-0 p-3">
+                <div className="flex place-content-between">
+                    <Titulo>Teste Aluno</Titulo>
+                </div>
+            </section>
+
+            <section className="bg-white rounded-md w-auto h-5/6 m-2 mb-0">
+                <Tabela objeto={funcionarios} 
+                        propriedadesExibidas={dados}
+                        cabecalho={cabecalho}
+                        objetoSelecionado={funcionarioSelecionado}
+                        objetoExcluido={funcionarioExcluido}></Tabela>
+                <Modal isOpen={openModal} isNotOpen={() => setOpenModal(!openModal)} cor='white' titulo='Titulo'
+                subtitulo='Subtitulo'><ModalFuncionario funcionario={funcionario} funcionarioMudou={salvarFuncionario}/></Modal>
+            </section>
+            
         </LayoutUser>
     )
 }

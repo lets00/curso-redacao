@@ -1,4 +1,3 @@
-import Botao from "@/components/Botao";
 import LayoutUser from "@/components/LayoutUser";
 import Select from "@/components/Select";
 import Tabela from "@/components/Tabela";

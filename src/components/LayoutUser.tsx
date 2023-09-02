@@ -14,7 +14,7 @@ export default function Teste(props: LayoutUserProps){
         return (
             <>
                 <Link href="/usuario/aluno">Materiais</Link>
-                <Link href="/">Turmas</Link>
+                <Link href="/usuario/aluno/turmas">Turmas</Link>
                 <Link href="/usuario/aluno/perfil">Perfil</Link>
             </>
         )
@@ -22,8 +22,8 @@ export default function Teste(props: LayoutUserProps){
     function funcionario(){
         return (
             <>
-                <Link href="/">Materiais</Link>
-                <Link href="/">Turmas</Link>
+                <Link href="/usuario/funcionario/materiais">Materiais</Link>
+                <Link href="/usuario/funcionario/turmas">Turmas</Link>
                 <Link href="/">Live</Link>
                 <Link href="/usuario/funcionario/listarMateriais">Listar Materiais</Link>
                 <Link href="/usuario/funcionario/perfil">Perfil</Link>

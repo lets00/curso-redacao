@@ -44,13 +44,9 @@ export default function PerfilFuncionario() {
                     <EntradaPerfil texto="CPF" valor={cpf} valorMudou={setCpf} somenteLeitura={editar} />
                 </section>
 
-                <section className="bg-white rounded-md w-1/2 h-auto m-2 ml-1 mt-0 p-6
+                <section className="bg-white rounded-md w-1/2 h-auto m-2 ml-1 mt-0 
                                 flex flex-col items-center">
-                    <h1 className="pt-5">21 Dias</h1>
-                    <h4>Para o próximo pagamento</h4>
-                    <div className="w-80 h-6 mt-8 bg-gray-200 rounded-xl dark:bg-gray-700">
-                        <div className="h-6 bg-gradient-to-r from-blue-400 to-pink-600 rounded-xl dark:bg-blue-500" style={{width: '45%'}}></div>
-                    </div>
+                    <Image src='/images/logoLOGIN.png' width='250' height='250' alt='imagemDoCurso'/>
                 </section>
 
             </div>
