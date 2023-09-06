@@ -11,8 +11,8 @@ export default function ListarMateriais() {
     const [material, setMaterial] = useState<Material>(Material.vazio())
 
     const materiais = [
-        new Material('Material da aula sobre Redação 1', 'Descrição breve desse documento', 'ARQUIVO', 'LINK', 'Redação', 'presencial terça/tarde', 'Abner', new Date(0)),
-        new Material('Material da aula sobre Redação 2', 'Descrição breve desse documento', 'ARQUIVO2', 'LINK2', 'Redação', 'presencial terça/manhã', 'João', new Date(0))
+        new Material('Material da aula sobre Redação 1', 'Descrição breve desse documento', 'ARQUIVO', 'LINK', 'Redação', 'presencial terça/tarde', 'Abner', new Date(0),'id' , false),
+        new Material('Material da aula sobre Redação 2', 'Descrição breve desse documento', 'ARQUIVO2', 'LINK2', 'Redação', 'presencial terça/manhã', 'João', new Date(0),'id' , false)
     ]
     const dados = ['nome','descricao','professor']
     const cabecalho = ['Nome', 'Descrição', 'Criador', 'Opções']

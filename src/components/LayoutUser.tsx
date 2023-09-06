@@ -24,7 +24,7 @@ export default function Teste(props: LayoutUserProps){
             <>
                 <Link href="/usuario/funcionario/materiais">Materiais</Link>
                 <Link href="/usuario/funcionario/turmas">Turmas</Link>
-                <Link href="/">Live</Link>
+                <Link href="/usuario/funcionario/live">Live</Link>
                 <Link href="/usuario/funcionario/listarMateriais">Listar Materiais</Link>
                 <Link href="/usuario/funcionario/perfil">Perfil</Link>
             </>

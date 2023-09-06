@@ -1,7 +1,4 @@
 import { IconeFeedback, IconeDeletar } from "./Icones"
-import Aluno from "@/core/Aluno"
-import Funcionario from "@/core/Funcionario"
-import Material from "@/core/Material"
 
 interface TabelaProps {
     objeto: any

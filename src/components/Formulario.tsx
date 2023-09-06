@@ -24,7 +24,7 @@ export default function Formulario(props: FormularioProps){
     return (
         <div>
             <Entrada texto="Nome" valor={nome} valorMudou={setNome} placeholder="Digite seu nome COMPLETO"/>
-            <DatePicker/>
+            <DatePicker titulo="Data de Nascimento"/>
             <Entrada texto="Naturalidade ( Cidade/Estado )" valor={natural} valorMudou={setNatural} placeholder="Digite seu Estado ( ex: PE )"/>
             <Entrada texto="Endereço ( Rua, Nº, Bairro)" valor={endereco} valorMudou={setEndereco} placeholder="Digite sua rua, número e cidade"/>
             <Entrada texto="Número de celular (com DDD)" valor={celular} valorMudou={setCelular} placeholder="(**)****-****"/>

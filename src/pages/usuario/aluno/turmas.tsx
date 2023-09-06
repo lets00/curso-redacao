@@ -1,56 +1,36 @@
-import Botao from "@/components/Botao";
 import LayoutUser from "@/components/LayoutUser";
-import Modal from "@/components/Modal";
 import Tabela from "@/components/Tabela";
 import Titulo from "@/components/Titulo";
-import ModalFuncionario from "@/components/modals/ModalFuncionario";
-import Funcionario from "@/core/Funcionario";
-import { useState } from "react";
+import Turma from "@/core/Turma";
 
 export default function Aluno() {
 
-    const [openModal, setOpenModal] = useState(false)
-    const [funcionario, setFuncionario] = useState<Funcionario>(Funcionario.vazio())
-
     const funcionarios = [
-        new Funcionario('Abner', "111111111", "2222222", "1111-1111", "email@gmail.com", "123", "1"),
-        new Funcionario('Junio', "333333333", "4444444", "1111-1111", "email@gmail.com", "123", "2"),
-        new Funcionario('Valdir', "555555555", "6666666", "1111-1111", "email@gmail.com", "123", "3")
+        new Turma ('presencial - terça/tarde', 'Redação', 'Felipe Alves','Terça-feira', '14h', 'idTeste', false),
+        new Turma ('online - sábado/tarde', 'Matemática', 'André Torres','Sábado', '14h', 'idTeste2', false)
     ]
-    const dados = ['nome', 'cpf', 'rg']
-    const cabecalho = ['Nome', 'CPF', 'RG', 'Ações']
-    
-    function funcionarioSelecionado(funcionario: Funcionario){
-        setFuncionario(funcionario)
-        setOpenModal(true)
-    }
-    function funcionarioExcluido(funcionario: Funcionario){
-    }
-    function salvarFuncionario(funcionario: Funcionario){
-        setOpenModal(false)
-    }
-    function novoFuncionario(){
-        setFuncionario(Funcionario.vazio())
-        setOpenModal(true)
-    }
+    const dados = ['nome', 'dia', 'horario', 'professor']
+    const cabecalho = ['Nome', 'Dia', 'Horário', 'Professor']
 
     return (
         <LayoutUser divisoes usuario={'aluno'}>
 
             <section className="bg-white rounded-md w-auto h-auto m-2 mb-0 p-3">
-                <div className="flex place-content-between">
-                    <Titulo>Teste Aluno</Titulo>
+                <div className="flex place-content-left items-center">
+                    <div className="
+                        flex justify-center items-center
+                        rounded-full p-4 ml-4 mr-0 bg-slate-300 hover:bg-white"/>
+                    <Titulo>Nome do Aluno</Titulo>
                 </div>
             </section>
 
             <section className="bg-white rounded-md w-auto h-5/6 m-2 mb-0">
+                <div className="flex justify-center p-5 font-semibold">
+                    <h3>Suas Turmas</h3>
+                </div>
                 <Tabela objeto={funcionarios} 
                         propriedadesExibidas={dados}
-                        cabecalho={cabecalho}
-                        objetoSelecionado={funcionarioSelecionado}
-                        objetoExcluido={funcionarioExcluido}></Tabela>
-                <Modal isOpen={openModal} isNotOpen={() => setOpenModal(!openModal)} cor='white' titulo='Titulo'
-                subtitulo='Subtitulo'><ModalFuncionario funcionario={funcionario} funcionarioMudou={salvarFuncionario}/></Modal>
+                        cabecalho={cabecalho}></Tabela>
             </section>
             
         </LayoutUser>

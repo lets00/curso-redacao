@@ -6,7 +6,7 @@ import { useState } from "react";
 import EntradaPerfil from "@/components/EntradaPerfil";
 
 export default function PerfilFuncionario() {
-    const funcionarioTeste = new Funcionario('Abner', "111111111", "2222222", "1111-1111", "email@gmail.com", "123", "1")
+    const funcionarioTeste = new Funcionario('Abner', "111111111", "2222222", "1111-1111", "email@gmail.com", "123", "1", false)
 
     const [nome, setNome] = useState(funcionarioTeste.nome ?? '')
     const [celular, setCelular] = useState(funcionarioTeste.celular ?? '')
@@ -29,7 +29,7 @@ export default function PerfilFuncionario() {
                     </div>
                     <h2 className="mt-10 ml-5 ">Nome Completo Exemplo</h2>
                     <Botao onCLick={() => salvarFuncionario(
-                        new Funcionario(nome, cpf, funcionarioTeste.rg, celular, email, funcionarioTeste.senha, funcionarioTeste.id))} 
+                        new Funcionario(nome, cpf, funcionarioTeste.rg, celular, email, funcionarioTeste.senha, funcionarioTeste.id, false))} 
                     className="m-10 p-10 bg-blue-400" cor="blue">{editar == true ? 'Alterar':'Salvar'}</Botao>
                 </div>
             </section>

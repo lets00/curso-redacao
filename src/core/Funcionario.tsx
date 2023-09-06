@@ -6,8 +6,9 @@ export default class Funcionario{
     #celular: string
     #email: string
     #senha: string
+    #excluido: boolean
 
-    constructor( nome: string, cpf: string, rg: string, celular: string, email: string, senha: string, id: string | null = null ){
+    constructor( nome: string, cpf: string, rg: string, celular: string, email: string, senha: string, id: string | null = null, excluido: boolean ){
         this.#nome = nome
         this.#cpf = cpf
         this.#rg = rg
@@ -15,9 +16,10 @@ export default class Funcionario{
         this.#email = email
         this.#senha = senha
         this.#id = id
+        this.#excluido = excluido
     }
     static vazio() {
-        return new Funcionario('','','','','','','')
+        return new Funcionario('','','','','','','',false)
     }
 
     get id(){
@@ -40,5 +42,8 @@ export default class Funcionario{
     }
     get senha(){
         return this.#senha
+    }
+    get excluido(){
+        return this.#excluido
     }
 }
