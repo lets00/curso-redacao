@@ -22,7 +22,7 @@ export default function Teste(props: LayoutUserProps){
     function funcionario(){
         return (
             <>
-                <Link href="/usuario/funcionario/materiais">Materiais</Link>
+                <Link href="/usuario/funcionario">Materiais</Link>
                 <Link href="/usuario/funcionario/turmas">Turmas</Link>
                 <Link href="/usuario/funcionario/live">Live</Link>
                 <Link href="/usuario/funcionario/listarMateriais">Listar Materiais</Link>
