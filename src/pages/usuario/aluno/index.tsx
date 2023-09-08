@@ -1,52 +1,74 @@
-import Botao from "@/components/Botao";
 import LayoutUser from "@/components/LayoutUser";
-import Modal from "@/components/Modal";
+import Select from "@/components/Select";
 import Tabela from "@/components/Tabela";
 import Titulo from "@/components/Titulo";
-import ModalFuncionario from "@/components/modals/ModalFuncionario";
-import Funcionario from "@/core/Funcionario";
+import Material from "@/core/Material";
+import Link from "next/link";
 import { useState } from "react";
 
 export default function Aluno() {
 
-    const [openModal, setOpenModal] = useState(false)
-    const [funcionario, setFuncionario] = useState<Funcionario>(Funcionario.vazio())
 
-    const funcionarios = [
-        new Funcionario('Abner', "111111111", "2222222", "1111-1111", "email@gmail.com", "123", "1", false),
-        new Funcionario('Junio', "333333333", "4444444", "1111-1111", "email@gmail.com", "123", "2", false),
-        new Funcionario('Valdir', "555555555", "6666666", "1111-1111", "email@gmail.com", "123", "3", false)
+    const materiais = [
+        new Material('Material da aula sobre Redação 1', 'Descrição breve desse documento', 'ARQUIVO', 'LINK', 'Redação', 'presencial terça/tarde', 'Abner', new Date(),'id' , false),
+        new Material('Material da aula sobre Redação 2', 'Descrição breve desse documento', 'ARQUIVO2', 'LINK2', 'Redação', 'presencial terça/manhã', 'João', new Date(),'id' , false)
     ]
-    const dados = ['nome', 'cpf', 'rg']
-    const cabecalho = ['Nome', 'CPF', 'RG', 'Ações']
-    
-    function funcionarioSelecionado(funcionario: Funcionario){
-        setFuncionario(funcionario)
-        setOpenModal(true)
+    const materiais2 = [
+        new Material('Material de teste', 'Descrição breve desse documento', 'ARQUIVO', 'LINK', 'Redação', 'presencial terça/tarde', 'Abner', new Date(),'id' , false),
+        new Material('Material de teste', 'Descrição breve desse documento', 'ARQUIVO2', 'LINK2', 'Redação', 'presencial terça/manhã', 'João', new Date(),'id' , false)
+    ]
+    const dados = ['nome', 'descricao', 'data']
+    const cabecalho = ['Título', 'Descrição', 'Data de publicação', `Avaliar & Enviar redações`]
+    const select = ['Redação','Linguagem','Matemática']
+
+    const [lista, setLista] = useState(materiais)
+    const [material, setMaterial] = useState<Material>(Material.vazio())
+    const [botaoAtivo, setBotaoAtivo] = useState('redacao');
+
+
+    const aoClicar = (conteudo: any, botao: any) => {
+        setLista(conteudo);
+        setBotaoAtivo(botao);
+      };
+    function materialSelecionado(material: Material){
+        setMaterial(material)
     }
-    function funcionarioExcluido(funcionario: Funcionario){
+    function materialExcluido(material: Material){
     }
-    function salvarFuncionario(funcionario: Funcionario){
-        setOpenModal(false)
-    }
-    function novoFuncionario(){
-        setFuncionario(Funcionario.vazio())
-        setOpenModal(true)
-    }
+
 
     return (
-        <LayoutUser usuario={'aluno'}>
-            <div className="flex place-content-between">
-                <Titulo>Teste Aluno</Titulo>
-                <Botao onCLick={() => novoFuncionario()} className="mx-8 px-10">Alterar algo</Botao>
-            </div>
-            <Tabela objeto={funcionarios} 
-                    propriedadesExibidas={dados}
-                    cabecalho={cabecalho}
-                    objetoSelecionado={funcionarioSelecionado}
-                    objetoExcluido={funcionarioExcluido}></Tabela>
-            <Modal isOpen={openModal} isNotOpen={() => setOpenModal(!openModal)} cor='white' titulo='Titulo'
-            subtitulo='Subtitulo'><ModalFuncionario funcionario={funcionario} funcionarioMudou={salvarFuncionario}/></Modal>
+        <LayoutUser divisoes usuario={'aluno'}>
+
+            <section className="bg-white rounded-md w-auto h-auto m-2 mb-0 p-3">
+                <div className="flex place-content-left items-center">
+                    <div className="
+                        flex justify-center items-center
+                        rounded-full p-4 ml-4 mr-0 bg-slate-300"/>
+                    <div className="ml-5 mt-1">
+                        <h4 className="ml-1">Olá, Nome do Aluno,</h4>
+                        <h2 className="font-Montserrant">Bem vindo de volta!</h2>
+                    </div>
+                </div>
+            </section>
+
+            <section className="bg-white rounded-md w-auto h-4/5 m-2 mb-0">
+                <div className="ml-8 py-4">
+                    <h3 className="font-Monteserrant font-semibold">Materiais</h3>
+                    <div className="flex ml-3 gap-2">
+                        <button onClick={() => aoClicar(materiais, 'redacao')} 
+                        className={`border-b-2 ${botaoAtivo === 'redacao' ? 'border-blue-400' : 'border-slate-200'} hover:border-blue-400`}>Redação</button>
+                        <button onClick={() => aoClicar(materiais2, 'linguagem')} 
+                        className={`border-b-2 ${botaoAtivo === 'linguagem' ? 'border-blue-400' : 'border-slate-200'} hover:border-blue-400`}>Linguagem</button>
+                    </div>
+                </div>
+                <Tabela objeto={lista} 
+                        propriedadesExibidas={dados}
+                        cabecalho={cabecalho}
+                        objetoSelecionado={materialSelecionado}
+                        objetoExcluido={materialExcluido}></Tabela>
+            </section>
+            
         </LayoutUser>
     )
 }

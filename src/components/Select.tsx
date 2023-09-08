@@ -6,11 +6,7 @@ interface SelectProps{
 }
 
 export default function Select(props: SelectProps) {
-    const [value, setValue] = useState("b");
-  
-    function logValue() {
-      console.log(value);
-    }
+    const [value, setValue] = useState("");
   
     return (
       <div>

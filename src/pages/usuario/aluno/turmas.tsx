@@ -3,7 +3,7 @@ import Tabela from "@/components/Tabela";
 import Titulo from "@/components/Titulo";
 import Turma from "@/core/Turma";
 
-export default function Aluno() {
+export default function TurmasAluno() {
 
     const funcionarios = [
         new Turma ('presencial - terça/tarde', 'Redação', 'Felipe Alves','Terça-feira', '14h', 'idTeste', false),
@@ -19,7 +19,7 @@ export default function Aluno() {
                 <div className="flex place-content-left items-center">
                     <div className="
                         flex justify-center items-center
-                        rounded-full p-4 ml-4 mr-0 bg-slate-300 hover:bg-white"/>
+                        rounded-full p-4 ml-4 mr-0 bg-slate-300"/>
                     <Titulo>Nome do Aluno</Titulo>
                 </div>
             </section>

@@ -16,7 +16,7 @@ export default function(){
                         </Link>
                     </div>
                     <div className='flex flex-col items-center'>
-                        <h2 className='font-Montserrant text-center'>Juntos, construiremos o seu futuro</h2>
+                        <h2 className='font-Montserrant text-center text-white'>Juntos, construiremos o seu futuro</h2>
                         <Image src='/images/logoLOGIN.png' width='400' height='400' alt='imagemDoCurso'/>
                     </div>
 
