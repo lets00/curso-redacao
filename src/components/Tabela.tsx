@@ -51,7 +51,11 @@ export default function Tabela(props: TabelaProps){
                     className={`${index % 2 === 0 ? 'bg-slate-100' : 'bg-slate-200'}`}>
                     {props.propriedadesExibidas.map((propriedade: any, propIndex: any) => (
                         <td key={propIndex} className="text-center p-2">
-                            {objeto[propriedade] instanceof Date ?
+                            {propriedade === 'pagamento'
+                                ? objeto[propriedade]
+                                    ? 'Pago'
+                                    : 'Não pago'
+                                :objeto[propriedade] instanceof Date ?
                                 format(objeto[propriedade], 'dd-MM-yyyy')
                                  : (
                                 objeto[propriedade]

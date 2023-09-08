@@ -12,7 +12,7 @@ export default function Materiais() {
 
             <div className="flex place-content-between">
                 <Titulo>Postar Material</Titulo>
-                <Link href="/usuario/funcionario/Materiais" className="px-10 mx-8 py-2 rounded-md text-white bg-pink-400">Listar Materiais</Link>
+                <Link href="/usuario/funcionario/listarMateriais" className="px-10 mx-8 py-2 rounded-md text-white bg-pink-400">Listar Materiais</Link>
             </div>
             <Checkbox titulo="Modalidade" opcoes={['Online','Presencial']}/>
             <Checkbox titulo="Turma (as)" opcoes={['Segunda 18h45 - 21h45','Terça 9h - 12h','Terça 14h - 17h','Terça 18h45 - 21h45']}/>
