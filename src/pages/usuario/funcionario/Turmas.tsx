@@ -5,11 +5,11 @@ import Titulo from "@/components/Titulo";
 import { useState } from "react";
 import Aluno from "@/core/Aluno";
 
-export default function ListarMateriais() {
+export default function FuncionarioTurmas() {
 
     const [aluno, setAluno] = useState<Aluno>(Aluno.vazio())
 
-    const materiais = [
+    const turmas = [
         new Aluno('Joao Carlos', new Date(2004-10-10), 'PE', 'rua teste', '111-111', 'jasha@gmail',
     'jose', 'carla', 'rgrgrg', 'cpfcpf', 15, 'presencial - terça/tarde',false , '123', "idTeste", false),
         new Aluno('Maria Luiza', new Date(2004-10-10), 'RJ', 'rua testew', '222-111', 'mari@gmail',
@@ -37,7 +37,7 @@ export default function ListarMateriais() {
             </div>
             <Select seletor={select}
                     titulo="Turma"/>
-            <Tabela objeto={materiais}
+            <Tabela objeto={turmas}
                     propriedadesExibidas={dados}
                     cabecalho={cabecalho}
                     //objetoSelecionado={alunoSelecionado}
