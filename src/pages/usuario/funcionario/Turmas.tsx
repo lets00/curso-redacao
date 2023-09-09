@@ -2,7 +2,6 @@ import LayoutUser from "@/components/LayoutUser";
 import Select from "@/components/Select";
 import Tabela from "@/components/Tabela";
 import Titulo from "@/components/Titulo";
-import Link from "next/link";
 import { useState } from "react";
 import Aluno from "@/core/Aluno";
 
@@ -32,7 +31,7 @@ export default function ListarMateriais() {
     }
 
     return (
-        <LayoutUser usuario={'funcionario'}>
+        <LayoutUser usuario={'funcionario'} className="text-black">
             <div className="flex place-content-between">
                 <Titulo>Turmas</Titulo>
             </div>

@@ -30,10 +30,10 @@ export default function ListarMateriais() {
     }
 
     return (
-        <LayoutUser usuario={'funcionario'}>
+        <LayoutUser usuario={'funcionario'} className="text-black">
             <div className="flex place-content-between">
                 <Titulo>Listar Materiais</Titulo>
-                <Link href="/usuario/funcionario" className="px-10 mx-8 py-2 rounded-md text-white bg-pink-400">Postar Material</Link>
+                <Link href="/usuario/funcionario/materiais" className="px-10 mx-8 py-2 rounded-md text-white bg-pink-400">Postar Material</Link>
             </div>
             <Select seletor={select}
                     titulo="Disciplina"/>

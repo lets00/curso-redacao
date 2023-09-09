@@ -4,7 +4,7 @@ import Link from 'next/link';
 
 export default function(){
     return( 
-        <div className="flex flex-row justify-center">
+        <div className="flex flex-row justify-center text-black">
             <div className="flex flex-col justify-center bg-blue-400 text-white
                             w-1/2 h-screen p-20">
                     

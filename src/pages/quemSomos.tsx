@@ -4,7 +4,7 @@ import Link from 'next/link'
 
 export default function Correcao(){
   return(
-    <Layout>
+    <Layout className="text-black">
       <div>
         <InitialSection ordem={false} titulo='Quem Somos' img='/images/IMG_3824.jpg'>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Quos aliquid cumque iusto velit harum libero adipisci, quod nulla modi praesentium ab nobis nesciunt reprehenderit inventore, magni autem sint maxime beatae.</InitialSection>
         <InitialSection ordem={true} titulo='Wellington' img='/images/IMG_3817.jpg'>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Quos aliquid cumque iusto velit harum libero adipisci, quod nulla modi praesentium ab nobis nesciunt reprehenderit inventore, magni autem sint maxime beatae.</InitialSection>

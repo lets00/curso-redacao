@@ -69,7 +69,7 @@ export default function Tabela(props: TabelaProps){
     }
 
     return (
-        <table className="w-full border-separate border-spacing-y-2">
+        <table className="w-full border-separate border-spacing-y-2 text-black">
             <thead>
                 {renderizarCabecalho()}
             </thead>

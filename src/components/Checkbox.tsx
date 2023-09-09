@@ -5,7 +5,7 @@ interface CheckBoxProps{
 
 export default function Checkbox(props: CheckBoxProps){
     return (
-        <div>
+        <div className="text-black">
             <h3 className="font-LeagueSpartan ml-9 mt-2">{props.titulo}</h3>
             <section className="flex flex-row items-center gap-6 ml-10">
                 {props.opcoes.map((opcao, index) => (

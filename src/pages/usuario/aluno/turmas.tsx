@@ -13,7 +13,7 @@ export default function TurmasAluno() {
     const cabecalho = ['Nome', 'Dia', 'Horário', 'Professor']
 
     return (
-        <LayoutUser divisoes usuario={'aluno'}>
+        <LayoutUser divisoes usuario={'aluno'} className="text-black">
 
             <section className="bg-white rounded-md w-auto h-auto m-2 mb-0 p-3">
                 <div className="flex place-content-left items-center">

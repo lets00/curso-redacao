@@ -22,11 +22,11 @@ export default function Teste(props: LayoutUserProps){
     function funcionario(){
         return (
             <>
-                <Link href="/usuario/funcionario">Materiais</Link>
+                <Link href="/usuario/funcionario/materiais">Materiais</Link>
                 <Link href="/usuario/funcionario/turmas">Turmas</Link>
                 <Link href="/usuario/funcionario/live">Live</Link>
                 <Link href="/usuario/funcionario/listarMateriais">Listar Materiais</Link>
-                <Link href="/usuario/funcionario/perfil">Perfil</Link>
+                <Link href="/usuario/funcionario">Perfil</Link>
             </>
         )
     }
@@ -41,7 +41,7 @@ export default function Teste(props: LayoutUserProps){
     }
 
     return (
-        <div className='flex justify-center items-center h-screen'>
+        <div className='flex justify-center items-center h-screen text-black'>
             <div className='bg-slate-200 m-8 rounded-xl w-11/12 h-5/6'>
                 <div className="flex flex-row w-full h-full">
                     

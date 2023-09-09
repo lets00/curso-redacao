@@ -3,7 +3,7 @@ import Layout from '../components/Layout'
 
 export default function Home(){
   return(
-    <Layout>
+    <Layout className="text-black">
       <div className="grid gap-20">
 
       <InitialSection ordem={true} titulo='Sabe o que vamos estudar por aqui?' img='/images/Estudaraqui.jpg' className='font-bold'>Olha só esses 3 jeitinhos que você pode estar estudando com a gente:</InitialSection>
@@ -19,7 +19,7 @@ export default function Home(){
           <div className="grid grid-cols-2 gap-7 items-center">
             <div className="bg-slate-700 p-9 text-white rounded-md shadow-2xl">
               <div className="rounded-full h-12 w-12 bg-blue-300 mb-6"></div>
-              <h1 className="font-bold font-Montserrant text-2xl">Presencial</h1><br/>
+              <h1 className="font-bold font-Montserrant text-2xl text-white">Presencial</h1><br/>
               <h2>Redação <br/> Lorem ipsum dolor sit amet consectetur adipisicing elit. Vero doloremque veniam temporibus, impedit aut consectetur rem voluptates consequatur</h2><br/>
               <h2>Linguagem <br/> Lorem ipsum dolor sit amet consectetur adipisicing elit. Vero doloremque veniam temporibus, impedit aut consectetur rem voluptates consequatur</h2><br/>
               <h2>Suporte <br/> Lorem ipsum dolor sit amet consectetur adipisicing elit. Vero doloremque veniam temporibus, impedit aut consectetur rem voluptates consequatur</h2>

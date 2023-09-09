@@ -14,7 +14,7 @@ export default function (props: ModalProps) {
     if(props.isOpen == true){
         return(
             <div className="fixed top-0 bottom-0 right-0 left-0 bg-slate-500/50 
-                            flex justify-center items-center ">
+                            flex justify-center items-center text-black">
                 <div className={`bg-${props.cor} p-4 rounded-xl w-fit h-fit`}>
                     <div className="flex flex-row justify-between">
                         <Titulo className='pt-10'>{props.titulo}</Titulo>

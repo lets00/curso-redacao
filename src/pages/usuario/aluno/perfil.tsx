@@ -22,7 +22,7 @@ export default function PerfilAluno() {
     }
 
     return (
-        <LayoutUser usuario={'aluno'} className="flex flex-col gap-2" divisoes>
+        <LayoutUser usuario={'aluno'} className="flex flex-col gap-2 text-black" divisoes>
             
             <section className="bg-white rounded-md w-auto h-1/2 m-2 mb-0">
                 <div className="bg-gradient-to-r from-blue-400 to-pink-600 h-1/2 rounded-md"></div>

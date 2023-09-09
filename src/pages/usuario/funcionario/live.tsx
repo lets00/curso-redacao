@@ -8,7 +8,7 @@ import Titulo from "@/components/Titulo";
 export default function Live() {
 
     return (
-        <LayoutUser usuario={'funcionario'}>
+        <LayoutUser usuario={'funcionario'} className="text-black">
 
             <Titulo>Marcar Live</Titulo>
             <Checkbox titulo="Modalidade" opcoes={['Online','Presencial']}/>

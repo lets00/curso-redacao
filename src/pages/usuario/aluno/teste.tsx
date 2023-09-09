@@ -35,7 +35,7 @@ export default function TesteAluno() {
     }
 
     return (
-        <LayoutUser usuario={'aluno'}>
+        <LayoutUser usuario={'aluno'} className="text-black">
             <div className="flex place-content-between">
                 <Titulo>Teste Aluno</Titulo>
                 <Botao onCLick={() => novoFuncionario()} className="mx-8 px-10">Alterar algo</Botao>

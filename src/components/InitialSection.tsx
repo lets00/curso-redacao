@@ -10,7 +10,7 @@ interface InitialSectionProps{
 
 export default function InitialSection(props: InitialSectionProps){
     return (
-        <div className="pb-20">
+        <div className="pb-20 text-black">
             <section className={props.ordem == true ? 'flex flex-row-reverse gap-20 items-center pt-10' : 'flex flex-row gap-20 items-center pt-10'}>
             <div>
                 <h1 className={`text-4xl font-LeagueSpartan ${props.className}`}>{props.titulo}</h1>

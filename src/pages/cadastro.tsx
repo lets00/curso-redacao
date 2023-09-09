@@ -11,7 +11,7 @@ export default function Cadastro(){
     ]
 
     return (
-        <div className="flex flex-row justify-center">
+        <div className="flex flex-row justify-center text-black">
             <div className="bg-gradient-to-t from-pink-800 to-pink-400 text-white
                             w-5/12 p-20 pt-10 pb-1 h-fit">
                     <div className='flex flex-col items-start pb-6'>

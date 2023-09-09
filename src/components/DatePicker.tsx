@@ -13,7 +13,7 @@ export default function DatePicker(props: DateProps) {
     };
 
     return(
-        <div className={`pb-5 ${props.classname}`}>
+        <div className={`pb-5 ${props.classname} text-black`}>
             <label className="font-Montserrant" htmlFor="data">{props.titulo}</label><br />
     
             <input type="date" id="date" name="calendario"

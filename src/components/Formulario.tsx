@@ -22,7 +22,7 @@ export default function Formulario(props: FormularioProps){
     const [senha, setSenha] = useState(props.aluno?.senha ?? '')
     
     return (
-        <div>
+        <div className="text-black">
             <Entrada texto="Nome" valor={nome} valorMudou={setNome} placeholder="Digite seu nome COMPLETO"/>
             <DatePicker titulo="Data de Nascimento"/>
             <Entrada texto="Naturalidade ( Cidade/Estado )" valor={natural} valorMudou={setNatural} placeholder="Digite seu Estado ( ex: PE )"/>

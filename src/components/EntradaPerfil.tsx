@@ -9,7 +9,7 @@ interface PerfilProps{
 }
 export default function PerfilDados(props: PerfilProps){
     return (
-        <div className={`flex flex-col ${props.className}`}>
+        <div className={`flex flex-col ${props.className} text-black`}>
             <label className="font-Montserrant">
                 {props.texto}
             </label>

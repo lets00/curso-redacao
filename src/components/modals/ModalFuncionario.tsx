@@ -18,7 +18,7 @@ export default function ModalFuncionario(props: ModalFuncionarioProps){
     const [senha, setSenha] = useState(props.funcionario?.senha ?? '')
 
     return(
-        <div>
+        <div className="text-black">
             <h1>TesteModalFuncionario</h1>
             {id ? (
                 <Entrada somenteLeitura texto="Id" valor={id}/>
