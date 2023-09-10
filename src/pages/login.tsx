@@ -6,13 +6,31 @@ import Link from 'next/link';
 import AuthInput from '@/components/AuthInput';
 import { useState } from 'react';
 import useAuth from '@/data/hook/useAuth';
+import db from "@/backend/config"
+import { collection, query, where, getDocs } from "firebase/firestore";
+
 
 export default function Login(){
 
-    const {usuario} = useAuth ()
+    async function login() {
+        const collectionRef = collection(db, 'Estudante')
 
-    const [email, setEmail] = useState('')
-    const [senha, setSenha] = useState('')
+        try {
+            const q = query(collectionRef,
+                where("email", "==", "maria@gmail.com"),
+                where("senha", "==", "12345")
+            );
+
+            const result = await getDocs(q);
+            result.forEach(doc => {
+                const data = doc.data();
+                console.log(data);
+            })
+        } catch (error) {
+            console.error("Erro ao buscar documentos:", error);
+        }
+
+    }
 
     return( 
         <div className="flex flex-row justify-center">
@@ -53,7 +71,7 @@ export default function Login(){
                     <label htmlFor="default-checkbox" className="ml-2 text-sm text-gray-900 dark:text-gray-300"><a href="" className="hover:underline text-gray-400">Mantenha-me conectado</a></label>
                 </div>
                 <div className='flex items-center gap-7 pt-10'>
-                    <Link href="/usuario/aluno" className="text-white py-2 rounded-md px-16 bg-blue-300">Login</Link>
+                    <button className="text-white py-2 rounded-md px-16 bg-blue-300" onClick={login}>Entrar</button>
                     <button className='text-gray-400 border-b border-blue-400'>Esqueci a senha</button>
                 </div>
 
