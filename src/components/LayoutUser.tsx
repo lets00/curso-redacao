@@ -33,9 +33,11 @@ export default function Teste(props: LayoutUserProps){
     function root(){
         return (
             <>
-                <Link href="/">Cursos</Link>
-                <Link href="/">Cursos</Link>
-                <Link href="/">Cursos</Link>
+                <Link href="/usuario/root/materiais">Materiais</Link>
+                <Link href="/usuario/root/turmas">Turmas</Link>
+                <Link href="/usuario/root/live">Live</Link>
+                <Link href="/usuario/root/funcionarios">Funcionários</Link>
+                <Link href="/usuario/root">Alunos</Link>
             </>
         )
     }
@@ -57,7 +59,6 @@ export default function Teste(props: LayoutUserProps){
                     {props.divisoes? 
                      (<div className={`w-full  ${props.className}`}>{props.children}</div>):
                      (<div className={`bg-white rounded-md w-full m-2 p-6 ${props.className}`} >{props.children}</div>)}
-
                 </div>
             </div>
         </div>

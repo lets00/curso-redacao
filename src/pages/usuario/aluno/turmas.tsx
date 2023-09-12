@@ -10,7 +10,7 @@ export default function TurmasAluno() {
         new Turma ('online - sábado/tarde', 'Matemática', 'André Torres','Sábado', '14h', 'idTeste2', false)
     ]
     const dados = ['nome', 'dia', 'horario', 'professor']
-    const cabecalho = ['Nome', 'Dia', 'Horário', 'Professor']
+    const cabecalho = ['Matéria', 'Dia', 'Horário', 'Professor']
 
     return (
         <LayoutUser divisoes usuario={'aluno'} className="text-black">
