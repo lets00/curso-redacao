@@ -29,7 +29,8 @@ export default function Formulario(props: FormularioProps){
             <Entrada texto="Endereço ( Rua, Nº, Bairro)" valor={endereco} valorMudou={setEndereco} placeholder="Digite sua rua, número e cidade"/>
             <Entrada texto="Número de celular (com DDD)" valor={celular} valorMudou={setCelular} placeholder="(**)****-****"/>
             <Entrada texto="E-mail" valor={email} valorMudou={setEmail} placeholder="Digite seu e-mail"/>
-            <Entrada texto="Senha" valor={senha} valorMudou={setSenha} placeholder="Digite sua senha"/>
+            <Entrada texto="Senha" valor={senha} valorMudou={setSenha} tipo="password" placeholder="Digite sua senha"/>
+            <Entrada texto="Senha (novamente)" valor={senha} valorMudou={setSenha} tipo="password" placeholder="Digite sua senha novamente"/>
             <Entrada texto="Nome do Pai" valor={pai} valorMudou={setPai} placeholder="Digite o nome do seu pai"/>
             <Entrada texto="Nome da Mãe" valor={mae} valorMudou={setMae} placeholder="Digite o nome da sua mãe"/>
             <h2 className="font-Montserrant">Documentação</h2><br />

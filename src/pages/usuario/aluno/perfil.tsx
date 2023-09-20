@@ -27,9 +27,9 @@ export default function PerfilAluno() {
             <section className="bg-white rounded-md w-auto h-1/2 m-2 mb-0">
                 <div className="bg-gradient-to-r from-blue-400 to-pink-600 h-1/2 rounded-md"></div>
                 <div className="flex flex-row">
-                    <div className="-mt-20 ml-10">
+                    <figure className="-mt-20 ml-10">
                         <Image src="/images/IMG_3817.jpg" width='190' height='190' alt="imagem do curso" className="rounded-full"/>
-                    </div>
+                    </figure>
                     <h2 className="mt-10 ml-5 ">Nome Completo Exemplo</h2>
                     <Botao onCLick={() => salvarAluno(
                         new Aluno(nome, alunoTeste.data, alunoTeste.natural, endereco, celular, alunoTeste.email, alunoTeste.pai,

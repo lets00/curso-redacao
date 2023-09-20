@@ -61,8 +61,8 @@ export default function Tabela(props: TabelaProps){
                         <h4 className="ml-6 font-semibold">PAGO</h4>
                         <button onClick={() => props.objetoSelecionado?.(objeto)} className="
                             flex rounded-full px-4 py-2 bg-blue-400 hover:bg-blue-300 text-white font-semibold">
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" className="w-6 h-6 mr-2">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-6 h-6 mr-2">
+                                    <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
                                 </svg>
                                 Ver
                         </button>
@@ -105,7 +105,9 @@ export default function Tabela(props: TabelaProps){
                 {props.objeto[props.objeto.length - 1] instanceof Funcionario && (
                     <tr>
                         <td colSpan={props.propriedadesExibidas.length} className="text-right p-1 pr-6">
-                            <button className="px-10 py-1 bg-blue-400 text-white font-semibold rounded-full">Criar novo funcionário</button>    
+                            <button className="px-10 py-1 bg-blue-400 text-white 
+                            font-semibold rounded-full"
+                            >Criar novo funcionário</button>    
                         </td>
                     </tr>
                 )}

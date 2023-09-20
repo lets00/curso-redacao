@@ -1,7 +1,9 @@
 import LayoutUser from "@/components/LayoutUser";
+import Modal from "@/components/Modal";
 import Select from "@/components/Select";
 import Tabela from "@/components/Tabela";
 import Titulo from "@/components/Titulo";
+import ModalAlunoMaterial from "@/components/modals/ModalAlunoMaterial";
 import Material from "@/core/Material";
 import Link from "next/link";
 import { useState } from "react";
@@ -10,7 +12,7 @@ export default function Aluno() {
 
 
     const materiais = [
-        new Material('Material da aula sobre Redação 1', 'Descrição breve desse documento', 'ARQUIVO', 'LINK', 'Redação', 'presencial terça/tarde', 'Abner', new Date(),'id' , false),
+        new Material('Material da aula sobre Redação 1', 'Descrição breve desse documento', 'ARQUIVO', 'https://correcao.cursofelipealves.com.br/student/login', 'Redação', 'presencial terça/tarde', 'Abner', new Date(),'id' , false),
         new Material('Material da aula sobre Redação 2', 'Descrição breve desse documento', 'ARQUIVO2', 'LINK2', 'Redação', 'presencial terça/manhã', 'João', new Date(),'id' , false)
     ]
     const materiais2 = [
@@ -24,6 +26,7 @@ export default function Aluno() {
     const [lista, setLista] = useState(materiais)
     const [material, setMaterial] = useState<Material>(Material.vazio())
     const [botaoAtivo, setBotaoAtivo] = useState('redacao');
+    const [openModal, setOpenModal] = useState(false)
 
 
     const aoClicar = (conteudo: any, botao: any) => {
@@ -32,10 +35,11 @@ export default function Aluno() {
       };
     function materialSelecionado(material: Material){
         setMaterial(material)
+        setOpenModal(true)
     }
-    function materialExcluido(material: Material){
+    function salvarMaterial(material: Material){
+        setOpenModal(false)
     }
-
 
     return (
         <LayoutUser divisoes usuario={'aluno'} className="text-black">
@@ -66,9 +70,12 @@ export default function Aluno() {
                         propriedadesExibidas={dados}
                         cabecalho={cabecalho}
                         objetoSelecionado={materialSelecionado}
-                        objetoExcluido={materialExcluido}></Tabela>
+                        linkDoObjeto></Tabela>
             </section>
             
+            <Modal isOpen={openModal} isNotOpen={() => setOpenModal(!openModal)} cor='white' titulo='Avalie o material'
+            subtitulo={material.nome}><ModalAlunoMaterial material={material} funcionarioMudou={salvarMaterial}/></Modal>
+
         </LayoutUser>
     )
 }

@@ -14,8 +14,8 @@ export default function ListarMateriais() {
         new Material('Material da aula sobre Redação 1', 'Descrição breve desse documento', 'ARQUIVO', 'LINK', 'Redação', 'presencial terça/tarde', 'Abner', new Date(0),'id' , false),
         new Material('Material da aula sobre Redação 2', 'Descrição breve desse documento', 'ARQUIVO2', 'LINK2', 'Redação', 'presencial terça/manhã', 'João', new Date(0),'id' , false)
     ]
-    const dados = ['nome','descricao','professor']
-    const cabecalho = ['Nome', 'Descrição', 'Criador', 'Opções']
+    const dados = ['nome','descricao', 'data']
+    const cabecalho = ['Nome', 'Descrição', 'Data de publicação', 'Opções']
     const select = ['Redação','Linguagem','Matemática']
     
     function materialSelecionado(material: Material){

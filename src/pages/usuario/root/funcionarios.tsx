@@ -3,9 +3,12 @@ import TabelaRoot from "@/components/TabelaRoot";
 import Titulo from "@/components/Titulo";
 import { useState } from "react";
 import Funcionario from "@/core/Funcionario";
+import Modal from "@/components/Modal";
+import ModalRootFuncionario from "@/components/modals/ModalRootFuncionario";
 
 export default function RootFuncionarios() {
 
+    const [openModal, setOpenModal] = useState(false)
     const [funcionario, setFuncionario] = useState<Funcionario>(Funcionario.vazio())
 
     const funcionarios = [
@@ -22,6 +25,7 @@ export default function RootFuncionarios() {
     function funcionarioExcluido(funcionario: Funcionario){
     }
     function salvarFuncionario(funcionario: Funcionario){
+        setOpenModal(true)
     }
     function novoFuncionario(){
         setFuncionario(Funcionario.vazio())
@@ -38,6 +42,9 @@ export default function RootFuncionarios() {
                     objetoSelecionado={funcionarioSelecionado}
                     objetoExcluido={funcionarioExcluido}
                     />
+
+            <Modal isOpen={openModal} isNotOpen={() => setOpenModal(!openModal)} cor='white' titulo='Gerenciar turma'
+            ><ModalRootFuncionario funcionario={funcionario}/></Modal>
 
         </LayoutUser>
     )

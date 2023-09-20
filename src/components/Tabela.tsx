@@ -1,5 +1,6 @@
 import { format } from "date-fns"
-import { IconeFeedback, IconeDeletar } from "./Icones"
+import { IconeComentario, IconeDeletar, IconeEnviar } from "./Icones"
+import Link from "next/link"
 
 interface TabelaProps {
     objeto: any
@@ -7,6 +8,7 @@ interface TabelaProps {
     cabecalho: string[]
     objetoSelecionado?: (objeto: any) => void
     objetoExcluido?: (objeto: any) => void
+    linkDoObjeto?: any 
 }
 
 export default function Tabela(props: TabelaProps){
@@ -30,7 +32,7 @@ export default function Tabela(props: TabelaProps){
                     <button onClick={() => props.objetoSelecionado?.(objeto)} className="
                         flex justify-center items-center
                         rounded-full p-2 m-1 bg-slate-300 hover:bg-white">
-                            {IconeFeedback}
+                            {IconeComentario}
                     </button>
                 ) : false}
                 {props.objetoExcluido ? (
@@ -39,6 +41,13 @@ export default function Tabela(props: TabelaProps){
                         rounded-full p-2 m-1 bg-slate-300 hover:bg-white">
                             {IconeDeletar}
                     </button>
+                ) : false}
+                {props.linkDoObjeto ? (
+                    <Link href={objeto.link} className="
+                        flex justify-center items-center
+                        rounded-full p-2 m-1 bg-slate-300 hover:bg-white">
+                            {IconeEnviar}
+                    </Link>
                 ) : false}
             </td>
         )

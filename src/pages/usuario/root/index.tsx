@@ -1,6 +1,6 @@
 import LayoutUser from "@/components/LayoutUser";
 import Select from "@/components/Select";
-import TabelaRoot from "@/components/Tabela";
+import TabelaRoot from "@/components/TabelaRoot";
 import Titulo from "@/components/Titulo";
 import { useState } from "react";
 import Aluno from "@/core/Aluno";

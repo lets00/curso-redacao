@@ -15,10 +15,10 @@ export default function(){
                                 {IconeVoltar}
                         </Link>
                     </div>
-                    <div className='flex flex-col items-center'>
+                    <figure className='flex flex-col items-center'>
                         <h2 className='font-Montserrant text-center text-white'>Juntos, construiremos o seu futuro</h2>
                         <Image src='/images/logoLOGIN.png' width='400' height='400' alt='imagemDoCurso'/>
-                    </div>
+                    </figure>
 
             </div>
             <div className="bg-gray-700 w-1/2 p-28 flex flex-col justify-center">

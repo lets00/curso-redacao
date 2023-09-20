@@ -1,8 +1,9 @@
 interface PerfilProps{
     texto: string
-    tipo?: 'text' | 'number'
+    tipo?: 'text' | 'number' | 'password'
     valor?: any
     somenteLeitura?: boolean
+    obrigatorio?: boolean
     valorMudou?: (valor: any) => void
     placeholder?: string
     className?: any
@@ -17,6 +18,7 @@ export default function PerfilDados(props: PerfilProps){
                 type={props.tipo ?? 'text'}
                 value={props.valor}
                 readOnly={props.somenteLeitura}
+                required={props.obrigatorio}
                 onChange={e => props.valorMudou?.(e.target.value)}
                 className={`
                     border-none bg-slate-200 rounded-sm

@@ -23,9 +23,9 @@ export default function Cadastro(){
                     </div>
                     <h3 className="text-white font-Montserrant">Sua vaga será garantida a partir do preenchimento e do pagamento do boleto, caso você não bolsista.</h3><br />
                     <h3 className="text-white font-Montserrant">Se você ainda não tem 18 anos, é necessário que um responsável preencha o campo "Dados do responsável"</h3>
-                    <div className="flex justify-center">
+                    <figure className="flex justify-center">
                         <Image src='/images/logoCADASTRO.png' width='300' height='300' alt='imagemDoCurso'/>
-                    </div>
+                    </figure>
                 </div>
             <div className="bg-white w-5/12 p-16 pt-20 ">
                 <Formulario aluno={alunos[0]}/>

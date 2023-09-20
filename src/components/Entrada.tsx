@@ -1,6 +1,6 @@
 interface EntradaProps{
     texto: string
-    tipo?: 'text' | 'number'
+    tipo?: 'text' | 'number' | 'password'
     valor?: any
     somenteLeitura?: boolean
     valorMudou?: (valor: any) => void

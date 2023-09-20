@@ -24,13 +24,13 @@ export default function PerfilFuncionario() {
             <section className="bg-white rounded-md w-auto h-1/2 m-2 mb-0">
                 <div className="bg-gradient-to-r from-pink-500 to-pink-700 h-1/2 rounded-md"></div>
                 <div className="flex flex-row">
-                    <div className="-mt-20 ml-10">
+                    <figure className="-mt-20 ml-10">
                         <Image src="/images/IMG_3817.jpg" width='190' height='190' alt="imagem do curso" className="rounded-full"/>
-                    </div>
+                    </figure>
                     <h2 className="mt-10 ml-5 ">Nome Completo Exemplo</h2>
                     <Botao onCLick={() => salvarFuncionario(
                         new Funcionario(nome, cpf, funcionarioTeste.rg, celular, email, funcionarioTeste.senha, funcionarioTeste.id, false))} 
-                    className="m-10 p-10 bg-blue-400" cor="blue">{editar == true ? 'Alterar':'Salvar'}</Botao>
+                    className="m-10 p-10 bg-blue-400">{editar == true ? 'Alterar':'Salvar'}</Botao>
                 </div>
             </section>
 
@@ -44,10 +44,10 @@ export default function PerfilFuncionario() {
                     <EntradaPerfil texto="CPF" valor={cpf} valorMudou={setCpf} somenteLeitura={editar} />
                 </section>
 
-                <section className="bg-white rounded-md w-1/2 h-auto m-2 ml-1 mt-0 
+                <figure className="bg-white rounded-md w-1/2 h-auto m-2 ml-1 mt-0 
                                 flex flex-col items-center">
                     <Image src='/images/logoLOGIN.png' width='250' height='250' alt='imagemDoCurso'/>
-                </section>
+                </figure>
 
             </div>
         </LayoutUser>

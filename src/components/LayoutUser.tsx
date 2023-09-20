@@ -1,66 +1,89 @@
-import Link from 'next/link'
-import Image from  'next/image'
+import Link from 'next/link';
+import Image from 'next/image';
+import { useRouter } from 'next/router';
 
-interface LayoutUserProps{
-    usuario: string
-    children: any
-    className?: string
-    divisoes?: boolean
+interface MenuItem {
+  text: string;
+  href: string;
 }
 
-export default function Teste(props: LayoutUserProps){
+interface MenuOptions {
+  [key: string]: MenuItem[];
+}
 
-    function aluno(){
-        return (
-            <>
-                <Link href="/usuario/aluno">Materiais</Link>
-                <Link href="/usuario/aluno/turmas">Turmas</Link>
-                <Link href="/usuario/aluno/perfil">Perfil</Link>
-            </>
-        )
-    }
-    function funcionario(){
-        return (
-            <>
-                <Link href="/usuario/funcionario/materiais">Materiais</Link>
-                <Link href="/usuario/funcionario/turmas">Turmas</Link>
-                <Link href="/usuario/funcionario/live">Live</Link>
-                <Link href="/usuario/funcionario/listarMateriais">Listar Materiais</Link>
-                <Link href="/usuario/funcionario">Perfil</Link>
-            </>
-        )
-    }
-    function root(){
-        return (
-            <>
-                <Link href="/usuario/root/materiais">Materiais</Link>
-                <Link href="/usuario/root/turmas">Turmas</Link>
-                <Link href="/usuario/root/live">Live</Link>
-                <Link href="/usuario/root/funcionarios">Funcionários</Link>
-                <Link href="/usuario/root">Alunos</Link>
-            </>
-        )
+interface LayoutUserProps {
+  usuario: string;
+  children: React.ReactNode;
+  className?: string;
+  divisoes?: boolean;
+}
+
+export default function LayoutUser(props: LayoutUserProps) {
+  const router = useRouter();
+
+  function getMenuLinks(userType: string) {
+    const menuOptions: MenuOptions = {
+        aluno: [
+            { text: 'Materiais', href: '/usuario/aluno' },
+            { text: 'Turmas', href: '/usuario/aluno/turmas' },
+            { text: 'Perfil', href: '/usuario/aluno/perfil' },
+          ],
+          funcionario: [
+            { text: 'Materiais', href: '/usuario/funcionario/materiais' },
+            { text: 'Turmas', href: '/usuario/funcionario/turmas' },
+            { text: 'Live', href: '/usuario/funcionario/live' },
+            { text: 'Listar Materiais', href: '/usuario/funcionario/listarMateriais' },
+            { text: 'Perfil', href: '/usuario/funcionario' },
+          ],
+          root: [
+            { text: 'Materiais', href: '/usuario/root/materiais' },
+            { text: 'Turmas', href: '/usuario/root/turmas' },
+            { text: 'Live', href: '/usuario/root/live' },
+            { text: 'Funcionários', href: '/usuario/root/funcionarios' },
+            { text: 'Alunos', href: '/usuario/root' },
+          ],
+    };
+
+    const validUserTypes = Object.keys(menuOptions);
+
+    if (!validUserTypes.includes(userType)) {
+      // Se userType não for uma chave válida em menuOptions, você pode lidar com isso aqui
+      // Por exemplo, redirecionar para uma página de erro
+      return null;
     }
 
-    return (
-        <div className='flex justify-center items-center h-screen text-black'>
-            <div className='bg-slate-200 m-8 rounded-xl w-11/12 h-5/6'>
-                <div className="flex flex-row w-full h-full">
-                    
-                    <div className="bg-white w-72 rounded-md">
-                        <div className='relative my-0 mt-3 p-5'>
-                            <Image src='/images/FELIPEALVESRBG2.png' width='200' height='100' alt='imagemDoCurso'/>
-                        </div>
-                        <div className='flex flex-col items-start m-14 mr-12 gap-5'>
-                            {props.usuario == 'aluno' ? aluno(): props.usuario == 'funcionario' ? funcionario() : root()}
-                        </div>
-                    </div>
+    return menuOptions[userType].map((option, index) => (
+      <Link legacyBehavior href={option.href} key={index}>
+        <a
+          className={`text-black hover:bg-blue-50 pr-32 w-full py-2 pl-10 ${
+            router.pathname === option.href ? 'bg-blue-100 border-l-4 border-blue-300' : ''
+          }`}
+        >
+          {option.text}
+        </a>
+      </Link>
+    ));
+  }
 
-                    {props.divisoes? 
-                     (<div className={`w-full  ${props.className}`}>{props.children}</div>):
-                     (<div className={`bg-white rounded-md w-full m-2 p-6 ${props.className}`} >{props.children}</div>)}
-                </div>
-            </div>
+  return (
+    <div className="flex justify-center items-center h-screen text-black">
+      <div className="bg-slate-200 m-8 rounded-xl w-11/12 h-5/6">
+        <div className="flex flex-row w-full h-full">
+          <div className="bg-white w-72 rounded-md">
+            <figure className="relative my-0 mt-3 p-5">
+              <Image src="/images/FELIPEALVESRBG2.png" width={200} height={100} alt="imagemDoCurso" />
+            </figure>
+            <nav className="flex flex-col items-start w-full mt-8">
+              {getMenuLinks(props.usuario)}
+            </nav>
+          </div>
+          {props.divisoes ? (
+            <div className={`w-full ${props.className}`}>{props.children}</div>
+          ) : (
+            <div className={`bg-white rounded-md w-full m-2 p-6 ${props.className}`}>{props.children}</div>
+          )}
         </div>
-    )
+      </div>
+    </div>
+  );
 }
