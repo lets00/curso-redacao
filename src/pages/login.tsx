@@ -5,32 +5,46 @@ import Image from  'next/image';
 import Link from 'next/link';
 import AuthInput from '@/components/AuthInput';
 import { useState } from 'react';
-import useAuth from '@/data/hook/useAuth';
 import db from "@/backend/config"
-import { collection, query, where, getDocs } from "firebase/firestore";
-
+import { getFirestore, collection, addDoc} from "firebase/firestore";
+import { signInWithEmailAndPassword, getAuth } from "firebase/auth";
+import router from 'next/router';
 
 export default function Login(){
+    const [email, setEmail] = useState("");
+    const [senha, setSenha] = useState(""); 
 
     async function login() {
-        const collectionRef = collection(db, 'Estudante')
 
         try {
-            const q = query(collectionRef,
-                where("email", "==", "maria@gmail.com"),
-                where("senha", "==", "12345")
-            );
+            const auth = getAuth();
+            const userCredential = await signInWithEmailAndPassword(auth, email, senha);
+            const user = userCredential.user;
 
-            const result = await getDocs(q);
-            result.forEach(doc => {
-                const data = doc.data();
-                console.log(data);
-            })
-        } catch (error) {
-            console.error("Erro ao buscar documentos:", error);
-        }
+        console.log("Usuário logado com ID:", user.uid);
 
+        router.push("/usuario/aluno/perfil");
+    } catch (error) {
+        console.error("Erro ao fazer login:", error);
     }
+    }
+
+    async function adicionarDocumento() {
+        try {
+            const app = db.app; 
+            const firestore = getFirestore(app); 
+            const novaEntrada = {
+                email: "maria@gmail.com",
+                senha: "123456",
+
+            };
+            const docRef = await addDoc(collection(firestore, "alunos"), novaEntrada);
+            console.log("Usuário adicionado com ID:", docRef.id);
+        } catch (error) {
+            console.error("Erro ao adicionar documento:", error);
+        }
+    }
+
 
     return( 
         <div className="flex flex-row justify-center">
@@ -56,13 +70,20 @@ export default function Login(){
                     
                     <label className="font-Montserrant text-gray-300"> E-mail </label>
                     <input className={`border-b border-gray-400 focus:outline-none py-2 px-5 mb-7 bg-transparent text-white`}
-                        placeholder='Digite seu e-mail'/>
+                           placeholder='Digite seu e-mail'
+                           value={email}
+                           onChange={(e) => setEmail(e.target.value)} 
+                         />
                         
                 </div>
                 <div className="flex flex-col">
                     <label className="font-Montserrant text-gray-300"> Senha </label>
                     <input className={`border-b border-gray-400 focus:outline-none py-2 px-5 mb-7 bg-transparent text-white`}
-                        placeholder='Digite sua senha'/>
+                           placeholder='Digite sua senha'
+                           type="password" 
+                           value={senha}
+                           onChange={(e) => setSenha(e.target.value)} 
+          />
                 </div>
                 <div className="flex items-center mb-6">
                     <input id="default-checkbox" type="checkbox" value="" 

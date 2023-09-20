@@ -1,11 +1,11 @@
 interface EntradaProps{
-    texto: string
-    tipo?: 'text' | 'number'
-    valor?: any
-    somenteLeitura?: boolean
-    valorMudou?: (valor: any) => void
-    placeholder?: string
-    className?: any
+    texto: string;
+    tipo?: 'text' | 'number';
+    valor?: any;
+    somenteLeitura?: boolean;
+    valorMudou: (e: any) => void;
+    placeholder?: string;
+    className?: any;
 }
 export default function Entrada(props: EntradaProps){
     return (
@@ -25,4 +25,5 @@ export default function Entrada(props: EntradaProps){
                 placeholder={props.placeholder ?? 'Digite sua resposta'} />
         </div>
     )
-}
+};
+

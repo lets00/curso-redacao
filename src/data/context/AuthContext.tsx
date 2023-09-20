@@ -26,7 +26,7 @@ const AuthContext = createContext<AuthContextProps>({});
 export const AuthProvider: React.FC<PropsWithChildren<AuthContextProps>> = (props) => {
     const [usuario, setUsuario] = useState<Usuario>()
 
-   /* async function login(email: string, senha: string) {
+    async function login(email: string, senha: string) {
        try{
             const resp = await firebase.auth()
             .signInWithEmailAndPassword(email,senha)
@@ -35,22 +35,21 @@ export const AuthProvider: React.FC<PropsWithChildren<AuthContextProps>> = (prop
         } finally{
 
       }
-   }*/
+   }
 
-  /* async function cadastrar(email: string, senha: string) {
+   async function cadastrar(email: string, senha: string) {
     try{
          const resp = await firebase.auth()
          .createUserWithEmailAndPassword(email,senha)
          route.push('/')
 
 
-
      } finally{
 
    }
-}*/
+}
     
-  /*  return (
+    return (
         <AuthContext.Provider value={{
             usuario,
             login
