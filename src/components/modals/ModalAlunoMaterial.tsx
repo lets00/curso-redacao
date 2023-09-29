@@ -25,9 +25,9 @@ export default function ModalAlunoMaterial(props: ModalFuncionarioProps){
             </section>
 
             <section className="flex place-content-between gap-10">
-                <div className="flex justify-center bg-pink-400 rounded-lg p-2 pl-3 text-white font-bold font-Montserrant">
+                <div className="flex justify-center bg-pink-400 rounded-lg p-2 px-3 gap-2 text-white font-bold font-Montserrant">
                     <h3>Avaliação</h3>
-                    <Estrelas></Estrelas>
+                    <Estrelas/>
                 </div>
                 <Botao className="p-10"
                         /*onCLick={() => props.funcionarioMudou?.(new Funcionario(nome, cpf, id, false))}*/>
