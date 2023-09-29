@@ -5,10 +5,13 @@ import Titulo from "@/components/Titulo";
 import { useState } from "react";
 import Aluno from "@/core/Aluno";
 import Pesquisa from "@/components/Pesquisa";
+import Modal from "@/components/Modal";
+import ModalRootAlunos from "@/components/modals/ModalRootAlunos";
 
 export default function RootAlunos() {
 
     const [aluno, setAluno] = useState<Aluno>(Aluno.vazio())
+    const [openModal, setOpenModal] = useState(false)
 
     const turmas = [
         new Aluno('Joao Carlos', new Date(2004-10-10), 'PE', 'rua teste', '111-111', 'jasha@gmail',
@@ -27,9 +30,15 @@ export default function RootAlunos() {
     function alunoExcluido(aluno: Aluno){
     }
     function salvarAluno(aluno: Aluno){
+        setOpenModal(false)
     }
     function novoAluno(){
         setAluno(Aluno.vazio())
+        setOpenModal(true)
+    }
+    function pagamento(){
+        setAluno(aluno)
+        setOpenModal(true)
     }
 
     return (
@@ -49,8 +58,10 @@ export default function RootAlunos() {
                     cabecalho={cabecalho}
                     objetoSelecionado={alunoSelecionado}
                     objetoExcluido={alunoExcluido}
+                    pagamento={pagamento}
                     />
-
+            <Modal isOpen={openModal} isNotOpen={() => setOpenModal(!openModal)} cor='white' titulo='Pagamento'
+            subtitulo={aluno.nome}><ModalRootAlunos/></Modal>
         </LayoutUser>
     )
 }

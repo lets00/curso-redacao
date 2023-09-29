@@ -1,7 +1,9 @@
 import LayoutUser from "@/components/LayoutUser";
+import Modal from "@/components/Modal";
 import Select from "@/components/Select";
 import Tabela from "@/components/Tabela";
 import Titulo from "@/components/Titulo";
+import ModalRootMateriais from "@/components/modals/ModalRootMateriais";
 import Material from "@/core/Material";
 import Link from "next/link";
 import { useState } from "react";
@@ -24,6 +26,7 @@ export default function Aluno() {
     const [lista, setLista] = useState(materiais)
     const [material, setMaterial] = useState<Material>(Material.vazio())
     const [botaoAtivo, setBotaoAtivo] = useState('redacao');
+    const [openModal, setOpenModal] = useState(false)
 
 
     const aoClicar = (conteudo: any, botao: any) => {
@@ -31,7 +34,8 @@ export default function Aluno() {
         setBotaoAtivo(botao);
       };
     function materialSelecionado(material: Material){
-        setMaterial(material)
+        setMaterial(material);
+        setOpenModal(true);
     }
     function materialExcluido(material: Material){
     }
@@ -48,7 +52,9 @@ export default function Aluno() {
                     propriedadesExibidas={dados}
                     cabecalho={cabecalho}
                     objetoSelecionado={materialSelecionado}
-                    objetoExcluido={materialExcluido}></Tabela>            
+                    objetoExcluido={materialExcluido}></Tabela>   
+            <Modal isOpen={openModal} isNotOpen={() => setOpenModal(!openModal)} cor='white' titulo='Análise de Feedback'
+            subtitulo={material.nome}><ModalRootMateriais/></Modal>         
         </LayoutUser>
     )
 }

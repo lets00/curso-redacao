@@ -3,6 +3,7 @@ import React, {useState} from "react"
 interface DateProps {
     titulo?: string
     classname?: string
+    classname2?: string
 }
 
 export default function DatePicker(props: DateProps) {
@@ -18,7 +19,7 @@ export default function DatePicker(props: DateProps) {
     
             <input type="date" id="date" name="calendario"
             value={selectedDate} min="1950-01-01" max="2100-12-31"
-            className="bg-gray-200 rounded-md p-1 px-2"
+            className={`bg-gray-200 rounded-md p-1 px-2 ${props.classname2}`}
             onChange={handleDateChange}/>
         </div>
 

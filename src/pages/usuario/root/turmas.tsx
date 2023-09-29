@@ -1,6 +1,6 @@
 import LayoutUser from "@/components/LayoutUser";
 import Select from "@/components/Select";
-import Tabela from "@/components/Tabela";
+import TabelaRoot from "@/components/TabelaRoot";
 import Titulo from "@/components/Titulo";
 import { useState } from "react";
 import Aluno from "@/core/Aluno";
@@ -40,15 +40,14 @@ export default function RootTurmas() {
             </div>
             <Select seletor={select}
                     titulo="Turma"/>
-            <Tabela objeto={turmas}
+            <TabelaRoot objeto={turmas}
                     propriedadesExibidas={dados}
                     cabecalho={cabecalho}
                     objetoSelecionado={alunoSelecionado}
                     objetoExcluido={alunoExcluido}
+                    turmas
                     />
-            <Modal isOpen={openModal} isNotOpen={() => setOpenModal(!openModal)} cor='white' titulo='Titulo'
-            subtitulo='Subtitulo'></Modal>
-
+                    
             <Modal isOpen={openModal} isNotOpen={() => setOpenModal(!openModal)} cor='white' titulo='Gerenciar turma'
             ><ModalRootTurma turmas={select} turmaSelecionada={turmaSelecionada}/></Modal>
 

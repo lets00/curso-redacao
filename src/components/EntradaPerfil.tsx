@@ -7,6 +7,7 @@ interface PerfilProps{
     valorMudou?: (valor: any) => void
     placeholder?: string
     className?: any
+    className2?: any
 }
 export default function PerfilDados(props: PerfilProps){
     return (
@@ -22,7 +23,7 @@ export default function PerfilDados(props: PerfilProps){
                 onChange={e => props.valorMudou?.(e.target.value)}
                 className={`
                     border-none bg-slate-200 rounded-sm
-                    focus:outline-none py-1 px-5 mb-4 mr-8
+                    focus:outline-none py-1 px-5 mb-4 mr-8 ${props.className2}
                     ${props.somenteLeitura == true ? '' : 'focus:bg-slate-50'}
                 `}
                 placeholder={props.placeholder ?? '...'} />

@@ -1,15 +1,16 @@
 import { format } from "date-fns"
 import { IconeFeedback, IconeDeletar } from "./Icones"
 import Funcionario from "@/core/Funcionario"
-import { stringify } from "querystring"
 
 interface TabelaProps {
     objeto: any
     propriedadesExibidas: any
     cabecalho: string[]
     objetoSelecionado?: (objeto: any) => void
+    pagamento?: (objeto: any) => void
+    salvarFuncionario?: (objeto: any) => void
     objetoExcluido?: (objeto: any) => void
-    root?: boolean
+    turmas?: boolean
 }
 
 export default function Tabela(props: TabelaProps){
@@ -49,17 +50,18 @@ export default function Tabela(props: TabelaProps){
         )
     }
 
-    function renderizarPagamento(objeto: any, propriedade: any, root: any){
+    function renderizarPagamento(objeto: any, propriedade: any){
         return (
             <div className="flex justify-center">
-                {objeto[propriedade] ? 
-                    <button onClick={() => props.objetoSelecionado?.(objeto)} className="
+                {
+                objeto[propriedade] ?
+                    <button onClick={() => props.pagamento?.(objeto)} className="
                         flex rounded-full p-2 px-4 -my-1 bg-blue-400 hover:bg-blue-300 text-white font-semibold">
                             Confirmar pagamento
                     </button> :
                     <div className="bg-white rounded-full p-0 -my-1 flex flex-row items-center gap-12">
                         <h4 className="ml-6 font-semibold">PAGO</h4>
-                        <button onClick={() => props.objetoSelecionado?.(objeto)} className="
+                        <button onClick={() => props.pagamento?.(objeto)} className="
                             flex rounded-full px-4 py-2 bg-blue-400 hover:bg-blue-300 text-white font-semibold">
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-6 h-6 mr-2">
                                     <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
@@ -82,8 +84,11 @@ export default function Tabela(props: TabelaProps){
                             {props.propriedadesExibidas.map((propriedade: any, propIndex: any) => (
                                 <td key={propIndex} className="text-center p-2">
                                     {propriedade === 'pagamento'
-                                        ? renderizarPagamento(objeto, propriedade, props.root)
-                                        :objeto[propriedade] instanceof Date ?
+                                        ? props.turmas ?
+                                        objeto[propriedade]?
+                                        'Pago' : 'Não pago'
+                                        : renderizarPagamento(objeto, propriedade)
+                                        : objeto[propriedade] instanceof Date ?
                                         format(objeto[propriedade], 'dd-MM-yyyy')
                                         : (
                                         objeto[propriedade]
@@ -99,13 +104,13 @@ export default function Tabela(props: TabelaProps){
         )
     }
 
-    function renderizarFuncionario(){
+    function renderizarFuncionario(objeto: any){
         return(
             <>
                 {props.objeto[props.objeto.length - 1] instanceof Funcionario && (
                     <tr>
                         <td colSpan={props.propriedadesExibidas.length} className="text-right p-1 pr-6">
-                            <button className="px-10 py-1 bg-blue-400 text-white 
+                            <button onClick={() => props.salvarFuncionario?.(objeto)} className="px-10 py-1 bg-blue-400 text-white 
                             font-semibold rounded-full"
                             >Criar novo funcionário</button>    
                         </td>
@@ -124,7 +129,7 @@ export default function Tabela(props: TabelaProps){
             </thead>
             <tbody>
                 {renderizarDados()}
-                {renderizarFuncionario()}
+                {renderizarFuncionario(props.objeto)}
             </tbody>
         </table>
     )

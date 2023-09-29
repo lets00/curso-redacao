@@ -18,19 +18,23 @@ export default function ModalRootFuncionario(props: ModalRootFuncionarioProps){
     const [senha, setSenha] = useState(props.funcionario?.senha ?? '')
 
     return(
-        <div className="text-black">
-            {id ? (
-                <EntradaPerfil somenteLeitura texto="Id" valor={id}/>
-            ) : false}
-            <EntradaPerfil texto="Nome" valor={nome} valorMudou={setNome}/>
-            <EntradaPerfil texto="CPF" valor={cpf} valorMudou={setCpf}/>
-            <EntradaPerfil texto="RG" valor={rg} valorMudou={setRg}/>
-            <EntradaPerfil texto="Celular" valor={celular} valorMudou={setCelular}/>
-            <EntradaPerfil texto="Email" valor={email} valorMudou={setEmail}/>
-            <EntradaPerfil texto="Senha" valor={senha} valorMudou={setSenha}/>
-            <Botao className="p-10"
+        <div>
+            <div className="grid grid-rows-2 grid-flow-col bg-blue-200 rounded-lg p-3 my-3">
+                {id ? (
+                    <EntradaPerfil somenteLeitura texto="Id" valor={id}/>
+                ) : false}
+                <EntradaPerfil className="text-white" className2="bg-white rounded-xl text-black" texto="Nome" valor={nome} valorMudou={setNome}/>
+                <EntradaPerfil className="text-white" className2="bg-white rounded-xl text-black" texto="CPF" valor={cpf} valorMudou={setCpf}/>
+                <EntradaPerfil className="text-white" className2="bg-white rounded-xl text-black" texto="RG" valor={rg} valorMudou={setRg}/>
+                <EntradaPerfil className="text-white" className2="bg-white rounded-xl text-black" texto="Celular" valor={celular} valorMudou={setCelular}/>
+                <EntradaPerfil className="text-white" className2="bg-white rounded-xl text-black" texto="Email" valor={email} valorMudou={setEmail}/>
+                <EntradaPerfil className="text-white" className2="bg-white rounded-xl text-black" texto="Senha" valor={senha} valorMudou={setSenha}/>
+            </div>
+            <div className="flex place-content-end">
+                <Botao className="p-10" cor="blue"
                     onCLick={() => props.funcionarioMudou?.(new Funcionario(nome, cpf, rg, celular, email, senha, id, false))}>
-                {id ? 'Alterar':'Salvar'}</Botao>
+                {id ? 'Alterar':'Criar funcionário'}</Botao>
+            </div>
         </div>
     )
 }

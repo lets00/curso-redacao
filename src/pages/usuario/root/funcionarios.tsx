@@ -25,6 +25,7 @@ export default function RootFuncionarios() {
     function funcionarioExcluido(funcionario: Funcionario){
     }
     function salvarFuncionario(funcionario: Funcionario){
+        setFuncionario(Funcionario.vazio())
         setOpenModal(true)
     }
     function novoFuncionario(){
@@ -41,9 +42,10 @@ export default function RootFuncionarios() {
                     cabecalho={cabecalho}
                     objetoSelecionado={funcionarioSelecionado}
                     objetoExcluido={funcionarioExcluido}
+                    salvarFuncionario={salvarFuncionario}
                     />
 
-            <Modal isOpen={openModal} isNotOpen={() => setOpenModal(!openModal)} cor='white' titulo='Gerenciar turma'
+            <Modal isOpen={openModal} isNotOpen={() => setOpenModal(!openModal)} cor='white' titulo='Criar novo funcionário'
             ><ModalRootFuncionario funcionario={funcionario}/></Modal>
 
         </LayoutUser>
