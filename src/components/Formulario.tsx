@@ -1,12 +1,13 @@
 import Entrada from "./Entrada";
 import { useEffect, useState } from "react";
 import Aluno from "@/core/Aluno";
-import Botao from "./Botao";
+import { Botao } from "./Botao";
 import DatePicker from "./DatePicker";
 import AlunoRepositorio from "@/core/AlunoRepositorio";
 import db from '../backend/config'
 import { collection, addDoc } from "firebase/firestore";
-import { createUserWithEmailAndPassword, getAuth } from "firebase/auth";
+import { createUserWithEmailAndPassword, getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
+import useAuth from "@/data/hook/useAuth";
 
 
 interface FormularioProps{
@@ -14,7 +15,6 @@ interface FormularioProps{
 }
 
  export default function Formulario(props: FormularioProps){
-
     const initialData = props.aluno?.data ? new Date(props.aluno.data) : new Date();
 
     const id = props.aluno?.id
@@ -29,12 +29,24 @@ interface FormularioProps{
     const [rg, setRg] = useState(props.aluno?.rg ?? '')
     const [cpf, setCpf] = useState(props.aluno?.cpf ?? '')
     const [senha, setSenha] = useState(props.aluno?.senha ?? '')
+    const [mensalidade, setMensalidade] = useState(props.aluno?.mensalidade ?? '')
     const [alunos, setAlunos] = useState<Aluno[]>([])
+    const [termosDeUso, setTermosDeUso] = useState(false);
 
     const auth = getAuth();
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+
+        if (!termosDeUso) {
+            console.error("Você deve aceitar os termos de uso para continuar.");
+            return;
+        }
+
+        if (senha.length < 6) {
+            console.error("A senha deve ter pelo menos 6 caracteres.");
+            return;
+        }
     
         const formData = {
           nome,
@@ -48,6 +60,7 @@ interface FormularioProps{
           rg,
           cpf,
           senha,
+          mensalidade,
         };
     
         try {
@@ -69,20 +82,22 @@ interface FormularioProps{
           setRg("");
           setCpf("");
           setSenha("");
+          setMensalidade(0);
+          setTermosDeUso(false);
+
+          
         } catch (error) {
           console.error("Erro ao salvar os dados no Firestore", error);
         }
       };
       
-      const [termosDeUso, setTermosDeUso] = useState(false);
-
       const handleTermosDeUsoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
       setTermosDeUso(e.target.checked);
     };
 
     return (
         <div>
-            <form>
+            <form onSubmit={handleSubmit}>
             <Entrada texto="Nome" valor={nome} valorMudou={(e) => setNome(e.target.value)} placeholder="Digite seu nome COMPLETO" />
             <DatePicker/>
             <Entrada texto="Naturalidade ( Cidade/Estado )" valor={natural} valorMudou={(e) => setNatural(e.target.value)} />
@@ -99,12 +114,12 @@ interface FormularioProps{
             <label className="font-Montserrant">Data de preferência para pagamento</label>
             <div className="flex flex-row items-center gap-6 pt-4">
                 <div className="flex items-center">
-                    <input id="default-radio-1" type="radio" value="" name="default-radio" className="w-4 h-4 text-pink-600 bg-gray-100
+                    <input onChange={() => setMensalidade(10)}id="default-radio-1" type="radio" value="" name="default-radio" className="w-4 h-4 text-pink-600 bg-gray-100
                             dark:ring-offset-gray-800 dark:bg-gray-700 dark:border-gray-600"/>
                     <label htmlFor="default-radio-1" className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">Dia 10</label>
                 </div>
                 <div className="flex items-center">
-                    <input checked id="default-radio-2" type="radio" value="" name="default-radio" className="w-4 h-4 text-pink-600 bg-gray-100
+                    <input onChange={() => setMensalidade(15)}checked id="default-radio-2" type="radio" value="" name="default-radio" className="w-4 h-4 text-pink-600 bg-gray-100
                             dark:ring-offset-gray-800 dark:bg-gray-700 dark:border-gray-600"/>
                     <label htmlFor="default-radio-2" className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">Dia 15</label>
                 </div>
@@ -117,7 +132,7 @@ interface FormularioProps{
                             dark:ring-offset-gray-800 dark:bg-gray-700 dark:border-gray-600"/>
                     <label htmlFor="default-checkbox" className="ml-2 text-sm text-gray-900 dark:text-gray-300"><a href="" className="hover:underline">Termos de uso</a></label>
                 </div>
-                <Botao className="px-12">
+                <Botao type="submit" className="px-12">
                  Próximo
                 </Botao>
                 

@@ -1,4 +1,3 @@
-import Botao from '@/components/Botao';
 import Entrada from '@/components/Entrada';
 import { IconeFechar, IconeVoltar } from '@/components/Icones';
 import Image from  'next/image';
@@ -7,12 +6,15 @@ import AuthInput from '@/components/AuthInput';
 import { useState } from 'react';
 import db from "@/backend/config"
 import { getFirestore, collection, addDoc} from "firebase/firestore";
-import { signInWithEmailAndPassword, getAuth } from "firebase/auth";
+import { signInWithEmailAndPassword, getAuth, signInWithPopup, GoogleAuthProvider  } from "firebase/auth";
 import router from 'next/router';
+import { useContext } from 'react';
+import { AuthProvider, useAuth } from '@/data/context/AuthContext';
 
 export default function Login(){
     const [email, setEmail] = useState("");
     const [senha, setSenha] = useState(""); 
+
 
     async function login() {
 
@@ -21,8 +23,8 @@ export default function Login(){
             const userCredential = await signInWithEmailAndPassword(auth, email, senha);
             const user = userCredential.user;
 
-        console.log("Usuário logado com ID:", user.uid);
 
+        console.log("Usuário logado com ID:", user.uid);
         router.push("/usuario/aluno/perfil");
     } catch (error) {
         console.error("Erro ao fazer login:", error);
@@ -44,9 +46,20 @@ export default function Login(){
             console.error("Erro ao adicionar documento:", error);
         }
     }
-
+    async function loginComGoogle() {
+        try {
+          const auth = getAuth();
+          const provider = new GoogleAuthProvider();
+          await signInWithPopup(auth, provider);
+    
+          router.push('/usuario/aluno/perfil');
+        } catch (error) {
+          console.error('Erro durante o login com o Google:', error);
+        }
+      }
 
     return( 
+        <AuthProvider>
         <div className="flex flex-row justify-center">
             <div className="flex flex-col justify-center bg-blue-400 text-white
                             w-1/2 h-screen p-20">
@@ -95,8 +108,15 @@ export default function Login(){
                     <button className="text-white py-2 rounded-md px-16 bg-blue-300" onClick={login}>Entrar</button>
                     <button className='text-gray-400 border-b border-blue-400'>Esqueci a senha</button>
                 </div>
-
-            </div>
+                <hr className='my-1 border-gray-500 w-full'/>
+                <button
+                className='flex w-full bg-white hover:bg-slate-200 text-slate-800 font-semibold rounded-lg px-4 py-3 items-center justify-center gap-5'
+                onClick={loginComGoogle}
+                >
+                <Image src='/images/pesquisa.png' width='23' height='23' alt='imagemDoCurso'></Image>Entrar com Google
+                </button>
+                </div>
         </div>
-    )
+        </AuthProvider>
+    );
 }
