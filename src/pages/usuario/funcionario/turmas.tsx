@@ -7,8 +7,6 @@ import Aluno from "@/core/Aluno";
 
 export default function FuncionarioTurmas() {
 
-    const [aluno, setAluno] = useState<Aluno>(Aluno.vazio())
-
     const turmas = [
         new Aluno('Joao Carlos', new Date(2004-10-10), 'PE', 'rua teste', '111-111', 'jasha@gmail',
     'jose', 'carla', 'rgrgrg', 'cpfcpf', 15, 'presencial - terça/tarde',false , '123', "idTeste", false),
@@ -18,7 +16,15 @@ export default function FuncionarioTurmas() {
     const dados = ['natural','nome','cpf','pagamento']
     const cabecalho = ['Estado', 'Nome', 'CPF', 'Pagamento']
     const select = ['Presencial terça/tarde', 'Online terça/tarde', 'Presencial sábado/tarde']
+
+    const [aluno, setAluno] = useState<Aluno>(Aluno.vazio())
+    const [botaoAtivo, setBotaoAtivo] = useState('redacao');
+    const [lista, setLista] = useState(turmas)
+
     
+    const aoClicar = (conteudo: any) => {
+        setLista(conteudo);
+      };
     function alunoSelecionado(aluno: Aluno){
         setAluno(aluno)
     }

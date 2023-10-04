@@ -5,11 +5,9 @@ import { useState } from "react";
 import Funcionario from "@/core/Funcionario";
 import Modal from "@/components/Modal";
 import ModalRootFuncionario from "@/components/modals/ModalRootFuncionario";
+import ModalExcluir from "@/components/modals/ModalExcluir";
 
 export default function RootFuncionarios() {
-
-    const [openModal, setOpenModal] = useState(false)
-    const [funcionario, setFuncionario] = useState<Funcionario>(Funcionario.vazio())
 
     const funcionarios = [
         new Funcionario('Abner', "111111111", "2222222", "1111-1111", "email@gmail.com", "123", "1", false),
@@ -18,14 +16,23 @@ export default function RootFuncionarios() {
     ]
     const dados = ['nome','cpf', 'email']
     const cabecalho = ['Nome', 'CPF', 'Email', "Ações"]
+
+    const [openModal, setOpenModal] = useState(false)
+    const [funcionario, setFuncionario] = useState<Funcionario>(Funcionario.vazio())
+    const [tipoModal, setTipoModal] = useState('')
+
     
     function funcionarioSelecionado(funcionario: Funcionario){
         setFuncionario(funcionario)
     }
     function funcionarioExcluido(funcionario: Funcionario){
+        setFuncionario(funcionario);
+        setTipoModal('excluir');
+        setOpenModal(true)
     }
     function salvarFuncionario(funcionario: Funcionario){
         setFuncionario(Funcionario.vazio())
+        setTipoModal('selecionado')
         setOpenModal(true)
     }
     function novoFuncionario(){
@@ -45,8 +52,8 @@ export default function RootFuncionarios() {
                     salvarFuncionario={salvarFuncionario}
                     />
 
-            <Modal isOpen={openModal} isNotOpen={() => setOpenModal(!openModal)} cor='white' titulo='Criar novo funcionário'
-            ><ModalRootFuncionario funcionario={funcionario}/></Modal>
+            <Modal isOpen={openModal} isNotOpen={() => setOpenModal(!openModal)} cor='white' titulo={tipoModal == 'selecionado' ? 'Criar novo funcionário': 'Tem certeza que deseja excluir:'}
+            > {tipoModal == 'selecionado' ? <ModalRootFuncionario funcionario={funcionario}/>:<ModalExcluir/>} </Modal>
 
         </LayoutUser>
     )

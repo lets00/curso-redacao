@@ -17,7 +17,7 @@ export default function (props: ModalProps) {
                             flex justify-center items-center text-black">
                 <div className={`bg-${props.cor} p-4 rounded-xl w-fit h-fit`}>
                     <div className="flex flex-row justify-between">
-                        <Titulo className='pt-10'>{props.titulo}</Titulo>
+                        <Titulo className='pr-2'>{props.titulo}</Titulo>
                         <button onClick={props.isNotOpen} className="
                         flex justify-center items-center
                         rounded-full p-1 m-1 bg-slate-300 hover:bg-white">

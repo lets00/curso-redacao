@@ -11,7 +11,7 @@ export default function Checkbox(props: CheckBoxProps){
                 {props.opcoes.map((opcao, index) => (
                     <div key={index} className="flex items-center">
                         <input id="default-checkbox-1" type="checkbox" value="" name="default-checkbox" className="w-4 h-4"/>
-                        <label htmlFor="default-checkbox-1" className="ml-2 text-sm text-gray-900 dark:text-gray-300">{opcao}</label>
+                        <label htmlFor="default-checkbox-1" className="ml-2 text-sm text-black">{opcao}</label>
                     </div>
                 ))}
             </section>

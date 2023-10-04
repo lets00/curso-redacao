@@ -3,13 +3,13 @@ import Modal from "@/components/Modal";
 import Select from "@/components/Select";
 import Tabela from "@/components/Tabela";
 import Titulo from "@/components/Titulo";
+import ModalExcluir from "@/components/modals/ModalExcluir";
 import ModalRootMateriais from "@/components/modals/ModalRootMateriais";
 import Material from "@/core/Material";
 import Link from "next/link";
 import { useState } from "react";
 
 export default function Aluno() {
-
 
     const materiais = [
         new Material('Material da aula sobre Redação 1', 'Descrição breve desse documento', 'ARQUIVO', 'LINK', 'Redação', 'presencial terça/tarde', 'Abner', new Date(),'id' , false),
@@ -27,17 +27,21 @@ export default function Aluno() {
     const [material, setMaterial] = useState<Material>(Material.vazio())
     const [botaoAtivo, setBotaoAtivo] = useState('redacao');
     const [openModal, setOpenModal] = useState(false)
+    const [tipoModal, setTipoModal] = useState('')
 
 
-    const aoClicar = (conteudo: any, botao: any) => {
+    const aoClicar = (conteudo: any) => {
         setLista(conteudo);
-        setBotaoAtivo(botao);
       };
     function materialSelecionado(material: Material){
         setMaterial(material);
+        setTipoModal('selecionado')
         setOpenModal(true);
     }
     function materialExcluido(material: Material){
+        setMaterial(material);
+        setTipoModal('excluir')
+        setOpenModal(true)
     }
 
 
@@ -53,8 +57,8 @@ export default function Aluno() {
                     cabecalho={cabecalho}
                     objetoSelecionado={materialSelecionado}
                     objetoExcluido={materialExcluido}></Tabela>   
-            <Modal isOpen={openModal} isNotOpen={() => setOpenModal(!openModal)} cor='white' titulo='Análise de Feedback'
-            subtitulo={material.nome}><ModalRootMateriais/></Modal>         
+            <Modal isOpen={openModal} isNotOpen={() => setOpenModal(!openModal)} cor='white' titulo={tipoModal == 'selecionado' ? 'Análise de Feedback': 'Tem certeza que deseja excluir:'}
+            subtitulo={material.nome}>{tipoModal == 'selecionado' ? <ModalRootMateriais/>:<ModalExcluir/>}</Modal>         
         </LayoutUser>
     )
 }

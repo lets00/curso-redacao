@@ -7,11 +7,9 @@ import Aluno from "@/core/Aluno";
 import Pesquisa from "@/components/Pesquisa";
 import Modal from "@/components/Modal";
 import ModalRootAlunos from "@/components/modals/ModalRootAlunos";
+import ModalExcluir from "@/components/modals/ModalExcluir";
 
 export default function RootAlunos() {
-
-    const [aluno, setAluno] = useState<Aluno>(Aluno.vazio())
-    const [openModal, setOpenModal] = useState(false)
 
     const turmas = [
         new Aluno('Joao Carlos', new Date(2004-10-10), 'PE', 'rua teste', '111-111', 'jasha@gmail',
@@ -23,11 +21,23 @@ export default function RootAlunos() {
     const cabecalho = ['Estado', 'Nome', 'CPF', 'Pagamento', 'Ações']
     const select1 = ['Presencial terça/tarde', 'Online terça/tarde', 'Presencial sábado/tarde']
     const select2 = ['Pagamentos dia 10','Pagamento dia 15']
-    
+
+    const [aluno, setAluno] = useState<Aluno>(Aluno.vazio())
+    const [openModal, setOpenModal] = useState(false)
+    const [lista, setLista] = useState(turmas)
+    const [tipoModal, setTipoModal] = useState('')
+
+
+    const aoClicar = (conteudo: any) => {
+        setLista(conteudo);
+      };
     function alunoSelecionado(aluno: Aluno){
         setAluno(aluno)
     }
     function alunoExcluido(aluno: Aluno){
+        setAluno(aluno)
+        setTipoModal('excluir');
+        setOpenModal(true)
     }
     function salvarAluno(aluno: Aluno){
         setOpenModal(false)
@@ -38,6 +48,7 @@ export default function RootAlunos() {
     }
     function pagamento(){
         setAluno(aluno)
+        setTipoModal('selecionado')
         setOpenModal(true)
     }
 
@@ -60,8 +71,8 @@ export default function RootAlunos() {
                     objetoExcluido={alunoExcluido}
                     pagamento={pagamento}
                     />
-            <Modal isOpen={openModal} isNotOpen={() => setOpenModal(!openModal)} cor='white' titulo='Pagamento'
-            subtitulo={aluno.nome}><ModalRootAlunos/></Modal>
+            <Modal isOpen={openModal} isNotOpen={() => setOpenModal(!openModal)} cor='white' titulo={tipoModal == 'selecionado' ? 'Pagamento': 'Tem certeza que deseja excluir:'}
+            subtitulo={aluno.nome}>{tipoModal == 'selecionado' ? <ModalRootAlunos/>:<ModalExcluir/>}</Modal>
         </LayoutUser>
     )
 }

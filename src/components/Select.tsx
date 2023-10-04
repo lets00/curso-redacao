@@ -4,10 +4,16 @@ interface SelectProps{
     seletor: any
     titulo: string
     classname?: string
+    aoClicar?: (objeto: any) => void
 }
 
 export default function Select(props: SelectProps) {
     const [value, setValue] = useState("");
+
+    function aoAlterar(e:any){
+      setValue(e.target.value);
+      props.aoClicar?.(e.target.value)
+    }
   
     return (
       <div className="text-black">
@@ -16,7 +22,7 @@ export default function Select(props: SelectProps) {
             className={`ml-6 p-2 mb-4 w-fit mr-4 bg-blue-400 rounded-lg text-white font-semibold outline-0 ${props.classname}`}
             value={value}
             onChange={(e) => {
-            setValue(e.target.value);
+            aoAlterar(e);
           }}
         >
             {props.seletor.map((linha: any, index: any) => (

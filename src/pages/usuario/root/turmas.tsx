@@ -7,11 +7,9 @@ import Aluno from "@/core/Aluno";
 import Botao from "@/components/Botao";
 import Modal from "@/components/Modal";
 import ModalRootTurma from "@/components/modals/ModalRootTurma";
+import ModalExcluir from "@/components/modals/ModalExcluir";
 
 export default function RootTurmas() {
-
-    const [openModal, setOpenModal] = useState(false)
-    const [aluno, setAluno] = useState<Aluno>(Aluno.vazio())
 
     const turmas = [
         new Aluno('Joao Carlos', new Date(2004-10-10), 'PE', 'rua teste', '111-111', 'jasha@gmail',
@@ -22,11 +20,25 @@ export default function RootTurmas() {
     const dados = ['natural','nome','cpf','pagamento']
     const cabecalho = ['Estado', 'Nome', 'CPF', 'Pagamento']
     const select = ['Presencial terça/tarde', 'Online terça/tarde', 'Presencial sábado/tarde']
+
+    const [openModal, setOpenModal] = useState(false)
+    const [aluno, setAluno] = useState<Aluno>(Aluno.vazio())
+    const [lista, setLista] = useState(turmas)
+    const [tipoModal, setTipoModal] = useState('')
+
     
+    const aoClicar = (conteudo: any) => {
+        setLista(conteudo);
+      };
     function alunoSelecionado(aluno: Aluno){
         setAluno(aluno)
+        //setTipoModal('editar')
+        //setOpenModal(true)
     }
     function alunoExcluido(aluno: Aluno){
+        setAluno(aluno);
+        setTipoModal('excluir')
+        setOpenModal(true)
     }
     function turmaSelecionada(){
         setOpenModal(true)
@@ -49,7 +61,7 @@ export default function RootTurmas() {
                     />
                     
             <Modal isOpen={openModal} isNotOpen={() => setOpenModal(!openModal)} cor='white' titulo='Gerenciar turma'
-            ><ModalRootTurma turmas={select} turmaSelecionada={turmaSelecionada}/></Modal>
+            >{tipoModal == 'selecionado' ? <ModalRootTurma turmas={select} turmaSelecionada={turmaSelecionada}/>:<ModalExcluir/>}</Modal>
 
         </LayoutUser>
     )
