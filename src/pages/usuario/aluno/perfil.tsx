@@ -9,11 +9,43 @@ import Professor from "@/core/Professor";
 import { useEffect, useState } from "react";
 import PerfilDados from "@/components/PerfilDados";
 import Aluno from "@/core/Aluno";
+import { getAuth } from "firebase/auth";
+import { getFirestore, addDoc, collection, query, where, getDocs } from "firebase/firestore";
+
+interface UserProfile {
+    modalidade: string;
+    nome: string;
+    numero: string;
+    rg: string;
+    cpf: string;
+    endereco: string;
+}
 
 export default function AlunoPage() {
 
+    useEffect(() => {
+        const auth = getAuth(); 
+        const user = auth.currentUser;
+    
+        if (user) {
+          const firestore = getFirestore();
+          const alunosRef = collection(firestore, "alunos");
+          const q = query(alunosRef, where("email", "==", user.email)); 
+          getDocs(q)
+            .then((querySnapshot) => {
+              if (!querySnapshot.empty) {
+                const alunoData = querySnapshot.docs[0].data() as UserProfile;
+                setUserProfile(alunoData);
+              }
+            })
+            .catch((error) => {
+              console.error("Erro ao buscar informações do Firestore:", error);
+            });
+        }
+      }, []);
+
     const [editar, setEditar] = useState(false);
-    const [userProfile, setUserProfile] = useState(null);
+    const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
 
     const professores = [
         new Professor('Abner', "111111111", "2222222"),
@@ -38,16 +70,20 @@ export default function AlunoPage() {
                 </div>
             </div>
             <div className="h-1/2 flex flex-row">
+
+                {userProfile &&(
                 <div className="bg-white rounded-md w-1/2 h-auto m-2 mr-1 mt-0 p-6
                                 grid grid-cols-2">
                     <PerfilDados texto="Modalidade" valor='' somenteLeitura={true} />
-                    <PerfilDados texto="Nome" valor='' somenteLeitura={!editar} />
-                    <PerfilDados texto="Número" valor='' somenteLeitura={!editar} />
-                    <PerfilDados texto="RG" valor='' somenteLeitura={!editar} />
-                    <PerfilDados texto="CPF" valor='' somenteLeitura={!editar} />
-                    <PerfilDados texto="Endereço" valor='' somenteLeitura={!editar} />
+                    <PerfilDados texto="Nome" valor={userProfile.nome} somenteLeitura={!editar} />
+                    <PerfilDados texto="Número" valor={userProfile.numero} somenteLeitura={!editar} />
+                    <PerfilDados texto="RG" valor={userProfile.rg} somenteLeitura={!editar} />
+                    <PerfilDados texto="CPF" valor={userProfile.cpf} somenteLeitura={!editar} />
+                    <PerfilDados texto="Endereço" valor={userProfile.endereco} somenteLeitura={!editar} />
 
                 </div>
+                )}
+
                 <div className="bg-white rounded-md w-1/2 h-auto m-2 ml-1 mt-0 p-6
                                 flex flex-col items-center">
                     <h1 className="pt-5">21 Dias</h1>

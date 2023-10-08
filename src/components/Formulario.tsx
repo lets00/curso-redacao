@@ -81,7 +81,7 @@ interface FormularioProps{
           setMae("");
           setRg("");
           setCpf("");
-          setSenha("");
+          setEmail("");
           setMensalidade(0);
           setTermosDeUso(false);
 

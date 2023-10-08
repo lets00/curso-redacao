@@ -5,7 +5,7 @@ import Link from 'next/link';
 import AuthInput from '@/components/AuthInput';
 import { useState } from 'react';
 import db from "@/backend/config"
-import { getFirestore, collection, addDoc} from "firebase/firestore";
+import { getFirestore, addDoc, collection, query, where, getDocs } from "firebase/firestore";
 import { signInWithEmailAndPassword, getAuth, signInWithPopup, GoogleAuthProvider  } from "firebase/auth";
 import router from 'next/router';
 import { useContext } from 'react';
@@ -14,6 +14,7 @@ import { AuthProvider, useAuth } from '@/data/context/AuthContext';
 export default function Login(){
     const [email, setEmail] = useState("");
     const [senha, setSenha] = useState(""); 
+    const [userProfile, setUserProfile] = useState({}); 
 
 
     async function login() {
@@ -23,8 +24,21 @@ export default function Login(){
             const userCredential = await signInWithEmailAndPassword(auth, email, senha);
             const user = userCredential.user;
 
-
         console.log("Usuário logado com ID:", user.uid);
+
+        const firestore = getFirestore();
+        const alunosRef = collection(firestore, "alunos");
+        const q = query(alunosRef, where("email", "==", email));
+        const querySnapshot = await getDocs(q);
+
+        if (querySnapshot.empty) {
+            console.error("Nenhum aluno encontrado com este email.");
+            return;
+        }
+
+        const alunoData = querySnapshot.docs[0].data();
+        setUserProfile(alunoData);
+
         router.push("/usuario/aluno/perfil");
     } catch (error) {
         console.error("Erro ao fazer login:", error);
