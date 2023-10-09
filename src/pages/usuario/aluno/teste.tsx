@@ -1,4 +1,5 @@
 import Botao from "@/components/Botao";
+import ImageUpload from "@/components/ImageUpload";
 import LayoutUser from "@/components/LayoutUser";
 import Modal from "@/components/Modal";
 import Tabela from "@/components/Tabela";
@@ -45,6 +46,7 @@ export default function TesteAluno() {
                     cabecalho={cabecalho}
                     objetoSelecionado={funcionarioSelecionado}
                     objetoExcluido={funcionarioExcluido}></Tabela>
+            <ImageUpload/>
             <Modal isOpen={openModal} isNotOpen={() => setOpenModal(!openModal)} cor='white' titulo='Titulo'
             subtitulo='Subtitulo'><ModalFuncionario funcionario={funcionario} funcionarioMudou={salvarFuncionario}/></Modal>
         </LayoutUser>

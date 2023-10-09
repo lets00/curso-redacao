@@ -4,6 +4,7 @@ import Image from "next/image"
 import Aluno from "@/core/Aluno";
 import { useState } from "react";
 import EntradaPerfil from "@/components/EntradaPerfil";
+import ImageTeste from "@/components/ImageUploader";
 
 export default function PerfilAluno() {
     const alunoTeste = new Aluno('joao', new Date(2004-10-10), 'PE', 'rua teste', '111-111', 'jasha@gmail',
@@ -27,14 +28,14 @@ export default function PerfilAluno() {
             <section className="bg-white rounded-md w-auto h-1/2 m-2 mb-0">
                 <div className="bg-gradient-to-r from-blue-400 to-pink-600 h-1/2 rounded-md"></div>
                 <div className="flex flex-row">
-                    <figure className="-mt-20 ml-10">
-                        <Image src="/images/IMG_3817.jpg" width='190' height='190' alt="imagem do curso" className="rounded-full"/>
+                    <figure className="-mt-16 ml-12 mr-2">
+                        <ImageTeste readOnly={editar} className="p-20"/>
                     </figure>
                     <h2 className="mt-10 ml-5 ">Nome Completo Exemplo</h2>
                     <Botao onCLick={() => salvarAluno(
                         new Aluno(nome, alunoTeste.data, alunoTeste.natural, endereco, celular, alunoTeste.email, alunoTeste.pai,
                                  alunoTeste.mae, rg,cpf, alunoTeste.mensalidade, alunoTeste.turma, alunoTeste.pagamento, alunoTeste.senha, alunoTeste.id, alunoTeste.excluido))} 
-                    className="m-10 p-10 bg-blue-400" cor="blue">{editar == true ? 'Alterar':'Salvar'}</Botao>
+                    className="m-10 p-10 bg-blue-400" cor="blue">{editar == true ? 'Editar':'Salvar'}</Botao>
                 </div>
             </section>
 

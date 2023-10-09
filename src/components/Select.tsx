@@ -14,7 +14,7 @@ export default function Select(props: SelectProps) {
       setValue(e.target.value);
       props.aoClicar?.(e.target.value)
     }
-  
+    
     return (
       <div className="text-black">
         <h3 className="m-5 mb-2 mt-3 font-semibold">{props.titulo}</h3>
