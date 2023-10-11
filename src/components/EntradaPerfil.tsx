@@ -1,6 +1,6 @@
 interface PerfilProps{
     texto: string
-    tipo?: 'text' | 'number' | 'password'
+    tipo?: 'text' | 'number' | 'password' | 'file'
     valor?: any
     somenteLeitura?: boolean
     obrigatorio?: boolean

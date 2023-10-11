@@ -1,6 +1,5 @@
 import Botao from "@/components/Botao";
 import LayoutUser from "@/components/LayoutUser";
-import Image from "next/image"
 import Aluno from "@/core/Aluno";
 import { useState } from "react";
 import EntradaPerfil from "@/components/EntradaPerfil";
@@ -28,8 +27,8 @@ export default function PerfilAluno() {
             <section className="bg-white rounded-md w-auto h-1/2 m-2 mb-0">
                 <div className="bg-gradient-to-r from-blue-400 to-pink-600 h-1/2 rounded-md"></div>
                 <div className="flex flex-row">
-                    <figure className="-mt-16 ml-12 mr-2">
-                        <ImageTeste readOnly={editar} className="p-20"/>
+                    <figure className="-mt-20 ml-12 mr-2">
+                        <ImageTeste readOnly={editar} className="p-24"/>
                     </figure>
                     <h2 className="mt-10 ml-5 ">Nome Completo Exemplo</h2>
                     <Botao onCLick={() => salvarAluno(

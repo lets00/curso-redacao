@@ -53,7 +53,7 @@ export default function ImageUploader(props: ImageUploaderProps) {
         />
       </div>
       {props.readOnly == false ?
-        <figure className="-m-6 -ml-4">
+        <figure className="-m-8 -ml-5">
           <Image src="/images/editar-imagem.png" width={38} height={38} alt="imagemDoCurso"/>
         </figure>
       : null }

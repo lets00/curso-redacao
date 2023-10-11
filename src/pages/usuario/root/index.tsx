@@ -13,24 +13,50 @@ export default function RootAlunos() {
 
     const turmas = [
         new Aluno('Joao Carlos', new Date(2004-10-10), 'PE', 'rua teste', '111-111', 'jasha@gmail',
-    'jose', 'carla', 'rgrgrg', 'cpfcpf', 15, 'presencial - terça/tarde',false , '123', "idTeste", false),
+    'jose', 'carla', 'rgrgrg', 'cpfcpf', 15, 'Presencial terça/tarde',false , '123', "idTeste", false),
+    new Aluno('teste 1', new Date(2004-10-10), 'PE', 'rua teste', '111-111', 'jasha@gmail',
+    'jose', 'carla', 'rgrgrg', 'cpfcpf', 10, 'Presencial terça/tarde',false , '123', "idTeste1", false),
         new Aluno('Maria Luiza', new Date(2004-10-10), 'RJ', 'rua testew', '222-111', 'mari@gmail',
-    'pedro', 'ana', 'rg2', 'cpf2', 10, 'online - terça/noite',true , 'abc', "idTeste2", false),
+    'pedro', 'ana', 'rg2', 'cpf2', 10, 'Online terça/tarde',true , 'abc', "idTeste2", false),
+    new Aluno('teste 2', new Date(2004-10-10), 'RJ', 'rua testew', '222-111', 'mari@gmail',
+    'pedro', 'ana', 'rg2', 'cpf2', 15, 'Online terça/tarde',true , 'abc', "idTeste3", false),
     ]
     const dados = ['natural','nome','cpf','pagamento']
     const cabecalho = ['Estado', 'Nome', 'CPF', 'Pagamento', 'Ações']
-    const select1 = ['Presencial terça/tarde', 'Online terça/tarde', 'Presencial sábado/tarde']
-    const select2 = ['Pagamentos dia 10','Pagamento dia 15']
+    const select1 = ['Todos(as)','Presencial terça/tarde', 'Online terça/tarde', 'Presencial sábado/tarde']
+    const select2 = ['Todos(as)','Pagamentos dia 10','Pagamento dia 15']
 
     const [aluno, setAluno] = useState<Aluno>(Aluno.vazio())
     const [openModal, setOpenModal] = useState(false)
-    const [lista, setLista] = useState(turmas)
     const [tipoModal, setTipoModal] = useState('')
+    const [listagem, setListagem] = useState(turmas)
+    const [filtro, setFiltro] = useState(null)
 
+    
+      const aoClicar = (conteudo: any) => {
+        if(filtro === select1){
 
-    const aoClicar = (conteudo: any) => {
-        setLista(conteudo);
-      };
+            if(conteudo == "Todos(as)"){
+                setListagem(turmas);
+            } else {
+                const materiaisFiltrados = turmas.filter((aluno) => aluno.turma === conteudo);
+                setListagem(materiaisFiltrados);
+            }
+
+        } else {
+
+            if(conteudo == "Todos(as)"){
+                setListagem(turmas);
+            } else if (conteudo == "Pagamentos dia 10") {
+                const materiaisFiltrados = turmas.filter((aluno) => aluno.mensalidade === 10);
+                setListagem(materiaisFiltrados);
+            } else {
+                const materiaisFiltrados = turmas.filter((aluno) => aluno.mensalidade === 15);
+                setListagem(materiaisFiltrados);
+            }
+
+        }
+      }
     function alunoSelecionado(aluno: Aluno){
         setAluno(aluno)
     }
@@ -59,12 +85,16 @@ export default function RootAlunos() {
             </div>
             <div className="flex flex-row items-center w-full">
                 <Select seletor={select1}
-                        titulo="Turma"/>
+                        titulo="Turma"
+                        aoClicar={aoClicar}
+                        setFiltro={setFiltro}/>
                 <Select seletor={select2}
-                    titulo="Mensalidade"/>
+                        titulo="Mensalidade"
+                        aoClicar={aoClicar}
+                        setFiltro={setFiltro}/>
                 <Pesquisa/>
             </div>
-            <TabelaRoot objeto={turmas}
+            <TabelaRoot objeto={listagem}
                     propriedadesExibidas={dados}
                     cabecalho={cabecalho}
                     objetoSelecionado={alunoSelecionado}

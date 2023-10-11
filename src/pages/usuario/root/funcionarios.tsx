@@ -22,9 +22,6 @@ export default function RootFuncionarios() {
     const [tipoModal, setTipoModal] = useState('')
 
     
-    function funcionarioSelecionado(funcionario: Funcionario){
-        setFuncionario(funcionario)
-    }
     function funcionarioExcluido(funcionario: Funcionario){
         setFuncionario(funcionario);
         setTipoModal('excluir');
@@ -35,8 +32,10 @@ export default function RootFuncionarios() {
         setTipoModal('selecionado')
         setOpenModal(true)
     }
-    function novoFuncionario(){
-        setFuncionario(Funcionario.vazio())
+    function editarFuncionario(){
+        setFuncionario(funcionario)
+        setTipoModal('selecionado')
+        setOpenModal(true)
     }
 
     return (
@@ -47,9 +46,10 @@ export default function RootFuncionarios() {
             <TabelaRoot objeto={funcionarios}
                     propriedadesExibidas={dados}
                     cabecalho={cabecalho}
-                    objetoSelecionado={funcionarioSelecionado}
+                    objetoSelecionado={editarFuncionario}
                     objetoExcluido={funcionarioExcluido}
                     salvarFuncionario={salvarFuncionario}
+                    
                     />
 
             <Modal isOpen={openModal} isNotOpen={() => setOpenModal(!openModal)} cor='white' titulo={tipoModal == 'selecionado' ? 'Criar novo funcionário': 'Tem certeza que deseja excluir:'}

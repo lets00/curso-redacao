@@ -5,6 +5,7 @@ interface SelectProps{
     titulo: string
     classname?: string
     aoClicar?: (objeto: any) => void
+    setFiltro?: (filtro: any) => void
 }
 
 export default function Select(props: SelectProps) {
@@ -13,6 +14,7 @@ export default function Select(props: SelectProps) {
     function aoAlterar(e:any){
       setValue(e.target.value);
       props.aoClicar?.(e.target.value)
+      props.setFiltro?.(props.seletor)
     }
     
     return (

@@ -6,33 +6,33 @@ import Titulo from "@/components/Titulo";
 import ModalExcluir from "@/components/modals/ModalExcluir";
 import ModalRootMateriais from "@/components/modals/ModalRootMateriais";
 import Material from "@/core/Material";
-import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export default function Aluno() {
 
-    const materiais = [
-        new Material('Material da aula sobre Redação 1', 'Descrição breve desse documento', 'ARQUIVO', 'LINK', 'Redação', 'presencial terça/tarde', 'Abner', new Date(),'id' , false),
-        new Material('Material da aula sobre Redação 2', 'Descrição breve desse documento', 'ARQUIVO2', 'LINK2', 'Redação', 'presencial terça/manhã', 'João', new Date(),'id' , false)
-    ]
-    const materiais2 = [
-        new Material('Material de teste', 'Descrição breve desse documento', 'ARQUIVO', 'LINK', 'Redação', 'presencial terça/tarde', 'Abner', new Date(),'id' , false),
-        new Material('Material de teste', 'Descrição breve desse documento', 'ARQUIVO2', 'LINK2', 'Redação', 'presencial terça/manhã', 'João', new Date(),'id' , false)
+    const Materiais = [
+        new Material('Material da aula sobre Redação 1', 'Descrição breve desse documento', 'ARQUIVO', 'LINK', 'Redação', 'presencial terça/tarde', 'Abner', new Date(0),'idA' , false),
+        new Material('Material da aula sobre Redação 2', 'Descrição breve desse documento', 'ARQUIVO2', 'LINK2', 'Redação', 'presencial terça/manhã', 'João', new Date(0),'idB' , false),
+        new Material('Material TESTE', 'Descrição breve desse documento', 'ARQUIVO', 'LINK', 'Linguagem', 'presencial terça/tarde', 'Abner', new Date(0),'idC' , false),
+        new Material('Material TESTE 2', 'Descrição breve desse documento', 'ARQUIVO2', 'LINK2', 'Linguagem', 'presencial terça/manhã', 'João', new Date(0),'idD' , false)
     ]
     const dados = ['nome', 'data', 'professor']
     const cabecalho = ['Título', 'Data de publicação', 'Quem publicou', `Ver feedback & Excluir`]
-    const select = ['Redação','Linguagem','Matemática']
+    const select = ['Todos(as)','Redação','Linguagem','Matemática']
 
-    const [lista, setLista] = useState(materiais)
     const [material, setMaterial] = useState<Material>(Material.vazio())
-    const [botaoAtivo, setBotaoAtivo] = useState('redacao');
     const [openModal, setOpenModal] = useState(false)
     const [tipoModal, setTipoModal] = useState('')
-
+    const [listagem, setListagem] = useState(Materiais)
 
     const aoClicar = (conteudo: any) => {
-        setLista(conteudo);
-      };
+        if(conteudo == "Todos(as)"){
+            setListagem(Materiais);
+        } else {
+            const materiaisFiltrados = Materiais.filter((material) => material.disciplina === conteudo);
+            setListagem(materiaisFiltrados);
+        }
+      }
     function materialSelecionado(material: Material){
         setMaterial(material);
         setTipoModal('selecionado')
@@ -44,6 +44,9 @@ export default function Aluno() {
         setOpenModal(true)
     }
 
+    useEffect(() => {
+        aoClicar(select[0]);
+    }, [])
 
     return (
         <LayoutUser usuario={'root'} className="text-black">
@@ -51,8 +54,9 @@ export default function Aluno() {
                 <Titulo>Materiais</Titulo>
             </div>
             <Select seletor={select}
-                titulo="Disciplina"/>
-            <Tabela objeto={lista} 
+                    titulo="Disciplina"
+                    aoClicar={aoClicar}/>
+            <Tabela objeto={listagem} 
                     propriedadesExibidas={dados}
                     cabecalho={cabecalho}
                     objetoSelecionado={materialSelecionado}
