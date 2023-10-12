@@ -10,7 +10,9 @@ import { useEffect, useState } from "react";
 import PerfilDados from "@/components/PerfilDados";
 import Aluno from "@/core/Aluno";
 import { getAuth } from "firebase/auth";
-import { getFirestore, addDoc, collection, query, where, getDocs } from "firebase/firestore";
+import { getFirestore, doc, setDoc, collection, query, where, getDocs } from "firebase/firestore";
+import ImageTeste from "@/components/ImageUploader";
+import { getStorage, ref, uploadString, getDownloadURL } from "firebase/storage";
 
 interface UserProfile {
     modalidade: string;
@@ -47,24 +49,39 @@ export default function AlunoPage() {
     const [editar, setEditar] = useState(false);
     const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
 
-    const professores = [
-        new Professor('Abner', "111111111", "2222222"),
-        new Professor('Junio', "333333333", "4444444"),
-        new Professor('Valdir', "555555555", "6666666")
-    ]
-    function professorSelecionado(professor: Professor){
-    }
-    function professorExcluido(professor: Professor){
-    }
+    const handleImageUpload = async (base64Image: string) => {
+      const auth = getAuth();
+      const user = auth.currentUser;
+  
+      if (user) {
+        const storage = getStorage(); 
+        const storageRef = ref(storage, `user-images/${user.uid}/profile-image.png`); 
+  
+        try {
+          await uploadString(storageRef, base64Image, "data_url");
+  
+          const imageUrl = await getDownloadURL(storageRef);
+
+          const firestore = getFirestore();
+          const userDocRef = doc(firestore, "alunos", user.uid);
+          await setDoc(userDocRef, { fotoPerfil: imageUrl }, { merge: true });
+  
+          console.log("Foto de perfil atualizada com sucesso.");
+        } catch (error) {
+          console.error("Erro ao atualizar a foto de perfil:", error);
+        }
+      }
+    };
+  
 
     return (
         <LayoutUser usuario={'aluno'} className="flex flex-col gap-2" divisoes>
             <div className="bg-white rounded-md w-auto h-1/2 m-2 mb-0">
                 <div className="bg-gradient-to-r from-blue-400 to-pink-600 h-1/2 rounded-md"></div>
                 <div className="flex flex-row">
-                    <div className="-mt-20 ml-10">
-                    <Image src="/images/IMG_3817.jpg" width={190} height={190} alt="imagem do curso" className="rounded-full"/>
-                    </div>
+                <figure className="-mt-16 ml-12 mr-2">
+                        <ImageTeste readOnly={editar} className="p-20"/>
+                </figure>
                     <h2 className="mt-10 ml-5 ">Nome Completo Exemplo</h2>
                     <Botao onClick={() => setEditar(!editar)} className="m-10 p-10 bg-blue-400" cor="blue">{editar == true ? 'Alterar':'Salvar'}</Botao>
                 </div>
