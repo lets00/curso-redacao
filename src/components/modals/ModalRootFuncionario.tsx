@@ -5,7 +5,9 @@ import Botao from "../Botao";
 
 interface ModalRootFuncionarioProps {
     funcionario: Funcionario
-    funcionarioMudou?: (funcionario: Funcionario) => void
+    novoFuncionario?: (funcionario: Funcionario) => void
+    editar?: (funcionario: Funcionario) => void
+    setOpenModal?: (open: boolean) => void
 }
 
 export default function ModalRootFuncionario(props: ModalRootFuncionarioProps){
@@ -32,7 +34,16 @@ export default function ModalRootFuncionario(props: ModalRootFuncionarioProps){
             </div>
             <div className="flex place-content-end">
                 <Botao className="p-10" cor="blue"
-                    onCLick={() => props.funcionarioMudou?.(new Funcionario(nome, cpf, rg, celular, email, senha, id, false))}>
+                    onClick={() => {
+                        if (id) {
+                            props.editar?.(new Funcionario(nome, cpf, rg, celular, email, senha, id, false));
+                            console.log("funcionou")
+                            props.setOpenModal?.(false);
+                          } else {
+                            props.novoFuncionario?.(new Funcionario(nome, cpf, rg, celular, email, senha, id, false));
+                            props.setOpenModal?.(false);
+                          }
+                    } }>
                 {id ? 'Alterar':'Criar funcionário'}</Botao>
             </div>
         </div>

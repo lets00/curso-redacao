@@ -20,6 +20,7 @@ export default function RootFuncionarios() {
     const [openModal, setOpenModal] = useState(false)
     const [funcionario, setFuncionario] = useState<Funcionario>(Funcionario.vazio())
     const [tipoModal, setTipoModal] = useState('')
+    const [listagem, setListagem] = useState(funcionarios)
 
     
     function funcionarioExcluido(funcionario: Funcionario){
@@ -27,15 +28,31 @@ export default function RootFuncionarios() {
         setTipoModal('excluir');
         setOpenModal(true)
     }
-    function salvarFuncionario(funcionario: Funcionario){
+    function salvarFuncionario(){
         setFuncionario(Funcionario.vazio())
         setTipoModal('selecionado')
         setOpenModal(true)
     }
-    function editarFuncionario(){
+    function editarFuncionario(funcionario: Funcionario){
         setFuncionario(funcionario)
         setTipoModal('selecionado')
         setOpenModal(true)
+    }
+    function exclusao(id: any){
+        const materiaisFiltrados = listagem.filter((funcionario) => funcionario.id !== id);
+        setListagem(materiaisFiltrados);
+        setOpenModal(false);
+    }
+    function edicao(funcionarioNovo: Funcionario){
+        const indexToEdit = listagem.findIndex((funcionario) => funcionario.id === funcionarioNovo.id);
+        if (indexToEdit !== -1) {
+            const listaAtualizada = [...listagem];
+            listaAtualizada[indexToEdit] = funcionarioNovo;
+            setListagem(listaAtualizada);
+            setOpenModal(false);
+        } else {
+            setOpenModal(false);
+        }
     }
 
     return (
@@ -43,17 +60,16 @@ export default function RootFuncionarios() {
             <div className="flex place-content-between mb-10">
                 <Titulo>Funcionários</Titulo>
             </div>
-            <TabelaRoot objeto={funcionarios}
+            <TabelaRoot objeto={listagem}
                     propriedadesExibidas={dados}
                     cabecalho={cabecalho}
                     objetoSelecionado={editarFuncionario}
                     objetoExcluido={funcionarioExcluido}
                     salvarFuncionario={salvarFuncionario}
-                    
                     />
 
             <Modal isOpen={openModal} isNotOpen={() => setOpenModal(!openModal)} cor='white' titulo={tipoModal == 'selecionado' ? 'Criar novo funcionário': 'Tem certeza que deseja excluir:'}
-            > {tipoModal == 'selecionado' ? <ModalRootFuncionario funcionario={funcionario}/>:<ModalExcluir/>} </Modal>
+            > {tipoModal == 'selecionado' ? <ModalRootFuncionario funcionario={funcionario} setOpenModal={setOpenModal} editar={edicao}/>:<ModalExcluir objeto={funcionario} exclusao={exclusao}/>} </Modal>
 
         </LayoutUser>
     )

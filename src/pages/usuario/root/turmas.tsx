@@ -8,6 +8,7 @@ import Botao from "@/components/Botao";
 import Modal from "@/components/Modal";
 import ModalRootTurma from "@/components/modals/ModalRootTurma";
 import ModalExcluir from "@/components/modals/ModalExcluir";
+import ModalRootALunos from "@/components/modals/ModalRootAlunos";
 
 export default function RootTurmas() {
 
@@ -23,23 +24,24 @@ export default function RootTurmas() {
 
     const [openModal, setOpenModal] = useState(false)
     const [aluno, setAluno] = useState<Aluno>(Aluno.vazio())
-    const [lista, setLista] = useState(turmas)
     const [tipoModal, setTipoModal] = useState('')
     const [listagem, setListagem] = useState(turmas)
+    const [filtragem, setFiltragem] = useState(listagem)
+    const [filtro, setFiltro] = useState('Todos(as)')
 
     
-    const aoClicar = (conteudo: any) => {
-        if(conteudo == "Todos(as)"){
-            setListagem(turmas);
+    const aoClicar = () => {
+        if(filtro == "Todos(as)"){
+            setFiltragem(listagem);
         } else {
-            const materiaisFiltrados = turmas.filter((aluno) => aluno.turma === conteudo);
-            setListagem(materiaisFiltrados);
+            const materiaisFiltrados = listagem.filter((aluno) => aluno.turma === filtro);
+            setFiltragem(materiaisFiltrados);
         }
       }
     function alunoSelecionado(aluno: Aluno){
         setAluno(aluno)
-        //setTipoModal('editar')
-        //setOpenModal(true)
+        setTipoModal("editar")
+        setOpenModal(true)
     }
     function alunoExcluido(aluno: Aluno){
         setAluno(aluno);
@@ -47,23 +49,40 @@ export default function RootTurmas() {
         setOpenModal(true)
     }
     function turmaSelecionada(){
+        setTipoModal('selecionado')
         setOpenModal(true)
+    }
+    function exclusao(id: any){
+        const materiaisFiltrados = listagem.filter((aluno) => aluno.id !== id);
+        setListagem(materiaisFiltrados);
+        setOpenModal(false);
+    }
+    function edicao(alunoEditado: Aluno){
+        const indexToEdit = listagem.findIndex((funcionario) => funcionario.id === alunoEditado.id);
+        if (indexToEdit !== -1) {
+            const listaAtualizada = [...listagem];
+            listaAtualizada[indexToEdit] = alunoEditado;
+            setListagem(listaAtualizada);
+            setOpenModal(false);
+        } else {
+            setOpenModal(false);
+        }
     }
 
     useEffect(() => {
-        aoClicar(select[0]);
-    }, [])
+        aoClicar();
+    }, [filtro, exclusao])
 
     return (
         <LayoutUser usuario={'root'} className="text-black">
             <div className="flex place-content-between">
                 <Titulo>Turmas</Titulo>
-                <Botao onCLick={() => turmaSelecionada()} className="mx-8 px-10">Gerenciar Turmas</Botao>
+                <Botao onClick={() => turmaSelecionada()} className="mx-8 px-10">Gerenciar Turmas</Botao>
             </div>
             <Select seletor={select}
                     titulo="Turma"
-                    aoClicar={aoClicar}/>
-            <TabelaRoot objeto={listagem}
+                    setFiltro={setFiltro}/>
+            <TabelaRoot objeto={filtragem}
                     propriedadesExibidas={dados}
                     cabecalho={cabecalho}
                     objetoSelecionado={alunoSelecionado}
@@ -71,8 +90,11 @@ export default function RootTurmas() {
                     turmas
                     />
                     
-            <Modal isOpen={openModal} isNotOpen={() => setOpenModal(!openModal)} cor='white' titulo='Gerenciar turma'
-            >{tipoModal == 'selecionado' ? <ModalRootTurma turmas={select} turmaSelecionada={turmaSelecionada}/>:<ModalExcluir/>}</Modal>
+            <Modal isOpen={openModal} isNotOpen={() => setOpenModal(!openModal)} cor='white' titulo={tipoModal == 'selecionado' ? 'Gerenciar turma': tipoModal == 'excluir' ? 'Tem certeza que deseja excluir:' : "Editar Aluno"}
+                subtitulo={tipoModal == 'excluir' ? aluno.nome : ''} >
+                {tipoModal == 'selecionado' ? <ModalRootTurma turmas={select} turmaSelecionada={turmaSelecionada}/>: 
+                tipoModal == 'excluir' ? <ModalExcluir objeto={aluno} exclusao={exclusao}/> :
+                <ModalRootALunos aluno={aluno} novoAluno={alunoSelecionado} editar={edicao}/>}</Modal>
 
         </LayoutUser>
     )

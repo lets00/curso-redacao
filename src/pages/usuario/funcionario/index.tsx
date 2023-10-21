@@ -28,8 +28,8 @@ export default function PerfilFuncionario() {
                     <figure className="-mt-20 ml-12 mr-2">
                         <ImageTeste readOnly={editar} className="p-24"/>
                     </figure>
-                    <h2 className="mt-10 ml-5 ">Nome Completo Exemplo</h2>
-                    <Botao onCLick={() => salvarFuncionario(
+                    <h2 className="mt-10 ml-5 ">{nome}</h2>
+                    <Botao onClick={() => salvarFuncionario(
                         new Funcionario(nome, cpf, funcionarioTeste.rg, celular, email, funcionarioTeste.senha, funcionarioTeste.id, false))} 
                     className="m-10 p-10 bg-blue-400">{editar == true ? 'Alterar':'Salvar'}</Botao>
                 </div>

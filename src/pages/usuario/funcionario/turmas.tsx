@@ -21,14 +21,16 @@ export default function FuncionarioTurmas() {
 
     const [aluno, setAluno] = useState<Aluno>(Aluno.vazio())
     const [listagem, setListagem] = useState(turmas)
+    const [filtragem, setFiltragem] = useState(listagem)
+    const [filtro, setFiltro] = useState('Todos(as)')
     
     
-    const aoClicar = (conteudo: any) => {
-        if(conteudo == "Todos(as)"){
-            setListagem(turmas);
+    const aoClicar = () => {
+        if(filtro == "Todos(as)"){
+            setFiltragem(listagem);
         } else {
-            const materiaisFiltrados = turmas.filter((aluno) => aluno.turma === conteudo);
-            setListagem(materiaisFiltrados);
+            const materiaisFiltrados = listagem.filter((aluno) => aluno.turma === filtro);
+            setFiltragem(materiaisFiltrados);
         }
       }
     function alunoSelecionado(aluno: Aluno){
@@ -43,8 +45,8 @@ export default function FuncionarioTurmas() {
     }
 
     useEffect(() => {
-        aoClicar(select[0]);
-    }, [])
+        aoClicar();
+    }, [filtro])
 
     return (
         <LayoutUser usuario={'funcionario'} className="text-black">
@@ -53,8 +55,8 @@ export default function FuncionarioTurmas() {
             </div>
             <Select seletor={select}
                     titulo="Turma"
-                    aoClicar={aoClicar}/>
-            <Tabela objeto={listagem}
+                    setFiltro={setFiltro}/>
+            <Tabela objeto={filtragem}
                     propriedadesExibidas={dados}
                     cabecalho={cabecalho}
                     //objetoSelecionado={alunoSelecionado}

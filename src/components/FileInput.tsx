@@ -9,7 +9,6 @@ export default function DragAndDrop() {
 
   function handleChange(e: any) {
     e.preventDefault();
-    console.log("File has been added");
     if (e.target.files && e.target.files[0]) {
       console.log(e.target.files);
       for (let i = 0; i < e.target.files["length"]; i++) {

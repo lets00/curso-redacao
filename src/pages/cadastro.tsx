@@ -1,4 +1,4 @@
-import Formulario from "@/components/Formulario";
+import Formulario from "@/components/Formulario2";
 import { IconeVoltar } from "@/components/Icones";
 import Image from  'next/image';
 import Link from "next/link";

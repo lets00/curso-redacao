@@ -30,7 +30,7 @@ export default function ModalAlunoMaterial(props: ModalFuncionarioProps){
                     <Estrelas/>
                 </div>
                 <Botao className="p-10"
-                        /*onCLick={() => props.funcionarioMudou?.(new Funcionario(nome, cpf, id, false))}*/>
+                        /*onClick={() => props.funcionarioMudou?.(new Funcionario(nome, cpf, id, false))}*/>
                     {id ? 'Alterar':'Enviar'}</Botao>
             </section>
         </div>

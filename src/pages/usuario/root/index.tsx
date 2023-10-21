@@ -2,12 +2,13 @@ import LayoutUser from "@/components/LayoutUser";
 import Select from "@/components/Select";
 import TabelaRoot from "@/components/TabelaRoot";
 import Titulo from "@/components/Titulo";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Aluno from "@/core/Aluno";
 import Pesquisa from "@/components/Pesquisa";
 import Modal from "@/components/Modal";
-import ModalRootAlunos from "@/components/modals/ModalRootAlunos";
+import ModalRootPagamento from "@/components/modals/ModalRootPagamento";
 import ModalExcluir from "@/components/modals/ModalExcluir";
+import ModalRootALunos from "@/components/modals/ModalRootAlunos";
 
 export default function RootAlunos() {
 
@@ -24,52 +25,37 @@ export default function RootAlunos() {
     const dados = ['natural','nome','cpf','pagamento']
     const cabecalho = ['Estado', 'Nome', 'CPF', 'Pagamento', 'Ações']
     const select1 = ['Todos(as)','Presencial terça/tarde', 'Online terça/tarde', 'Presencial sábado/tarde']
-    const select2 = ['Todos(as)','Pagamentos dia 10','Pagamento dia 15']
+    const select2 = ['Todos(as)','Pagamentos dia 10','Pagamentos dia 15']
 
     const [aluno, setAluno] = useState<Aluno>(Aluno.vazio())
     const [openModal, setOpenModal] = useState(false)
     const [tipoModal, setTipoModal] = useState('')
     const [listagem, setListagem] = useState(turmas)
-    const [filtro, setFiltro] = useState(null)
+    const [filtragem, setFiltragem] = useState(listagem)
+    const [filtro1, setFiltro1] = useState('Todos(as)')
+    const [filtro2, setFiltro2] = useState('Todos(as)')
 
     
-      const aoClicar = (conteudo: any) => {
-        if(filtro === select1){
-
-            if(conteudo == "Todos(as)"){
-                setListagem(turmas);
-            } else {
-                const materiaisFiltrados = turmas.filter((aluno) => aluno.turma === conteudo);
-                setListagem(materiaisFiltrados);
-            }
-
-        } else {
-
-            if(conteudo == "Todos(as)"){
-                setListagem(turmas);
-            } else if (conteudo == "Pagamentos dia 10") {
-                const materiaisFiltrados = turmas.filter((aluno) => aluno.mensalidade === 10);
-                setListagem(materiaisFiltrados);
-            } else {
-                const materiaisFiltrados = turmas.filter((aluno) => aluno.mensalidade === 15);
-                setListagem(materiaisFiltrados);
-            }
-
+      const aoClicar = () => {
+        let filtragemResultante = listagem;
+        if (filtro1 !== "Todos(as)") {
+            filtragemResultante = filtragemResultante.filter(aluno => aluno.turma === filtro1);
         }
+        if (filtro2 === "Pagamentos dia 10") {
+            filtragemResultante = filtragemResultante.filter(aluno => aluno.mensalidade === 10);
+        } else if (filtro2 === "Pagamentos dia 15") {
+            filtragemResultante = filtragemResultante.filter(aluno => aluno.mensalidade === 15);
+        }    
+        setFiltragem(filtragemResultante);
       }
     function alunoSelecionado(aluno: Aluno){
         setAluno(aluno)
+        setTipoModal("editar")
+        setOpenModal(true)
     }
     function alunoExcluido(aluno: Aluno){
         setAluno(aluno)
         setTipoModal('excluir');
-        setOpenModal(true)
-    }
-    function salvarAluno(aluno: Aluno){
-        setOpenModal(false)
-    }
-    function novoAluno(){
-        setAluno(Aluno.vazio())
         setOpenModal(true)
     }
     function pagamento(){
@@ -77,6 +63,25 @@ export default function RootAlunos() {
         setTipoModal('selecionado')
         setOpenModal(true)
     }
+    function exclusao(id: any){
+        const materiaisFiltrados = listagem.filter((aluno) => aluno.id !== id);
+        setListagem(materiaisFiltrados);
+        setOpenModal(false);
+    }
+    function edicao(alunoEditado: Aluno){
+        const indexToEdit = listagem.findIndex((funcionario) => funcionario.id === alunoEditado.id);
+        if (indexToEdit !== -1) {
+            const listaAtualizada = [...listagem];
+            listaAtualizada[indexToEdit] = alunoEditado;
+            setListagem(listaAtualizada);
+            setOpenModal(false);
+        } else {
+            setOpenModal(false);
+        }
+    }
+    useEffect(() => {
+        aoClicar();
+      }, [filtro1, filtro2, exclusao]);
 
     return (
         <LayoutUser usuario={'root'} className="text-black">
@@ -86,23 +91,23 @@ export default function RootAlunos() {
             <div className="flex flex-row items-center w-full">
                 <Select seletor={select1}
                         titulo="Turma"
-                        aoClicar={aoClicar}
-                        setFiltro={setFiltro}/>
+                        setFiltro={setFiltro1}/>
                 <Select seletor={select2}
                         titulo="Mensalidade"
-                        aoClicar={aoClicar}
-                        setFiltro={setFiltro}/>
+                        setFiltro={setFiltro2}/>
                 <Pesquisa/>
             </div>
-            <TabelaRoot objeto={listagem}
+            <TabelaRoot objeto={filtragem}
                     propriedadesExibidas={dados}
                     cabecalho={cabecalho}
                     objetoSelecionado={alunoSelecionado}
                     objetoExcluido={alunoExcluido}
                     pagamento={pagamento}
                     />
-            <Modal isOpen={openModal} isNotOpen={() => setOpenModal(!openModal)} cor='white' titulo={tipoModal == 'selecionado' ? 'Pagamento': 'Tem certeza que deseja excluir:'}
-            subtitulo={aluno.nome}>{tipoModal == 'selecionado' ? <ModalRootAlunos/>:<ModalExcluir/>}</Modal>
+            <Modal isOpen={openModal} isNotOpen={() => setOpenModal(!openModal)} cor='white' titulo={tipoModal == 'selecionado' ? 'Pagamento' : tipoModal == 'excluir' ? 'Tem certeza que deseja excluir:': "Editar Aluno"}
+            subtitulo={tipoModal == 'excluir' ? aluno.nome : ''}>
+            {tipoModal == 'selecionado' ? <ModalRootPagamento/>: tipoModal == 'excluir' ? <ModalExcluir objeto={aluno} exclusao={exclusao}/>: 
+            <ModalRootALunos aluno={aluno} novoAluno={alunoSelecionado} editar={edicao}/>}</Modal>
         </LayoutUser>
     )
 }

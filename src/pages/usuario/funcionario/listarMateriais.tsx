@@ -25,14 +25,16 @@ export default function ListarMateriais() {
     const [openModal, setOpenModal] = useState(false)
     const [tipoModal, setTipoModal] = useState('')
     const [listagem, setListagem] = useState(Materiais)
+    const [filtragem, setFiltragem] = useState(listagem)
+    const [filtro, setFiltro] = useState('Todos(as)')
     
     
-    const aoClicar = (conteudo: any) => {
-        if(conteudo == "Todos(as)"){
-            setListagem(Materiais);
+    const aoClicar = () => {
+        if(filtro == "Todos(as)"){
+            setFiltragem(listagem);
         } else {
-            const materiaisFiltrados = Materiais.filter((material) => material.disciplina === conteudo);
-            setListagem(materiaisFiltrados);
+            const materiaisFiltrados = listagem.filter((material) => material.disciplina === filtro);
+            setFiltragem(materiaisFiltrados);
         }
       }
     function materialSelecionado(material: Material){
@@ -44,17 +46,21 @@ export default function ListarMateriais() {
         setMaterial(material);
         setTipoModal('excluir');
         setOpenModal(true)
-
     }
     function salvarMaterial(material: Material){
     }
     function novoMaterial(){
         setMaterial(Material.vazio())
     }
+    function exclusao(id: any){
+        const materiaisFiltrados = listagem.filter((material) => material.id !== id);
+        setListagem(materiaisFiltrados);
+        setOpenModal(false);
+    }
 
     useEffect(() => {
-        aoClicar(select[0]);
-    }, [])
+        aoClicar();
+    }, [filtro, exclusao])
 
     return (
         <LayoutUser usuario={'funcionario'} className="text-black">
@@ -64,15 +70,15 @@ export default function ListarMateriais() {
             </div>
             <Select seletor={select}
                     titulo="Disciplina"
-                    aoClicar={aoClicar}/>
-            <Tabela objeto={listagem}
+                    setFiltro={setFiltro}/>
+            <Tabela objeto={filtragem}
                     propriedadesExibidas={dados}
                     cabecalho={cabecalho}
                     objetoSelecionado={materialSelecionado}
                     objetoExcluido={materialExcluido}
                     />
             <Modal isOpen={openModal} isNotOpen={() => setOpenModal(!openModal)} cor='white' titulo={tipoModal == 'selecionado' ? 'Análise de Feedback': 'Tem certeza que deseja excluir:'}
-            subtitulo={material.nome}>{tipoModal == 'selecionado' ? <ModalRootMateriais/>:<ModalExcluir/>}</Modal>
+            subtitulo={material.nome}>{tipoModal == 'selecionado' ? <ModalRootMateriais/>:<ModalExcluir objeto={material} exclusao={exclusao}/>}</Modal>
         </LayoutUser>
     )
 }

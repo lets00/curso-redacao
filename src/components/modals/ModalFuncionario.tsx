@@ -30,7 +30,7 @@ export default function ModalFuncionario(props: ModalFuncionarioProps){
             <Entrada texto="Email" valor={email} valorMudou={setEmail}/>
             <Entrada texto="Senha" valor={senha} valorMudou={setSenha}/>
             <Botao className="p-10"
-                    onCLick={() => props.funcionarioMudou?.(new Funcionario(nome, cpf, rg, celular, email, senha, id, false))}>
+                    onClick={() => props.funcionarioMudou?.(new Funcionario(nome, cpf, rg, celular, email, senha, id, false))}>
                 {id ? 'Alterar':'Salvar'}</Botao>
         </div>
     )

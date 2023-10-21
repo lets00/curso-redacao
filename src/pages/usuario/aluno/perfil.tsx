@@ -30,8 +30,8 @@ export default function PerfilAluno() {
                     <figure className="-mt-20 ml-12 mr-2">
                         <ImageTeste readOnly={editar} className="p-24"/>
                     </figure>
-                    <h2 className="mt-10 ml-5 ">Nome Completo Exemplo</h2>
-                    <Botao onCLick={() => salvarAluno(
+                    <h2 className="mt-10 ml-5 ">{nome}</h2>
+                    <Botao onClick={() => salvarAluno(
                         new Aluno(nome, alunoTeste.data, alunoTeste.natural, endereco, celular, alunoTeste.email, alunoTeste.pai,
                                  alunoTeste.mae, rg,cpf, alunoTeste.mensalidade, alunoTeste.turma, alunoTeste.pagamento, alunoTeste.senha, alunoTeste.id, alunoTeste.excluido))} 
                     className="m-10 p-10 bg-blue-400" cor="blue">{editar == true ? 'Editar':'Salvar'}</Botao>
