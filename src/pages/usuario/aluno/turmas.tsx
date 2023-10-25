@@ -20,7 +20,7 @@ export default function TurmasAluno() {
                     <div className="
                         flex justify-center items-center
                         rounded-full p-4 ml-4 mr-0 bg-slate-300"/>
-                    <Titulo>Nome do Aluno</Titulo>
+                    <Titulo className="font-Montserrant">Nome do Aluno</Titulo>
                 </div>
             </section>
 

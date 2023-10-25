@@ -1,8 +1,6 @@
 import Material from "@/core/Material";
-import Botao from "../Botao";
-import DatePicker from "../DatePicker";
-import EntradaPerfil from "../EntradaPerfil";
 import Avaliacoes from "../Avaliacoes";
+import Comentarios from "../Comentarios";
 
 interface ModalAlunoMaterialProps {
     material?: Material
@@ -14,13 +12,13 @@ export default function ModalAlunoMaterial(props: ModalAlunoMaterialProps){
 
     return(
         <div className="text-black">
-            <section className="flex gap-4 bg-pink-300 rounded-lg p-3 my-3">      
-                <div className="bg-white rounded-lg p-4 w-64">
+            <section className="flex gap-3 bg-pink-300 rounded-lg p-3 my-3">      
+                <div className="bg-white rounded-lg p-4 w-full">
                     <Avaliacoes/>
                 </div>     
 
-                <div className="bg-white rounded-lg p-3">
-                    <h3>Comentários</h3>
+                <div className="bg-white rounded-lg p-2 w-full">
+                    <Comentarios/>
                 </div>
             </section>
         </div>

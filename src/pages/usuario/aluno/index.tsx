@@ -49,9 +49,9 @@ export default function Aluno() {
                     <div className="
                         flex justify-center items-center
                         rounded-full p-4 ml-4 mr-0 bg-slate-300"/>
-                    <div className="ml-5 mt-1">
+                    <div className="ml-5 mt-1 font-Montserrant">
                         <h4 className="ml-1">Olá, Nome do Aluno,</h4>
-                        <h2 className="font-Montserrant">Bem vindo de volta!</h2>
+                        <h2>Bem vindo de volta!</h2>
                     </div>
                 </div>
             </section>
