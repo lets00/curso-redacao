@@ -1,11 +1,11 @@
 interface EntradaProps{
-    texto?: string
+    texto: string;
     tipo?: 'text' | 'number' | 'password' | 'file'
-    valor?: any
-    somenteLeitura?: boolean
-    valorMudou?: (valor: any) => void
-    placeholder?: string
-    className?: any
+    valor?: any;
+    somenteLeitura?: boolean;
+    valorMudou: (e: any) => void;
+    placeholder?: string;
+    className?: any;
 }
 export default function Entrada(props: EntradaProps){
     return (
@@ -17,7 +17,7 @@ export default function Entrada(props: EntradaProps){
                 type={props.tipo ?? 'text'}
                 value={props.valor}
                 readOnly={props.somenteLeitura}
-                onChange={e => props.valorMudou?.(e.target.value)}
+                onChange={e => props.valorMudou?.(e)}
                 className={`
                     border-b border-black focus:outline-none py-1 px-5 mb-7
                     ${props.somenteLeitura ? '' : 'focus:bg-slate-50'}
@@ -25,4 +25,5 @@ export default function Entrada(props: EntradaProps){
                 placeholder={props.placeholder ?? 'Digite sua resposta'} />
         </div>
     )
-}
+};
+

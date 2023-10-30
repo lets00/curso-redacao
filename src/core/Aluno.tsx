@@ -1,5 +1,5 @@
 export default class Aluno {
-    #id: string | null
+    #id: string
     #nome: string
     #data: Date
     #natural: string
