@@ -4,7 +4,7 @@ import Image from  'next/image';
 import Link from 'next/link';
 import AuthInput from '@/components/AuthInput';
 import { useState } from 'react';
-import db from "@/backend/config"
+import {db} from "@/backend/config"
 import { getFirestore, addDoc, collection, query, where, getDocs } from "firebase/firestore";
 import { signInWithEmailAndPassword, getAuth, signInWithPopup, GoogleAuthProvider  } from "firebase/auth";
 import router from 'next/router';
