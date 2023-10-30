@@ -1,12 +1,11 @@
 interface BotaoProps {
     cor?: String
     className?: string
-    children: any
     children: React.ReactNode 
+    onClick?: () => void
     type?: "button" | "submit" | "reset"
 }
 
-export default function Botao(props: BotaoProps){
 export function Botao(props: BotaoProps){ 
     const cor = props.cor ?? 'pink'
     return (
