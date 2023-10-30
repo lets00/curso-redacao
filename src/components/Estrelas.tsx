@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 
-export default function Estrelas() {
-  const [rating, setRating] = useState(0);
+export default function Estrelas(props: any) {
+  const { estrelas, setEstrelas } = props;
 
   const handleRatingClick = (index: any) => {
     // Define a nova classificação com base no índice do ícone de estrela clicado
-    setRating(index + 1);
+    setEstrelas(index + 1);
   };
 
   return (
@@ -14,7 +14,7 @@ export default function Estrelas() {
         <svg
           key={index}
           className={`w-4 h-4 cursor-pointer ${
-            index < rating ? "text-yellow-300" : "text-gray-300 dark:text-gray-500"
+            index < estrelas ? "text-yellow-300" : "text-gray-300"
           }`}
           aria-hidden="true"
           xmlns="http://www.w3.org/2000/svg"

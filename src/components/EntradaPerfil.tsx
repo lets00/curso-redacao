@@ -1,5 +1,5 @@
 interface PerfilProps{
-    texto: string
+    texto?: string
     tipo?: 'text' | 'number' | 'password' | 'file'
     valor?: any
     somenteLeitura?: boolean
@@ -23,8 +23,9 @@ export default function PerfilDados(props: PerfilProps){
                 onChange={e => props.valorMudou?.(e.target.value)}
                 className={`
                     border-none bg-slate-200 rounded-sm
-                    focus:outline-none py-1 px-5 mb-4 mr-8 ${props.className2}
+                    focus:outline-none py-1 px-5 mb-4 mr-8 
                     ${props.somenteLeitura == true ? '' : 'focus:bg-slate-50'}
+                    ${props.className2}
                 `}
                 placeholder={props.placeholder ?? '...'} />
         </div>

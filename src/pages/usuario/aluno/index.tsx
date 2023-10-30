@@ -1,23 +1,22 @@
 import LayoutUser from "@/components/LayoutUser";
 import Modal from "@/components/Modal";
-import Select from "@/components/Select";
 import Tabela from "@/components/Tabela";
-import Titulo from "@/components/Titulo";
 import ModalAlunoMaterial from "@/components/modals/ModalAlunoMaterial";
 import Material from "@/core/Material";
-import Link from "next/link";
+import Comentario from "@/core/Comentario";
+import Aluno from "@/core/Aluno";
 import { useState } from "react";
 
-export default function Aluno() {
+export default function AlunoIndex() {
 
 
     const materiais = [
-        new Material('Material da aula sobre Redação 1', 'Descrição breve desse documento', 'ARQUIVO', 'https://correcao.cursofelipealves.com.br/student/login', 'Redação', 'presencial terça/tarde', 'Abner', new Date(),'id' , false),
-        new Material('Material da aula sobre Redação 2', 'Descrição breve desse documento', 'ARQUIVO2', 'LINK2', 'Redação', 'presencial terça/manhã', 'João', new Date(),'id' , false)
+        new Material('Material da aula sobre Redação 1', 'Descrição breve desse documento', 'ARQUIVO', 'https://correcao.cursofelipealves.com.br/student/login', 'Redação', 'presencial terça/tarde', 'Abner', new Date(),'id1' , false),
+        new Material('Material da aula sobre Redação 2', 'Descrição breve desse documento', 'ARQUIVO2', 'LINK2', 'Redação', 'presencial terça/manhã', 'João', new Date(),'id2' , false)
     ]
     const materiais2 = [
-        new Material('Material de teste', 'Descrição breve desse documento', 'ARQUIVO', 'LINK', 'Redação', 'presencial terça/tarde', 'Abner', new Date(),'id' , false),
-        new Material('Material de teste', 'Descrição breve desse documento', 'ARQUIVO2', 'LINK2', 'Redação', 'presencial terça/manhã', 'João', new Date(),'id' , false)
+        new Material('Material de teste', 'Descrição breve desse documento', 'ARQUIVO', 'LINK', 'Redação', 'presencial terça/tarde', 'Abner', new Date(),'id3' , false),
+        new Material('Material de teste', 'Descrição breve desse documento', 'ARQUIVO2', 'LINK2', 'Redação', 'presencial terça/manhã', 'João', new Date(),'id4' , false)
     ]
     const dados = ['nome', 'descricao', 'data']
     const cabecalho = ['Título', 'Descrição', 'Data de publicação', `Avaliar & Enviar redações`]
@@ -25,19 +24,24 @@ export default function Aluno() {
 
     const [lista, setLista] = useState(materiais)
     const [material, setMaterial] = useState<Material>(Material.vazio())
+    const [aluno, setAluno] = useState<Aluno>(Aluno.vazio())
+    const [comentario, setComentario] = useState<Comentario>(Comentario.vazio())
     const [botaoAtivo, setBotaoAtivo] = useState('redacao');
     const [openModal, setOpenModal] = useState(false)
 
-
+    //Filtro da lista
     const aoClicar = (conteudo: any, botao: any) => {
         setLista(conteudo);
         setBotaoAtivo(botao);
       };
+    //Lista
     function materialSelecionado(material: Material){
         setMaterial(material)
         setOpenModal(true)
     }
-    function salvarMaterial(material: Material){
+    //Comentário
+    function salvarComentario(comentarioNovo: Comentario){
+        console.log(comentarioNovo)
         setOpenModal(false)
     }
 
@@ -74,7 +78,7 @@ export default function Aluno() {
             </section>
             
             <Modal isOpen={openModal} isNotOpen={() => setOpenModal(!openModal)} cor='white' titulo='Avalie o material'
-            subtitulo={material.nome}><ModalAlunoMaterial material={material} funcionarioMudou={salvarMaterial}/></Modal>
+            subtitulo={material.nome}><ModalAlunoMaterial material={material} comentario={comentario} aluno={aluno} salvarComentario={salvarComentario}/></Modal>
 
         </LayoutUser>
     )

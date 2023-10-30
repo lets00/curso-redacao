@@ -36,8 +36,7 @@ export default function(){
                 </div>
                 <div className="flex items-center mb-2">
                     <input id="default-checkbox" type="checkbox" value="" 
-                    className="w-4 h-4 text-pink-600 bg-gray-100  rounded-xl
-                            dark:ring-offset-gray-800 dark:bg-gray-700 dark:border-gray-600"/>
+                    className="w-4 h-4 text-pink-600 bg-gray-100  rounded-xl"/>
                     <label htmlFor="default-checkbox" className="ml-2 text-sm text-black"><a href="" className="hover:underline text-gray-400">Mantenha-me conectado</a></label>
                 </div>
 

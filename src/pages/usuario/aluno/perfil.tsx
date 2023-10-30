@@ -54,8 +54,8 @@ export default function PerfilAluno() {
                                 flex flex-col items-center">
                     <h1 className="pt-5">21 Dias</h1>
                     <h4>Para o próximo pagamento</h4>
-                    <div className="w-80 h-6 mt-8 bg-gray-200 rounded-xl dark:bg-gray-700">
-                        <div className="h-6 bg-gradient-to-r from-blue-400 to-pink-600 rounded-xl dark:bg-blue-500" style={{width: '45%'}}></div>
+                    <div className="w-80 h-6 mt-8 bg-gray-200 rounded-xl">
+                        <div className="h-6 bg-gradient-to-r from-blue-400 to-pink-600 rounded-xl" style={{width: '45%'}}></div>
                     </div>
                 </section>
 

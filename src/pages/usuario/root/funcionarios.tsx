@@ -7,7 +7,10 @@ import Modal from "@/components/Modal";
 import ModalRootFuncionario from "@/components/modals/ModalRootFuncionario";
 import ModalExcluir from "@/components/modals/ModalExcluir";
 
+
 export default function RootFuncionarios() {
+
+
 
     const funcionarios = [
         new Funcionario('Abner', "111111111", "2222222", "1111-1111", "email@gmail.com", "123", "1", false),
@@ -43,17 +46,38 @@ export default function RootFuncionarios() {
         setListagem(materiaisFiltrados);
         setOpenModal(false);
     }
-    function edicao(funcionarioNovo: Funcionario){
-        const indexToEdit = listagem.findIndex((funcionario) => funcionario.id === funcionarioNovo.id);
+    function edicao(funcionarioEditado: Funcionario){
+        const indexToEdit = listagem.findIndex((funcionario) => funcionario.id === funcionarioEditado.id);
         if (indexToEdit !== -1) {
             const listaAtualizada = [...listagem];
-            listaAtualizada[indexToEdit] = funcionarioNovo;
+            listaAtualizada[indexToEdit] = funcionarioEditado;
             setListagem(listaAtualizada);
             setOpenModal(false);
         } else {
             setOpenModal(false);
         }
     }
+    function adicao(funcionarioNovo: Funcionario){
+        console.log(funcionarioNovo)
+        if (verificaObjetoInvalido(funcionarioNovo) === true){
+            setListagem([...listagem, funcionarioNovo])
+            
+        } else {
+            alert("Objeto Inválido")
+            console.log(funcionarioNovo)
+        }
+        
+    }
+    function verificaObjetoInvalido(funcionarioNovo: Funcionario) {
+        if (
+            !funcionarioNovo.id || !funcionarioNovo.nome || !funcionarioNovo.cpf ||
+            !funcionarioNovo.rg ||  !funcionarioNovo.celular || !funcionarioNovo.email ||
+            !funcionarioNovo.senha
+          ) {
+            return false;
+          }
+          return true;
+        }
 
     return (
         <LayoutUser usuario={'root'} className="text-black">
@@ -69,7 +93,7 @@ export default function RootFuncionarios() {
                     />
 
             <Modal isOpen={openModal} isNotOpen={() => setOpenModal(!openModal)} cor='white' titulo={tipoModal == 'selecionado' ? 'Criar novo funcionário': 'Tem certeza que deseja excluir:'}
-            > {tipoModal == 'selecionado' ? <ModalRootFuncionario funcionario={funcionario} setOpenModal={setOpenModal} editar={edicao}/>:<ModalExcluir objeto={funcionario} exclusao={exclusao}/>} </Modal>
+            > {tipoModal == 'selecionado' ? <ModalRootFuncionario funcionario={funcionario} setOpenModal={setOpenModal} editar={edicao} adicao={adicao}/>:<ModalExcluir objeto={funcionario} exclusao={exclusao}/>} </Modal>
 
         </LayoutUser>
     )

@@ -41,13 +41,11 @@ export default function Formulario(props: FormularioProps){
             <label className="font-Montserrant">Data de preferência para pagamento</label>
             <div className="flex flex-row items-center gap-6 pt-4">
                 <div className="flex items-center">
-                    <input   id="default-radio-1" type="radio" value="" name="default-radio" className="w-4 h-4 text-pink-600 bg-gray-100
-                            dark:ring-offset-gray-800 dark:bg-gray-700 dark:border-gray-600"/>
+                    <input   id="default-radio-1" type="radio" value="" name="default-radio" className="w-4 h-4 text-pink-600 bg-gray-100"/>
                     <label htmlFor="default-radio-1" className="ml-2 text-sm font-medium text-black">Dia 10</label>
                 </div>
                 <div className="flex items-center">
-                    <input   checked id="default-radio-2" type="radio" value="" name="default-radio" className="w-4 h-4 text-pink-600 bg-gray-100
-                            dark:ring-offset-gray-800 dark:bg-gray-700 dark:border-gray-600"/>
+                    <input   checked id="default-radio-2" type="radio" value="" name="default-radio" className="w-4 h-4 text-pink-600 bg-gray-100"/>
                     <label htmlFor="default-radio-2" className="ml-2 text-sm font-medium text-black">Dia 15</label>
                 </div>
             </div>
@@ -55,8 +53,7 @@ export default function Formulario(props: FormularioProps){
             <div className="pt-28 flex-col">
                 <div className="flex items-center mb-6">
                     <input id="default-checkbox" type="checkbox" value="" 
-                    className="w-4 h-4 text-pink-600 bg-gray-100  rounded-xl
-                            dark:ring-offset-gray-800 dark:bg-gray-700 dark:border-gray-600"/>
+                    className="w-4 h-4 text-pink-600 bg-gray-100  rounded-xl"/>
                     <label htmlFor="default-checkbox" className="ml-2 text-sm text-black"><a href="" className="hover:underline">Termos de uso</a></label>
                 </div>
                 <Botao className="px-12">Próximo</Botao>

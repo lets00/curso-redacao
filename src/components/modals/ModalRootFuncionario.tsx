@@ -5,7 +5,7 @@ import Botao from "../Botao";
 
 interface ModalRootFuncionarioProps {
     funcionario: Funcionario
-    novoFuncionario?: (funcionario: Funcionario) => void
+    adicao?: (funcionario: Funcionario) => void
     editar?: (funcionario: Funcionario) => void
     setOpenModal?: (open: boolean) => void
 }
@@ -40,7 +40,8 @@ export default function ModalRootFuncionario(props: ModalRootFuncionarioProps){
                             console.log("funcionou")
                             props.setOpenModal?.(false);
                           } else {
-                            props.novoFuncionario?.(new Funcionario(nome, cpf, rg, celular, email, senha, id, false));
+                            props.adicao?.(new Funcionario(nome, cpf, rg, celular, email, senha, '4', false));
+                            //aqui coloquei um id "4" só pra poder criar um funcionario sem nenhum atributo vazio
                             props.setOpenModal?.(false);
                           }
                     } }>

@@ -1,5 +1,5 @@
 interface EntradaProps{
-    texto: string
+    texto?: string
     tipo?: 'text' | 'number' | 'password' | 'file'
     valor?: any
     somenteLeitura?: boolean
