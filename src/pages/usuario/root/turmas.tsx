@@ -9,15 +9,22 @@ import Modal from "@/components/Modal";
 import ModalRootTurma from "@/components/modals/ModalRootTurma";
 import ModalExcluir from "@/components/modals/ModalExcluir";
 import ModalRootALunos from "@/components/modals/ModalRootAlunos";
+import Turma from "@/core/Turma";
 
 export default function RootTurmas() {
 
-    const turmas = [
+    const alunos = [
         new Aluno('Joao Carlos', new Date(2004-10-10), 'PE', 'rua teste', '111-111', 'jasha@gmail',
     'jose', 'carla', 'rgrgrg', 'cpfcpf', 15, 'Presencial terça/tarde',false , '123', "idTeste", false),
         new Aluno('Maria Luiza', new Date(2004-10-10), 'RJ', 'rua testew', '222-111', 'mari@gmail',
     'pedro', 'ana', 'rg2', 'cpf2', 10, 'Online terça/tarde',true , 'abc', "idTeste2", false),
     ]
+    const turmas = [
+        new Turma('Presencial terça/tarde', 'Linguagem', 'Felipe Alves', 'terça-feira', '14h', 'idA', false),
+        new Turma('Online terça/tarde', 'Redação', 'Wellington', 'terça-feira', '14h', 'idB', false),
+        new Turma('Presencial sábado/tarde', 'Redação', 'Wellington', 'sábado', '14h', 'idC', false),
+    ]
+
     const dados = ['natural','nome','cpf','pagamento']
     const cabecalho = ['Estado', 'Nome', 'CPF', 'Pagamento']
     const select = ['Todos(as)','Presencial terça/tarde', 'Online terça/tarde', 'Presencial sábado/tarde']
@@ -25,7 +32,7 @@ export default function RootTurmas() {
     const [openModal, setOpenModal] = useState(false)
     const [aluno, setAluno] = useState<Aluno>(Aluno.vazio())
     const [tipoModal, setTipoModal] = useState('')
-    const [listagem, setListagem] = useState(turmas)
+    const [listagem, setListagem] = useState(alunos)
     const [filtragem, setFiltragem] = useState(listagem)
     const [filtro, setFiltro] = useState('Todos(as)')
 
@@ -92,7 +99,7 @@ export default function RootTurmas() {
                     
             <Modal isOpen={openModal} isNotOpen={() => setOpenModal(!openModal)} cor='white' titulo={tipoModal == 'selecionado' ? 'Gerenciar turma': tipoModal == 'excluir' ? 'Tem certeza que deseja excluir:' : "Editar Aluno"}
                 subtitulo={tipoModal == 'excluir' ? aluno.nome : ''} >
-                {tipoModal == 'selecionado' ? <ModalRootTurma turmas={select} turmaSelecionada={turmaSelecionada}/>: 
+                {tipoModal == 'selecionado' ? <ModalRootTurma turmas={turmas} turmasSeletor={select} turmaSelecionada={turmaSelecionada} setOpenModal={setOpenModal}/>: 
                 tipoModal == 'excluir' ? <ModalExcluir objeto={aluno} exclusao={exclusao}/> :
                 <ModalRootALunos aluno={aluno} novoAluno={alunoSelecionado} editar={edicao}/>}</Modal>
 
