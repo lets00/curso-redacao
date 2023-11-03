@@ -5,7 +5,7 @@ interface AuthContextType {
   setUserProfile: React.Dispatch<React.SetStateAction<any>>;
 }
 
-const AuthContext = createContext<AuthContextType | undefined>(undefined);
+export const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 interface AuthProviderProps {
   children: ReactNode;
@@ -28,4 +28,3 @@ export const useAuth = (): AuthContextType => {
   }
   return context;
 };
-
