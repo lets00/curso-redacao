@@ -58,7 +58,7 @@ export default function Materiais() {
                 <EntradaPerfil texto="Título" placeholder="Digite o título da atividade" className={'ml-9 mt-2 w-full'} valor={nome} valorMudou={setNome}/>
                 <EntradaPerfil texto="Descrição" placeholder="Digite a descrição da atividade" className={'ml-9 mt-2 w-full'} valor={descricao} valorMudou={setDescricao}/>
                 <EntradaPerfil texto="Link" placeholder="Link usado no material (opcional)" className={'ml-9 mt-2 w-full'} valor={link} valorMudou={setLink}/>
-                <FileInput setArquivo={setArquivo}/>
+                <FileInput/>
                 <Botao onClick={()=>{adicao(new Material(nome, descricao, arquivo, link, disciplina, turma, professor, data, "id", false))}} className="w-36 bg-blue-400 ml-9 mt-4" cor={'blue'}>Enviar</Botao>
             </div>
 
