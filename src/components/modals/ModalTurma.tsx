@@ -1,14 +1,13 @@
 import Turma from "@/core/Turma";
 import EntradaPerfil from "../EntradaPerfil";
 import { useState } from "react";
-import Botao from "../Botao";
+import {Botao} from "../Botao";
 import { IconeVoltar } from "../Icones";
 
 interface ModalRootTurmaProps {
     turma: Turma
     adicao?: (turma: Turma) => void
     editar?: (turma: Turma) => void
-    setOpenModal?: (open: boolean) => void
     setSelecionou: (open: Boolean) => void
 }
 
@@ -38,12 +37,9 @@ export default function ModalRootTurma(props: ModalRootTurmaProps){
                     onClick={() => {
                         if (id) {
                             props.editar?.(new Turma(nome, disciplina, professor, dia, horario, id, false));
-                            console.log("funcionou")
-                            props.setOpenModal?.(false);
                           } else {
                             props.adicao?.(new Turma(nome, disciplina, professor, dia, horario, '4', false));
                             //aqui coloquei um id "4" só pra poder criar um turma sem nenhum atributo vazio
-                            props.setOpenModal?.(false);
                           }
                     } }>
                 {id ? 'Alterar':'Criar funcionário'}</Botao>

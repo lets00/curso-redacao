@@ -1,4 +1,4 @@
-import Botao from "@/components/Botao";
+import {Botao} from "@/components/Botao";
 import LayoutUser from "@/components/LayoutUser";
 import Modal from "@/components/Modal";
 import Tabela from "@/components/Tabela";

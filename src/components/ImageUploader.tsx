@@ -1,27 +1,8 @@
 import { useState } from "react";
 import Image from "next/image";
-<<<<<<< HEAD
-
-interface ImageUploaderProps {
-  className: string
-  readOnly: boolean
-}
-
-export default function ImageUploader(props: ImageUploaderProps) {
-  const [base64Image, setBase64Image] = useState<string | null>(null);
-
-  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-
-    if (file) {
-      const base64 = await convertToBase64(file);
-      setBase64Image(base64);
-    }
-  };
-=======
 import { ref, uploadString, getDownloadURL, getStorage } from "firebase/storage";
 import { doc, updateDoc, collection, query, where, getDocs, setDoc, getFirestore} from "firebase/firestore";
-import { getAuth, User } from "firebase/auth";
+import {  User, getAuth } from "firebase/auth";
 import {storage} from "@/backend/config";
 import { initializeApp } from "firebase/app";
 
@@ -77,7 +58,6 @@ export default function ImageUploader(props: ImageUploaderProps) {
       }
     }
   }
->>>>>>> backend
 
   const convertToBase64 = (file: File): Promise<string | null> => {
     return new Promise((resolve) => {
@@ -93,12 +73,8 @@ export default function ImageUploader(props: ImageUploaderProps) {
 
       reader.readAsDataURL(file);
     });
-<<<<<<< HEAD
-  };
-=======
   }
 
->>>>>>> backend
 
   return (
     <div className="flex flex-col justify-end">
@@ -119,11 +95,7 @@ export default function ImageUploader(props: ImageUploaderProps) {
         />
       </div>
       {props.readOnly == false ?
-<<<<<<< HEAD
-        <figure className="-m-8 -ml-5">
-=======
         <figure className="-m-6 -ml-4">
->>>>>>> backend
           <Image src="/images/editar-imagem.png" width={38} height={38} alt="imagemDoCurso"/>
         </figure>
       : null }

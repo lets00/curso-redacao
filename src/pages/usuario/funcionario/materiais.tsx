@@ -1,4 +1,4 @@
-import Botao from "@/components/Botao";
+import {Botao} from "@/components/Botao";
 import Checkbox from "@/components/Checkbox";
 import EntradaPerfil from "@/components/EntradaPerfil";
 import FileInput from "@/components/FileInput";

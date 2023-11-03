@@ -1,5 +1,5 @@
 import Material from "@/core/Material";
-import Botao from "../Botao";
+import {Botao} from "../Botao";
 import DatePicker from "../DatePicker";
 import EntradaPerfil from "../EntradaPerfil";
 

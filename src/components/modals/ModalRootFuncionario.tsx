@@ -1,7 +1,7 @@
 import Funcionario from "@/core/Funcionario";
 import EntradaPerfil from "../EntradaPerfil";
 import { useState } from "react";
-import Botao from "../Botao";
+import {Botao} from "../Botao";
 
 interface ModalRootFuncionarioProps {
     funcionario: Funcionario
@@ -33,7 +33,7 @@ export default function ModalRootFuncionario(props: ModalRootFuncionarioProps){
                 <EntradaPerfil className="text-white" className2="bg-white rounded-xl text-black" texto="Senha" valor={senha} valorMudou={setSenha}/>
             </div>
             <div className="flex place-content-end">
-                <Botao className="p-10" cor="blue"
+                <Botao className="p-10 bg-blue-400" cor="blue"
                     onClick={() => {
                         if (id) {
                             props.editar?.(new Funcionario(nome, cpf, rg, celular, email, senha, id, false));

@@ -1,7 +1,7 @@
 import Entrada from "./Entrada";
 import { useState } from "react";
 import Aluno from "@/core/Aluno";
-import Botao from "./Botao";
+import {Botao} from "./Botao";
 import DatePicker from "./DatePicker";
 
 interface FormularioProps{

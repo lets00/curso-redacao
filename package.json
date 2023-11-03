@@ -14,12 +14,8 @@
     "@types/react": "18.2.14",
     "@types/react-dom": "18.2.6",
     "autoprefixer": "10.4.14",
-<<<<<<< HEAD
     "date-fns": "^2.30.0",
     "firebase": "^10.5.0",
-=======
-    "firebase": "^10.3.1",
->>>>>>> backend
     "next": "13.4.7",
     "postcss": "8.4.24",
     "react": "18.2.0",

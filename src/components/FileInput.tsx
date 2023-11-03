@@ -1,7 +1,6 @@
 "use client";
 
 import { useRef, useState } from "react";
-import Titulo from "./Titulo";
 export default function DragAndDrop() {
   const [dragActive, setDragActive] = useState<boolean>(false);
   const inputRef = useRef<any>(null);

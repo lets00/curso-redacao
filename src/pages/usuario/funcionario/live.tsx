@@ -1,4 +1,4 @@
-import Botao from "@/components/Botao";
+import {Botao} from "@/components/Botao";
 import Checkbox from "@/components/Checkbox";
 import DatePicker from "@/components/DatePicker";
 import EntradaPerfil from "@/components/EntradaPerfil";

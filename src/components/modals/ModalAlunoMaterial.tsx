@@ -1,5 +1,5 @@
 import Material from "@/core/Material";
-import Botao from "../Botao";
+import {Botao} from "../Botao";
 import Estrelas from "../Estrelas";
 import Comentario from "@/core/Comentario";
 import { useState } from "react";

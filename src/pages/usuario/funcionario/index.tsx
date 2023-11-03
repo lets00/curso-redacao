@@ -1,4 +1,4 @@
-import Botao from "@/components/Botao";
+import {Botao} from "@/components/Botao";
 import LayoutUser from "@/components/LayoutUser";
 import Image from "next/image"
 import Funcionario from "@/core/Funcionario";
@@ -26,7 +26,9 @@ export default function PerfilFuncionario() {
                 <div className="bg-gradient-to-r from-pink-500 to-pink-700 h-1/2 rounded-md"></div>
                 <div className="flex flex-row">
                     <figure className="-mt-20 ml-12 mr-2">
-                        <ImageTeste readOnly={editar} className="p-24"/>
+                        <ImageTeste readOnly={editar} className="p-24" base64Image={null} onImageUpload={function (base64Image: string): void {
+                            throw new Error("Function not implemented.");
+                        } }/>
                     </figure>
                     <h2 className="mt-10 ml-5 ">{nome}</h2>
                     <Botao onClick={() => salvarFuncionario(

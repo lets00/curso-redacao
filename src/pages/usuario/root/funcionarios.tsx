@@ -93,6 +93,7 @@ export default function RootFuncionarios() {
                     />
 
             <Modal isOpen={openModal} isNotOpen={() => setOpenModal(!openModal)} cor='white' titulo={tipoModal == 'selecionado' ? 'Criar novo funcionário': 'Tem certeza que deseja excluir:'}
+            subtitulo={tipoModal == 'excluir' ? funcionario.nome : ''}
             > {tipoModal == 'selecionado' ? <ModalRootFuncionario funcionario={funcionario} setOpenModal={setOpenModal} editar={edicao} adicao={adicao}/>:<ModalExcluir objeto={funcionario} exclusao={exclusao}/>} </Modal>
 
         </LayoutUser>

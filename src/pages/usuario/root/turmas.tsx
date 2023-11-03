@@ -4,7 +4,7 @@ import TabelaRoot from "@/components/TabelaRoot";
 import Titulo from "@/components/Titulo";
 import { useEffect, useState } from "react";
 import Aluno from "@/core/Aluno";
-import Botao from "@/components/Botao";
+import {Botao} from "@/components/Botao";
 import Modal from "@/components/Modal";
 import ModalRootTurma from "@/components/modals/ModalRootTurma";
 import ModalExcluir from "@/components/modals/ModalExcluir";
@@ -27,7 +27,7 @@ export default function RootTurmas() {
 
     const dados = ['natural','nome','cpf','pagamento']
     const cabecalho = ['Estado', 'Nome', 'CPF', 'Pagamento']
-    const select = ['Todos(as)','Presencial terça/tarde', 'Online terça/tarde', 'Presencial sábado/tarde']
+    const [select, setSelect] = useState(['Todos(as)','Presencial terça/tarde', 'Online terça/tarde', 'Presencial sábado/tarde'])
 
     const [openModal, setOpenModal] = useState(false)
     const [aluno, setAluno] = useState<Aluno>(Aluno.vazio())
@@ -35,6 +35,7 @@ export default function RootTurmas() {
     const [listagem, setListagem] = useState(alunos)
     const [filtragem, setFiltragem] = useState(listagem)
     const [filtro, setFiltro] = useState('Todos(as)')
+    const [executeUseEffect, setExecuteUseEffect] = useState(false);
 
     
     const aoClicar = () => {
@@ -77,8 +78,8 @@ export default function RootTurmas() {
     }
 
     useEffect(() => {
-        aoClicar();
-    }, [filtro, exclusao])
+        aoClicar()
+    }, [filtro]);
 
     return (
         <LayoutUser usuario={'root'} className="text-black">
@@ -99,7 +100,7 @@ export default function RootTurmas() {
                     
             <Modal isOpen={openModal} isNotOpen={() => setOpenModal(!openModal)} cor='white' titulo={tipoModal == 'selecionado' ? 'Gerenciar turma': tipoModal == 'excluir' ? 'Tem certeza que deseja excluir:' : "Editar Aluno"}
                 subtitulo={tipoModal == 'excluir' ? aluno.nome : ''} >
-                {tipoModal == 'selecionado' ? <ModalRootTurma turmas={turmas} turmasSeletor={select} turmaSelecionada={turmaSelecionada} setOpenModal={setOpenModal}/>: 
+                {tipoModal == 'selecionado' ? <ModalRootTurma turmas={turmas} turmasSeletor={select} turmaSelecionada={turmaSelecionada} setSelect={setSelect}/>: 
                 tipoModal == 'excluir' ? <ModalExcluir objeto={aluno} exclusao={exclusao}/> :
                 <ModalRootALunos aluno={aluno} novoAluno={alunoSelecionado} editar={edicao}/>}</Modal>
 

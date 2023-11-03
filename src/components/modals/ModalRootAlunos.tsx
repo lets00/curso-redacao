@@ -1,8 +1,9 @@
 import Aluno from "@/core/Aluno";
 import EntradaPerfil from "../EntradaPerfil";
 import { useState } from "react";
-import Botao from "../Botao";
+import {Botao} from "../Botao";
 import DatePicker from "../DatePicker";
+import Select from "../Select";
 
 interface ModalRootALunosProps {
     aluno: Aluno
@@ -43,10 +44,10 @@ export default function ModalRootALunos(props: ModalRootALunosProps){
                 <EntradaPerfil className="text-white" className2="bg-white rounded-xl text-black" texto="RG" valor={rg} valorMudou={setRg} />
                 <EntradaPerfil className="text-white" className2="bg-white rounded-xl text-black" texto="CPF" valor={cpf} valorMudou={setCpf}/>
                 <EntradaPerfil className="text-white" className2="bg-white rounded-xl text-black" texto="Mensalidade" valor={mensalidade} valorMudou={setMensalidade}/>
-                <EntradaPerfil className="text-white" className2="bg-white rounded-xl text-black" texto="Turma" valor={turma} valorMudou={setTurma}/>
+                <Select seletor={['Presencial terça/tarde', 'Online terça/tarde', 'Presencial sábado/tarde']} titulo="Turma" classname2="text-white -m-5" classname="-m-5" setFiltro={setTurma}/>
             </div>
             <div className="flex place-content-end">
-            <Botao className="p-10" cor="blue"
+            <Botao className="p-10 bg-blue-400" cor="blue"
                     onClick={() => {
                         if (id) {
                             props.editar?.(new Aluno(nome, data, natural, endereco, celular, email, pai, mae, rg, cpf, mensalidade, turma, pagamento, senha, id, false));

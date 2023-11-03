@@ -1,7 +1,7 @@
 import Funcionario from "@/core/Funcionario";
 import Entrada from "../Entrada";
 import { useState } from "react";
-import Botao from "../Botao";
+import {Botao} from "../Botao";
 
 interface ModalFuncionarioProps {
     funcionario: Funcionario
@@ -21,7 +21,9 @@ export default function ModalFuncionario(props: ModalFuncionarioProps){
         <div className="text-black">
             <h1>TesteModalFuncionario</h1>
             {id ? (
-                <Entrada somenteLeitura texto="Id" valor={id}/>
+                <Entrada somenteLeitura texto="Id" valor={id} valorMudou={function (e: any): void {
+                    throw new Error("Function not implemented.");
+                } }/>
             ) : false}
             <Entrada texto="Nome" valor={nome} valorMudou={setNome}/>
             <Entrada texto="CPF" valor={cpf} valorMudou={setCpf}/>

@@ -10,7 +10,6 @@ export default class Aluno {
     #mae: string
     #rg: string
     #cpf: string
-<<<<<<< HEAD
     #mensalidade: number
     #turma: string
     #pagamento: boolean
@@ -20,16 +19,7 @@ export default class Aluno {
     constructor(nome: string, data: Date, natural:string, endereco: string, 
                 celular: string, email: string, pai: string, mae: string, 
                 rg: string, cpf: string, mensalidade: number, turma: string,
-                pagamento: boolean ,senha: string, id: string | null = null, excluido: boolean){
-=======
-    #pagamento: string
-    #senha: string
-    #mensalidade: number
-
-    constructor(nome: string, data: Date, natural:string, endereco: string, 
-                celular: string, email: string, pai: string, mae: string, 
-                rg: string, cpf: string, pagamento: string, id: string, senha: string, mensalidade:number){
->>>>>>> backend
+                pagamento: boolean ,senha: string, id: string, excluido: boolean){
                 this.#nome = nome
                 this.#data = data
                 this.#natural = natural
@@ -45,20 +35,11 @@ export default class Aluno {
                 this.#pagamento = pagamento
                 this.#senha = senha
                 this.#id = id
-<<<<<<< HEAD
                 this.#excluido = excluido
                 }
     
     static vazio() {
         return new Aluno('',new Date(0),'','','','','','','','',0,'', false, '','',false)
-=======
-                this.#senha = senha
-                this.#mensalidade = mensalidade
-                }
-    
-    static vazio() {
-        return new Aluno('',new Date(0),'','','','','','','','','','','',0)
->>>>>>> backend
     }
     
     get id() {
@@ -106,12 +87,7 @@ export default class Aluno {
     get senha() {
         return this.#senha
     }
-<<<<<<< HEAD
     get excluido(){
         return this.#excluido
-=======
-    get mensalidade(){
-        return this.#mensalidade
->>>>>>> backend
     }
 }

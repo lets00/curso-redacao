@@ -4,6 +4,7 @@ interface SelectProps{
     seletor: any
     titulo: string
     classname?: string
+    classname2?: string
     setFiltro?: (filtro: string) => void
 }
 
@@ -16,8 +17,8 @@ export default function Select(props: SelectProps) {
     }
     
     return (
-      <div className="text-black">
-        <h3 className="m-5 mb-2 mt-3 font-semibold">{props.titulo}</h3>
+      <div className={`text-black ${props.classname2}`}>
+        <h3 className="m-5 mb-2 mt-3 font-semibold ">{props.titulo}</h3>
         <select
             className={`ml-6 p-2 mb-4 w-fit mr-4 bg-blue-400 rounded-lg text-white font-semibold outline-0 ${props.classname}`}
             value={value}

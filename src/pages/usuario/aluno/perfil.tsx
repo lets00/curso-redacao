@@ -1,43 +1,12 @@
 import { Botao } from "@/components/Botao";
 import LayoutUser from "@/components/LayoutUser";
-<<<<<<< HEAD
-import Aluno from "@/core/Aluno";
-import { useState } from "react";
-import EntradaPerfil from "@/components/EntradaPerfil";
-import ImageTeste from "@/components/ImageUploader";
-
-export default function PerfilAluno() {
-    const alunoTeste = new Aluno('joao', new Date(2004-10-10), 'PE', 'rua teste', '111-111', 'jasha@gmail',
-    'jose', 'maria', 'rgrgrg', 'cpfcpf', 15, 'presencial - terça/tarde', true, '123', "idTeste", false)
-
-    const [modalidade, setModalidade] = useState(alunoTeste.turma ?? '')
-    const [nome, setNome] = useState(alunoTeste.nome ?? '')
-    const [celular, setCelular] = useState(alunoTeste.celular ?? '')
-    const [rg, setRg] = useState(alunoTeste.rg ?? '')
-    const [cpf, setCpf] = useState(alunoTeste.cpf ?? '')
-    const [endereco, setEndereco] = useState(alunoTeste.endereco ?? '')
-    const [editar, setEditar] = useState(true)
-
-    function salvarAluno(aluno: Aluno){
-        setEditar(!editar)
-=======
-import Modal from "@/components/Modal";
-import Tabela from "@/components/Tabela";
-import Titulo from "@/components/Titulo";
-import Image from "next/image"
-import ModalFuncionario from "@/components/modals/ModalProfessor";
-import Professor from "@/core/Professor";
 import { useEffect, useState } from "react";
-import PerfilDados from "@/components/PerfilDados";
-import Aluno from "@/core/Aluno";
 import { getAuth } from "firebase/auth";
-import { useRouter } from "next/router";
-import { GetServerSideProps } from 'next';
 import { getFirestore, doc, setDoc, collection, query, where, getDocs } from "firebase/firestore";
-import ImageTeste from "@/components/ImageUploader";
 import { getStorage, ref, uploadString, getDownloadURL } from "firebase/storage";
 import ProtectedRoute from "@/components/ProtectedRoute";
 import ImageUploader from "@/components/ImageUploader";
+import PerfilDados from "@/components/EntradaPerfil";
 
 
 interface UserProfile {
@@ -49,8 +18,6 @@ interface UserProfile {
     endereco: string;
     profileImageUrl: string;
 }
-
-
 
 export default function AlunoPage() {
   const [base64Image, setBase64Image] = useState<string | null>(null);
@@ -81,7 +48,7 @@ export default function AlunoPage() {
     }
   }, []);
 
-  const [editar, setEditar] = useState(false);
+  const [editar, setEditar] = useState(true);
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
 
   const handleImageUpload = async (base64Image: string) => {
@@ -107,27 +74,11 @@ export default function AlunoPage() {
       } catch (error) {
         console.error("Erro ao atualizar a foto de perfil:", error);
       }
->>>>>>> backend
     }
   };
   
 
     return (
-<<<<<<< HEAD
-        <LayoutUser usuario={'aluno'} className="flex flex-col gap-2 text-black" divisoes>
-            
-            <section className="bg-white rounded-md w-auto h-1/2 m-2 mb-0">
-                <div className="bg-gradient-to-r from-blue-400 to-pink-600 h-1/2 rounded-md"></div>
-                <div className="flex flex-row">
-                    <figure className="-mt-20 ml-12 mr-2">
-                        <ImageTeste readOnly={editar} className="p-24"/>
-                    </figure>
-                    <h2 className="mt-10 ml-5 ">{nome}</h2>
-                    <Botao onClick={() => salvarAluno(
-                        new Aluno(nome, alunoTeste.data, alunoTeste.natural, endereco, celular, alunoTeste.email, alunoTeste.pai,
-                                 alunoTeste.mae, rg,cpf, alunoTeste.mensalidade, alunoTeste.turma, alunoTeste.pagamento, alunoTeste.senha, alunoTeste.id, alunoTeste.excluido))} 
-                    className="m-10 p-10 bg-blue-400" cor="blue">{editar == true ? 'Editar':'Salvar'}</Botao>
-=======
       <ProtectedRoute>
         <LayoutUser usuario={'aluno'} className="flex flex-col gap-2" divisoes>
             <div className="bg-white rounded-md w-auto h-1/2 m-2 mb-0">
@@ -136,27 +87,12 @@ export default function AlunoPage() {
                 <figure className="-mt-16 ml-12 mr-2">
                 <ImageUploader readOnly={editar} className="p-20" base64Image={base64Image} onImageUpload={(base64Image) => handleImageUpload(base64Image)}/>
                 </figure>
-                    <h2 className="mt-10 ml-5 ">Nome Completo Exemplo</h2>
+                    <h2 className="mt-10 ml-5 ">{userProfile?.nome}</h2>
                     <Botao onClick={() => setEditar(!editar)} className="m-10 p-10 bg-blue-400" cor="blue">{editar == true ? 'Alterar':'Salvar'}</Botao>
->>>>>>> backend
                 </div>
-            </section>
-
+            </div>
             <div className="h-1/2 flex flex-row">
 
-<<<<<<< HEAD
-                <section className="bg-white rounded-md w-1/2 h-auto m-2 mr-1 mt-0 p-6
-                                grid grid-cols-2">
-                    <EntradaPerfil texto="Modalidade" valor={modalidade} somenteLeitura={true} />
-                    <EntradaPerfil texto="Nome" valor={nome} valorMudou={setNome} somenteLeitura={editar} />
-                    <EntradaPerfil texto="Número" valor={celular} valorMudou={setCelular} somenteLeitura={editar} />
-                    <EntradaPerfil texto="RG" valor={rg} valorMudou={setRg} somenteLeitura={editar} />
-                    <EntradaPerfil texto="CPF" valor={cpf} valorMudou={setCpf} somenteLeitura={editar} />
-                    <EntradaPerfil texto="Endereço" valor={endereco} valorMudou={setEndereco} somenteLeitura={editar} />
-                </section>
-
-                <section className="bg-white rounded-md w-1/2 h-auto m-2 ml-1 mt-0 p-6
-=======
                 {userProfile &&(
                 <div className="bg-white rounded-md w-1/2 h-auto m-2 mr-1 mt-0 p-6
                                 grid grid-cols-2">
@@ -171,15 +107,11 @@ export default function AlunoPage() {
                 )}
 
                 <div className="bg-white rounded-md w-1/2 h-auto m-2 ml-1 mt-0 p-6
->>>>>>> backend
                                 flex flex-col items-center">
                     <h1 className="pt-5">21 Dias</h1>
                     <h4>Para o próximo pagamento</h4>
-                    <div className="w-80 h-6 mt-8 bg-gray-200 rounded-xl">
-                        <div className="h-6 bg-gradient-to-r from-blue-400 to-pink-600 rounded-xl" style={{width: '45%'}}></div>
-                    </div>
-                </section>
-
+                    <div className="bg-gray-200 h-6 w-80 mt-8 rounded-xl"></div>
+                </div>
             </div>
         </LayoutUser>
         </ProtectedRoute>
