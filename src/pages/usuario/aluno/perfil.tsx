@@ -65,7 +65,7 @@ export default function AlunoPage() {
         const imageUrl = await getDownloadURL(storageRef);
 
         const firestore = getFirestore();
-        const userDocRef = doc(firestore, "alunos", user.uid);
+        const userDocRef = doc(firestore, "Estudante", user.uid);
 
         await setDoc(userDocRef, { profileImageUrl: imageUrl }, { merge: true });
 
