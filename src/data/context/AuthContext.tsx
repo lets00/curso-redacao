@@ -1,7 +1,7 @@
 import { createContext, useContext, useState, ReactNode } from 'react';
 
 interface AuthContextType {
-  userProfile: any; // Substitua 'any' pelo tipo correto do seu objeto de perfil de usuário.
+  userProfile: any;
   setUserProfile: React.Dispatch<React.SetStateAction<any>>;
 }
 
@@ -12,7 +12,7 @@ interface AuthProviderProps {
 }
 
 export const AuthProvider = ({ children }: AuthProviderProps) => {
-  const [userProfile, setUserProfile] = useState<any>(null); // Substitua 'any' pelo tipo correto do seu objeto de perfil de usuário.
+  const [userProfile, setUserProfile] = useState<any>(null);
 
   return (
     <AuthContext.Provider value={{ userProfile, setUserProfile }}>

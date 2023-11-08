@@ -1,27 +1,38 @@
-import React, {useState} from "react"
+import React, { useState } from "react";
 
 interface DateProps {
-    titulo?: string
-    classname?: string
-    classname2?: string
+  titulo?: string;
+  classname?: string; 
+  classname2?: string; 
+  setData?: (data: Date) => void;
 }
 
 export default function DatePicker(props: DateProps) {
-    const [selectedDate, setSelectedDate] = useState<string>("");
+  const [selectedDate, setSelectedDate] = useState<string>("");
 
-    const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setSelectedDate(e.target.value);
-    };
+  const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newDate = new Date(e.target.value);
+    setSelectedDate(e.target.value);
 
-    return(
-        <div className={`pb-5 ${props.classname} text-black`}>
-            <label className="font-Montserrant" htmlFor="data">{props.titulo}</label><br />
-    
-            <input type="date" id="date" name="calendario"
-            value={selectedDate} min="1950-01-01" max="2100-12-31"
-            className={`bg-gray-200 rounded-md p-1 px-2 ${props.classname2}`}
-            onChange={handleDateChange}/>
-        </div>
+    if (props.setData) {
+      props.setData(newDate);
+    }
+  };
 
-    )
+  return (
+    <div className={`pb-5 ${props.classname} text-black`}>
+      <label className="font-Montserrat" htmlFor="data">{props.titulo}</label><br />
+
+      <input
+        type="date"
+        id="date"
+        name="calendario"
+        value={selectedDate}
+        min="1950-01-01"
+        max="2100-12-31"
+        className={`bg-gray-200 rounded-md p-1 px-2 ${props.classname2}`}
+        onChange={handleDateChange}
+      />
+    </div>
+  );
 }

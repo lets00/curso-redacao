@@ -20,9 +20,9 @@ export default function RootTurmas() {
     'pedro', 'ana', 'rg2', 'cpf2', 10, 'Online terça/tarde',true , 'abc', "idTeste2", false),
     ]
     const turmas = [
-        new Turma('Presencial terça/tarde', 'Linguagem', 'Felipe Alves', 'terça-feira', '14h', 'idA', false),
-        new Turma('Online terça/tarde', 'Redação', 'Wellington', 'terça-feira', '14h', 'idB', false),
-        new Turma('Presencial sábado/tarde', 'Redação', 'Wellington', 'sábado', '14h', 'idC', false),
+        new Turma('Presencial terça/tarde', 'Linguagem', 'Felipe Alves', 'terça-feira', '14h', 'Presencial', 'idA', false),
+        new Turma('Online terça/tarde', 'Redação', 'Wellington', 'terça-feira', '14h', 'Online', 'idB', false),
+        new Turma('Presencial sábado/tarde', 'Redação', 'Wellington', 'sábado', '14h', 'Presencial', 'idC', false),
     ]
 
     const dados = ['natural','nome','cpf','pagamento']
@@ -35,7 +35,6 @@ export default function RootTurmas() {
     const [listagem, setListagem] = useState(alunos)
     const [filtragem, setFiltragem] = useState(listagem)
     const [filtro, setFiltro] = useState('Todos(as)')
-    const [executeUseEffect, setExecuteUseEffect] = useState(false);
 
     
     const aoClicar = () => {

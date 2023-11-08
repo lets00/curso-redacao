@@ -28,7 +28,6 @@ interface FormularioProps{
     const [cpf, setCpf] = useState(props.aluno?.cpf ?? '')
     const [senha, setSenha] = useState(props.aluno?.senha ?? '')
     const [mensalidade, setMensalidade] = useState(props.aluno?.mensalidade ?? '')
-    const [alunos, setAlunos] = useState<Aluno[]>([])
     const [termosDeUso, setTermosDeUso] = useState(false);
 
     const auth = getAuth();
@@ -97,14 +96,14 @@ interface FormularioProps{
         <div>
             <form onSubmit={handleSubmit}>
             <Entrada texto="Nome" valor={nome} valorMudou={(e) => setNome(e.target.value)} placeholder="Digite seu nome COMPLETO" />
-            <DatePicker/>
+            <DatePicker classname="text-black" titulo="Data de Nascimento"/>
             <Entrada texto="Naturalidade ( Cidade/Estado )" valor={natural} valorMudou={(e) => setNatural(e.target.value)} />
             <Entrada texto="Endereço ( Rua, Nº, Bairro)" valor={endereco} valorMudou={(e) => setEndereco(e.target.value)} />
             <Entrada texto="Número de celular (com DDD)" valor={celular} valorMudou={(e) => setCelular(e.target.value)} placeholder="(**)****-****" />
             <Entrada texto="E-mail" valor={email} valorMudou={(e) => setEmail(e.target.value)} />
             <Entrada texto="Nome do Pai" valor={pai} valorMudou={(e) => setPai(e.target.value)} />
             <Entrada texto="Nome da Mãe" valor={mae} valorMudou={(e) => setMae(e.target.value)} />
-            <Entrada texto="Senha" valor={senha} valorMudou={(e) => setSenha(e.target.value)} />
+            <Entrada texto="Senha" valor={senha} valorMudou={(e) => setSenha(e.target.value)} tipo="password"/>
             <h2 className="font-Montserrant">Documentação</h2><br />
             <Entrada texto="RG" valor={rg} valorMudou={(e) => setRg(e.target.value)} />
             <Entrada texto="CPF" valor={cpf} valorMudou={(e) => setCpf(e.target.value)} />

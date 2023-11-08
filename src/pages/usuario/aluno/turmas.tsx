@@ -6,8 +6,8 @@ import Turma from "@/core/Turma";
 export default function TurmasAluno() {
 
     const funcionarios = [
-        new Turma ('presencial - terça/tarde', 'Redação', 'Felipe Alves','Terça-feira', '14h', 'idTeste', false),
-        new Turma ('online - sábado/tarde', 'Matemática', 'André Torres','Sábado', '14h', 'idTeste2', false)
+        new Turma ('presencial - terça/tarde', 'Redação', 'Felipe Alves','Terça-feira', '14h', 'Presencial', 'idTeste', false),
+        new Turma ('online - sábado/tarde', 'Matemática', 'André Torres','Sábado', '14h', 'Online', 'idTeste2', false)
     ]
     const dados = ['nome', 'dia', 'horario', 'professor']
     const cabecalho = ['Matéria', 'Dia', 'Horário', 'Professor']

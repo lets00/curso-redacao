@@ -97,11 +97,11 @@ export default function AlunoPage() {
                 <div className="bg-white rounded-md w-1/2 h-auto m-2 mr-1 mt-0 p-6
                                 grid grid-cols-2">
                     <PerfilDados texto="Modalidade" valor='' somenteLeitura={true} />
-                    <PerfilDados texto="Nome" valor={userProfile.nome} somenteLeitura={!editar} />
-                    <PerfilDados texto="Número" valor={userProfile.numero} somenteLeitura={!editar} />
-                    <PerfilDados texto="RG" valor={userProfile.rg} somenteLeitura={!editar} />
-                    <PerfilDados texto="CPF" valor={userProfile.cpf} somenteLeitura={!editar} />
-                    <PerfilDados texto="Endereço" valor={userProfile.endereco} somenteLeitura={!editar} />
+                    <PerfilDados texto="Nome" valor={userProfile.nome} somenteLeitura={editar} />
+                    <PerfilDados texto="Número" valor={userProfile.numero} somenteLeitura={editar} />
+                    <PerfilDados texto="RG" valor={userProfile.rg} somenteLeitura={editar} />
+                    <PerfilDados texto="CPF" valor={userProfile.cpf} somenteLeitura={editar} />
+                    <PerfilDados texto="Endereço" valor={userProfile.endereco} somenteLeitura={editar} />
 
                 </div>
                 )}
@@ -114,6 +114,6 @@ export default function AlunoPage() {
                 </div>
             </div>
         </LayoutUser>
-        </ProtectedRoute>
+      </ProtectedRoute>
     )
 }

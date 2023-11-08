@@ -54,6 +54,7 @@ export default function ModalRootTurma(props: ModalRootTurmaProps){
         setExcluir(false);
         setSelecionou(false);
       }
+
     function edicao(turmaEditada: Turma) {
         const indexToEdit = turmas.findIndex((turma) => turma.nome === filtro);
       
@@ -71,10 +72,21 @@ export default function ModalRootTurma(props: ModalRootTurmaProps){
         setSelecionou(false);
       }
 
+    function adicao(turmaNova: Turma){
+        if (!turmaNova.nome || !turmaNova.disciplina || !turmaNova.dia || !turmaNova.horario) {
+            alert("Preencha todos os campos obrigatórios.");
+            return;
+          }
+        setTurmas([...turmas,turmaNova]);
+        setSeletor([...seletor,turmaNova.nome])
+        props.setSelect?.([...seletor,turmaNova.nome])
+        
+    }
+
     return (
         <div className="flex text-black gap-3 -ml-3 -mt-2">
             {selecionou === true ? 
-                <ModalTurma setSelecionou={setSelecionou} turma={turma} editar={edicao}/>
+                <ModalTurma setSelecionou={setSelecionou} turma={turma} editar={edicao} adicao={adicao}/>
             :
             excluir === false?
             <>

@@ -106,7 +106,7 @@ export default function RootAlunos() {
                     />
             <Modal isOpen={openModal} isNotOpen={() => setOpenModal(!openModal)} cor='white' titulo={tipoModal == 'selecionado' ? 'Pagamento' : tipoModal == 'excluir' ? 'Tem certeza que deseja excluir:': "Editar Aluno"}
             subtitulo={tipoModal == 'excluir' ? aluno.nome : ''}>
-            {tipoModal == 'selecionado' ? <ModalRootPagamento/>: tipoModal == 'excluir' ? <ModalExcluir objeto={aluno} exclusao={exclusao}/>: 
+            {tipoModal == 'selecionado' ? <ModalRootPagamento objeto={aluno}/>: tipoModal == 'excluir' ? <ModalExcluir objeto={aluno} exclusao={exclusao} />: 
             <ModalRootALunos aluno={aluno} novoAluno={alunoSelecionado} editar={edicao}/>}</Modal>
         </LayoutUser>
     )

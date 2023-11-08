@@ -1,90 +1,99 @@
-"use client";
-
 import { useRef, useState } from "react";
-export default function DragAndDrop() {
-  const [dragActive, setDragActive] = useState<boolean>(false);
-  const inputRef = useRef<any>(null);
-  const [files, setFiles] = useState<any>([]);
 
-  function handleChange(e: any) {
+interface PropsArquivo {
+  setArquivo?: (arquivo: any) => void;
+}
+
+export default function DragAndDrop(props: PropsArquivo) {
+  const [dragActive, setDragActive] = useState(false);
+  const inputRef = useRef<HTMLInputElement | null>(null);
+  const [files, setFiles] = useState<File[]>([]);
+
+  function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
     e.preventDefault();
-    if (e.target.files && e.target.files[0]) {
-      console.log(e.target.files);
-      for (let i = 0; i < e.target.files["length"]; i++) {
-        setFiles((prevState: any) => [...prevState, e.target.files[i]]);
+    if (e.target.files && e.target.files.length > 0) {
+      const selectedFiles = Array.from(e.target.files);
+      setFiles((prevState) => [...prevState, ...selectedFiles]);
+
+      if (props.setArquivo) {
+        props.setArquivo(selectedFiles);
       }
     }
   }
 
-  function handleSubmitFile(e: any) {
+  function handleSubmitFile(e: React.FormEvent) {
+    e.preventDefault();
     if (files.length === 0) {
-      // no file has been submitted
+      // Nenhum arquivo foi enviado
     } else {
-      // write submit logic here
+      // Lógica de envio aqui
     }
   }
 
-  function handleDrop(e: any) {
+  function handleDrop(e: React.DragEvent) {
     e.preventDefault();
     e.stopPropagation();
     setDragActive(false);
-    if (e.dataTransfer.files && e.dataTransfer.files[0]) {
-      for (let i = 0; i < e.dataTransfer.files["length"]; i++) {
-        setFiles((prevState: any) => [...prevState, e.dataTransfer.files[i]]);
+    if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+      const droppedFiles = Array.from(e.dataTransfer.files);
+      setFiles((prevState) => [...prevState, ...droppedFiles]);
+
+      if (props.setArquivo) {
+        props.setArquivo(droppedFiles);
       }
     }
   }
 
-  function handleDragLeave(e: any) {
+  function handleDragLeave(e: React.DragEvent) {
     e.preventDefault();
     e.stopPropagation();
     setDragActive(false);
   }
 
-  function handleDragOver(e: any) {
+  function handleDragOver(e: React.DragEvent) {
     e.preventDefault();
     e.stopPropagation();
     setDragActive(true);
   }
 
-  function handleDragEnter(e: any) {
+  function handleDragEnter(e: React.DragEvent) {
     e.preventDefault();
     e.stopPropagation();
     setDragActive(true);
   }
 
-  function removeFile(fileName: any, idx: any) {
+  function removeFile(fileName: string, idx: number) {
     const newArr = [...files];
     newArr.splice(idx, 1);
-    setFiles([]);
     setFiles(newArr);
   }
 
   function openFileExplorer() {
-    inputRef.current.value = "";
-    inputRef.current.click();
+    if (inputRef.current) {
+      inputRef.current.value = "";
+      inputRef.current.click();
+    }
   }
 
   return (
     <div className="flex flex-col items-start justify-center ml-10 w-full">
-        <h3 className="font-Montserrant">Arquivos</h3>
+      <h3 className="font-Montserrant">Arquivos</h3>
       <form
         className={`${
           dragActive ? "bg-slate-400" : "bg-slate-200"
-        }  p-4 w-4/5 rounded-lg  min-h-[9rem] text-center flex flex-col items-center justify-center`}
+        } p-4 w-4/5 rounded-lg min-h-[9rem] text-center flex flex-col items-center justify-center`}
         onDragEnter={handleDragEnter}
         onSubmit={(e) => e.preventDefault()}
         onDrop={handleDrop}
         onDragLeave={handleDragLeave}
         onDragOver={handleDragOver}
       >
-        {/* this input element allows us to select files for upload. We make it hidden so we can activate it when the user clicks select files */}
         <input
           placeholder="fileInput"
           className="hidden"
           ref={inputRef}
           type="file"
-          multiple={true}
+          multiple
           onChange={handleChange}
           accept=".xlsx,.xls,image/*,.doc, .docx,.ppt, .pptx,.txt,.pdf"
         />
@@ -101,25 +110,18 @@ export default function DragAndDrop() {
         </p>
 
         <div className="flex flex-col items-center p-3">
-          {files.map((file: any, idx: any) => (
+          {files.map((file: File, idx: number) => (
             <div key={idx} className="flex flex-row space-x-5">
               <span>{file.name}</span>
               <span
                 className="text-red-500 cursor-pointer"
                 onClick={() => removeFile(file.name, idx)}
               >
-                remove
+                remover
               </span>
             </div>
           ))}
         </div>
-
-        {/* <button
-          className="bg-black rounded-lg p-2 mt-3 w-auto"
-          onClick={handleSubmitFile}
-        >
-          <span className="p-2 text-white">Submit</span>
-        </button> */}
       </form>
     </div>
   );

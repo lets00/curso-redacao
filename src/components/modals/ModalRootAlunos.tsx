@@ -34,7 +34,7 @@ export default function ModalRootALunos(props: ModalRootALunosProps){
         <div>
             <div className="grid grid-rows-4 grid-flow-col bg-blue-200 rounded-lg p-3 my-3">
                 <EntradaPerfil className="text-white" className2="bg-white rounded-xl text-black" texto="Nome" valor={nome} valorMudou={setNome}/>
-                <DatePicker titulo="Data de Nascimento"/>
+                <DatePicker titulo="Data de Nascimento" setData={setData}/>
                 <EntradaPerfil className="text-white" className2="bg-white rounded-xl text-black" texto="Naturalidade ( Cidade/Estado )" valor={natural} valorMudou={setNatural}/>
                 <EntradaPerfil className="text-white" className2="bg-white rounded-xl text-black" texto="Endereço ( Rua, Nº, Bairro)" valor={endereco} valorMudou={setEndereco}/>
                 <EntradaPerfil className="text-white" className2="bg-white rounded-xl text-black" texto="Número de celular (com DDD)" valor={celular} valorMudou={setCelular}/>
