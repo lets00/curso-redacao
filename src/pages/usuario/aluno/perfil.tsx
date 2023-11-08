@@ -9,7 +9,7 @@ import Professor from "@/core/Professor";
 import { useEffect, useState } from "react";
 import PerfilDados from "@/components/PerfilDados";
 import Aluno from "@/core/Aluno";
-import { getAuth } from "firebase/auth";
+import { getAuth, User } from "firebase/auth";
 import { useRouter } from "next/router";
 import { GetServerSideProps } from 'next';
 import { getFirestore, doc, setDoc, collection, query, where, getDocs } from "firebase/firestore";
@@ -40,7 +40,7 @@ export default function AlunoPage() {
 
     if (user) {
       const firestore = getFirestore();
-      const alunosRef = collection(firestore, "alunos");
+      const alunosRef = collection(firestore, "Estudante");
       const q = query(alunosRef, where("email", "==", user.email));
 
       getDocs(q)
@@ -79,7 +79,7 @@ export default function AlunoPage() {
         const firestore = getFirestore();
         const userDocRef = doc(firestore, "alunos", user.uid);
 
-        await setDoc(userDocRef, { profileImageUrl: imageUrl }, { merge: true });
+        await setDoc(userDocRef, { fotoPerfil: imageUrl }, { merge: true });
 
         setBase64Image(imageUrl);
         console.log("Foto de perfil atualizada com sucesso.");

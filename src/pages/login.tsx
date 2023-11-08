@@ -16,7 +16,6 @@ export default function Login(){
     const [senha, setSenha] = useState(""); 
     const [userProfile, setUserProfile] = useState({}); 
 
-
     async function login() {
 
         try {
@@ -27,7 +26,7 @@ export default function Login(){
         console.log("Usuário logado com ID:", user.uid);
 
         const firestore = getFirestore();
-        const alunosRef = collection(firestore, "alunos");
+        const alunosRef = collection(firestore, "Estudante");
         const q = query(alunosRef, where("email", "==", email));
         const querySnapshot = await getDocs(q);
 
@@ -54,7 +53,7 @@ export default function Login(){
                 senha: "123456",
 
             };
-            const docRef = await addDoc(collection(firestore, "alunos"), novaEntrada);
+            const docRef = await addDoc(collection(firestore, "Estudante"), novaEntrada);
             console.log("Usuário adicionado com ID:", docRef.id);
         } catch (error) {
             console.error("Erro ao adicionar documento:", error);

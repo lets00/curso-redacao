@@ -44,8 +44,8 @@ export default function ImageUploader(props: ImageUploaderProps) {
           const imageUrl = await getDownloadURL(storageRef);
   
           const firestore = getFirestore();
-          const userDocRef = doc(firestore, "alunos", user.uid);
-          await setDoc(userDocRef, { profileImageUrl: imageUrl }, { merge: true });
+          const userDocRef = doc(firestore, "Estudante", user.uid);
+          await setDoc(userDocRef, { fotoPerfil: base64Image });
   
           setBase64Image(base64Image); 
           props.onImageUpload(base64Image);
