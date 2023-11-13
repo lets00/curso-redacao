@@ -1,3 +1,4 @@
+import { format } from "date-fns";
 import React, { useState } from "react";
 
 interface DateProps {
@@ -5,6 +6,8 @@ interface DateProps {
   classname?: string; 
   classname2?: string; 
   setData?: (data: Date) => void;
+  dataMin?: Date
+  dataMax?: Date
 }
 
 export default function DatePicker(props: DateProps) {
@@ -28,8 +31,8 @@ export default function DatePicker(props: DateProps) {
         id="date"
         name="calendario"
         value={selectedDate}
-        min="1950-01-01"
-        max="2100-12-31"
+        min={props.dataMin? format(props.dataMin, 'yyyy-MM-dd') : "1950-01-01"}
+        max={props.dataMax? format(props.dataMax, 'yyyy-MM-dd') : "2100-12-31"}
         className={`bg-gray-200 rounded-md p-1 px-2 ${props.classname2}`}
         onChange={handleDateChange}
       />

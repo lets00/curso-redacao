@@ -22,27 +22,27 @@ export default function RootLive() {
     const [nome, setNome] = useState('')
     const [link, setLink] = useState('')
     const [professor, setProfessor] = useState('')
-    const [data, setData] = useState(new Date(0))
+    const [data, setData] = useState<Date>(new Date(1000, 10, 10))
     const [turmas, setTurmas] = useState<string[]>([])
 
     const turmasUnicas = listaTurmas.map((turma: { nome: any }) => turma.nome);
 
     function adicao(){
-        if (!nome || turmas.length === 0 || !link || !data) {
+        if (!nome || turmas.length === 0 || !link || data.getTime() === new Date(1000, 10, 10).getTime()) {
             alert("Preencha todos os campos obrigatórios.");
             return;
-          }
+        }
         
-          const novasLives = turmas.map((turmaSelecionada) => {
-            return new Live(nome, turmaSelecionada, professor, data, link, "id" + Math.random(), false);
-          });
+        const novasLives = turmas.map((turmaSelecionada) => {
+        return new Live(nome, turmaSelecionada, professor, data, link, "id" + Math.random(), false);
+        });
 
-          setLives([...lives, ...novasLives]);
-          alert("Lives criadas com sucesso!")
+        setLives([...lives, ...novasLives]);
+        alert("Lives criadas com sucesso!")
 
-          setNome('');
-          setLink('');
-          setProfessor('');
+        setNome('');
+        setLink('');
+        setProfessor('');
     }
 
     return (
@@ -53,7 +53,7 @@ export default function RootLive() {
             <div className="grid grid-cols-1 w-fit">
                 <EntradaPerfil texto="Título" placeholder="Digite o título da live" className={'ml-9 mt-2 w-full'} valor={nome} valorMudou={setNome}/>
                 <EntradaPerfil texto="Link" placeholder="Link para acessar a live" className={'ml-9 mt-2 w-full'} valor={link} valorMudou={setLink}/>
-                <DatePicker titulo="Data Selecionada" classname="ml-9" setData={setData}/>
+                <DatePicker titulo="Data Selecionada" classname="ml-9" setData={setData} dataMin={new Date()}/>
                 <Botao onClick={adicao} className="w-36 bg-blue-400 ml-9 mt-4" cor={'blue'}>Marcar</Botao>
             </div>
 

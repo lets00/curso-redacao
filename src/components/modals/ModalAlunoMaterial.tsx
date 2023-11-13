@@ -9,54 +9,65 @@ import EntradaPerfil from "../EntradaPerfil";
 interface ModalAlunoMaterial {
     material: Material
     comentario: Comentario
-    aluno?: Aluno
+    aluno: Aluno
     salvarComentario?: (comentario: Comentario) => void
+    editarComentario?: (comentario: Comentario) => void
+    excluirComentario?: () => void
 }
 
 export default function ModalAlunoMaterial(props: ModalAlunoMaterial){
-    const idMaterial = (props.material.id ?? '')
+    const idMaterial = (props.material.id ?? '') 
     const id = props.comentario?.id
     const [texto, setTexto] = useState(props.comentario?.texto ?? '')
     const [estrelas, setEstrelas] = useState(props.comentario?.estrelas ?? '')
-    const idUsuario = (props.aluno?.id ?? '')
+    const [excluir, setExcluir] = useState<Boolean>(false)
 
-    const handleTextoChange = (e: any) => {
-        // Atualize o estado 'texto' quando o usuário digitar no campo de entrada de texto
-        setTexto(e.target.value);
-      };
 
     return(
         <div className="text-black">
-            <section className="bg-pink-200 rounded-lg p-3 my-3">      
-                <div className="flex items-center mb-3 gap-1">
-                    <div className=" flex justify-center items-center
-                            rounded-full p-4 ml-4 mr-0 bg-white"/>
-                    <h4 className="ml-1">{props.aluno?.nome}</h4>
-                </div>     
+            {excluir === false ? 
+                <>
+                    <section className="bg-pink-200 rounded-lg p-3 my-3">      
+                        <div className="flex items-center mb-3 gap-1">
+                            <div className=" flex justify-center items-center
+                                    rounded-full p-4 ml-4 mr-0 bg-white"/>
+                            <h4 className="ml-1">{props.aluno?.nome}</h4>
+                        </div>     
 
-                <div className="bg-white rounded-lg">
-                    <input type="text" className="rounded-md p-3 w-full outline-none" value={texto} onChange={handleTextoChange}
-                    placeholder="Insira aqui sua dúvida e/ou comentário"/>
-                </div>
-            </section>
+                        <div className="bg-white rounded-lg">
+                            <input type="text" className="rounded-md p-3 w-full outline-none" value={texto} onChange={(e) => {setTexto(e.target.value)}}
+                            placeholder="Insira aqui sua dúvida e/ou comentário"/>
+                        </div>
+                    </section>
 
-            <section className="flex place-content-between gap-10">
-                <div className="flex justify-center bg-pink-400 rounded-lg p-2 px-3 gap-2 text-white font-bold font-Montserrant">
-                    <h3>Avaliação</h3>
-                    <Estrelas estrelas={estrelas} setEstrelas={setEstrelas}/>
+                    <section className={`flex place-content-between gap-10 ${id && 'gap-2'}`}>
+                        <div className="flex justify-center bg-pink-400 rounded-lg p-2 px-3 gap-2 text-white font-bold font-Montserrant">
+                            <h3>Avaliação</h3>
+                            <Estrelas estrelas={estrelas} setEstrelas={setEstrelas}/>
+                        </div>
+                        <Botao className="p-10 font-bold"
+                                onClick={() => {
+                                    if (estrelas === 0) {
+                                    alert("Avaliação deve ser maior que 0");
+                                    } else if (id) {
+                                            props.editarComentario?.(
+                                                new Comentario(idMaterial, texto, estrelas, props.aluno.id, "4", false));
+                                        } else {
+                                            props.salvarComentario?.(
+                                                new Comentario(idMaterial, texto, estrelas, props.aluno.id, "4", false));
+                                            //aqui coloquei um id "4" só pra poder criar um turma sem nenhum atributo vazio
+                                        }
+                                    } }>
+                                {id ? 'Alterar':'Enviar comentário'}</Botao>
+                        {id && <Botao onClick={() => {setExcluir(true)}} className="p-10 font-bold">Excluir</Botao>}
+                    </section>
+                </>
+            :
+                <div className="flex flex-col items-center content-center p-4 px-5 gap-3">
+                    <h3>Deseja mesmo excluir seu comentário?</h3>
+                    <button onClick={props.excluirComentario} className="p-3 bg-red-600 text-white font-bold rounded-lg">Sim, Excluir</button>
                 </div>
-                <Botao className="p-10"
-                        onClick={() => {
-                            if (estrelas === 0) {
-                              alert("Avaliação deve ser maior que 0");
-                            } else {
-                              props.salvarComentario?.(
-                                new Comentario(idMaterial, texto, estrelas, idUsuario, id, false)
-                              );
-                            }
-                          }}>
-                    Enviar</Botao>
-            </section>
+            }
         </div>
     )
 }

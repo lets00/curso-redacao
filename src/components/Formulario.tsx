@@ -46,18 +46,9 @@ interface FormularioProps{
         }
     
         const formData = {
-          nome,
-          data,
-          natural,
-          endereco,
-          celular,
-          email,
-          pai,
-          mae,
-          rg,
-          cpf,
-          senha,
-          mensalidade,
+          nome, data, natural, endereco, celular,
+          email, pai, mae, rg, cpf,
+          senha, mensalidade,
         };
     
         try {
@@ -96,7 +87,7 @@ interface FormularioProps{
         <div>
             <form onSubmit={handleSubmit}>
             <Entrada texto="Nome" valor={nome} valorMudou={(e) => setNome(e.target.value)} placeholder="Digite seu nome COMPLETO" />
-            <DatePicker classname="text-black" titulo="Data de Nascimento"/>
+            <DatePicker classname="text-black" titulo="Data de Nascimento" dataMax={new Date()}/>
             <Entrada texto="Naturalidade ( Cidade/Estado )" valor={natural} valorMudou={(e) => setNatural(e.target.value)} />
             <Entrada texto="Endereço ( Rua, Nº, Bairro)" valor={endereco} valorMudou={(e) => setEndereco(e.target.value)} />
             <Entrada texto="Número de celular (com DDD)" valor={celular} valorMudou={(e) => setCelular(e.target.value)} placeholder="(**)****-****" />

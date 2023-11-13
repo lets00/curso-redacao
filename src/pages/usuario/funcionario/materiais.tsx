@@ -26,15 +26,16 @@ export default function Materiais() {
     const [descricao, setDescricao] = useState('')
     const [arquivo, setArquivo] = useState('')
     const [link, setLink] = useState('')
-    const [professor, setProfessor] = useState('')
-    const [data, setData] = useState(new Date(0))
+    //Nome do usuario professor 
+    const [professor, setProfessor] = useState('Felipe Alves')
+    const [data, setData] = useState<Date>(new Date(1000, 10, 10))
     const [turmas, setTurmas] = useState<string[]>([])
 
 
     const turmasUnicas = listaTurmas.map((turma: { nome: any }) => turma.nome);
 
     function adicao() {
-      if (!nome || turmas.length === 0) {
+      if (!nome || turmas.length === 0 || data.getTime() === new Date(1000, 10, 10).getTime()) {
         alert("Preencha todos os campos obrigatórios.");
         return;
       }
@@ -55,7 +56,6 @@ export default function Materiais() {
       setNome('');
       setDescricao('');
       setLink('');
-      setProfessor('');
     }
     
 
