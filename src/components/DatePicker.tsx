@@ -14,13 +14,16 @@ export default function DatePicker(props: DateProps) {
   const [selectedDate, setSelectedDate] = useState<string>("");
 
   const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newDate = new Date(e.target.value);
-    setSelectedDate(e.target.value);
-
+    const selectedDateString = e.target.value;
+    const newDate = new Date(selectedDateString + 'T00:00:00Z');
+    newDate.setDate(newDate.getDate() + 1);
+    setSelectedDate(selectedDateString);
+  
     if (props.setData) {
       props.setData(newDate);
     }
   };
+  
 
   return (
     <div className={`pb-5 ${props.classname} text-black`}>

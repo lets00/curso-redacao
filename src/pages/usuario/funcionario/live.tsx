@@ -25,6 +25,8 @@ export default function FuncionarioLive() {
     const [professor, setProfessor] = useState('Professor Teste')
     const [data, setData] = useState<Date>(new Date(1000, 10, 10))
     const [turmas, setTurmas] = useState<string[]>([])
+    const liveVazia = Live.vazio()
+    const [live, setLive] = useState<Live>(liveVazia)
 
     const turmasUnicas = listaTurmas.map((turma: { nome: any }) => turma.nome);
 
@@ -33,22 +35,63 @@ export default function FuncionarioLive() {
             alert("Preencha todos os campos obrigatórios.");
             return;
           }
+
+        const existeDuplicata = turmas.some((turmaSelecionada) =>
+            lives.some(
+            (live) =>
+                live.nome === nome &&
+                live.turma.includes(turmaSelecionada) &&
+                live.data.getTime() === data.getTime() &&
+                live.link === link
+            )
+        );
+
+        if (existeDuplicata) {
+            alert("Já existe uma Live com os mesmos atributos, verifique as turmas selecionadas ou realtere a data.");
+            return;
+        }
         
-          const novasLives = turmas.map((turmaSelecionada) => {
+        if(live.id === liveVazia.id){
+            const novasLives = turmas.map((turmaSelecionada) => {
             return new Live(nome, turmaSelecionada, professor, data, link, "id" + Math.random(), false);
-          });
-
-          setLives([...lives, ...novasLives]);
-          alert("Lives criadas com sucesso!")
-
-          setNome('');
-          setLink('');
+            });
+    
+            setLives([...lives, ...novasLives]);
+            alert("Lives criadas com sucesso!")
+            setNome('');
+            setLink('');
+        } else {
+            if(turmas.length > 1){
+                alert("Insira a alteração a apenas uma turma")
+            } else {
+                const indexToEdit = lives.findIndex((liveCopia) => liveCopia.id === live.id);
+    
+                if (indexToEdit !== -1) {
+                    const listaAtualizada = [...lives];
+                    listaAtualizada[indexToEdit] = new Live(nome, turmas[0], professor, data, link, live.id, false);;
+                    setLives(listaAtualizada);
+                    alert("Live atualizada!")
+                    setNome('');
+                    setLink('');    
+                    setLive(liveVazia)
+                } else {
+                    alert("Live não encontrada")
+                }
+            }
+        }
     }
 
     function edicao(live: Live){
         setNome(live.nome)
         setLink(live.link)
         setData(live.data)
+        setLive(live)
+    }
+
+    function exclusao(live: Live){
+        const livesFiltrados = lives.filter((liveCopia) => liveCopia.id !== live.id);
+        setLives(livesFiltrados);
+        setLive(liveVazia)
     }
 
     return (
@@ -81,12 +124,12 @@ export default function FuncionarioLive() {
                                     {format(live.data, 'dd-MM-yyyy')} {live.nome} 
                                 </h4>
                                 <h4 className="text-gray-600 font-semibold">
-                                    {live.turma}
+                                    {live.turma} 
                                 </h4>
                                 {professor === live.professor && 
                                 <div className="flex gap-2">
-                                    <Botao onClick={() => {}} className="mt-2 p-4 pt-1 pb-1 font-semibold">Excluir</Botao>
-                                    <Botao onClick={() => {}} className="mt-2 p-4 pt-1 pb-1 font-semibold">Editar</Botao>
+                                    <Botao onClick={() => {exclusao(live)}} className="mt-2 p-4 pt-1 pb-1 font-semibold">Excluir</Botao>
+                                    <Botao onClick={() => {edicao(live)}} className="mt-2 p-4 pt-1 pb-1 font-semibold">Editar</Botao>
                                 </div>
                                 }
                             </div>
