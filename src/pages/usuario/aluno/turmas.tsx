@@ -5,7 +5,12 @@ import Turma from "@/core/Turma";
 
 export default function TurmasAluno() {
 
-    const funcionarios = [
+    interface UserProfile {
+        turma: string[];
+    }
+
+    const alunoTurmas = [
+        // aqui seria pegar as turmas em que cada userProfile.turma[y] da array turma (do aluno) é igual a uma turmas[x].id de turmas
         new Turma ('presencial - terça/tarde', 'Redação', 'Felipe Alves','Terça-feira', '14h', 'Presencial', 'idTeste', false),
         new Turma ('online - sábado/tarde', 'Matemática', 'André Torres','Sábado', '14h', 'Online', 'idTeste2', false)
     ]
@@ -28,7 +33,7 @@ export default function TurmasAluno() {
                 <div className="flex justify-center p-5 font-semibold">
                     <h3>Suas Turmas</h3>
                 </div>
-                <Tabela objeto={funcionarios} 
+                <Tabela objeto={alunoTurmas} 
                         propriedadesExibidas={dados}
                         cabecalho={cabecalho}></Tabela>
             </section>

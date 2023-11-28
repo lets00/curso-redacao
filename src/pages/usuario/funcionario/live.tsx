@@ -14,11 +14,11 @@ export default function FuncionarioLive() {
     const [lives, setLives] = useState([
         new Live("Live de Repertório","online terça/tarde", "Wellington", new Date(2023, 10, 10), "www.google.com", "Id1", false),
     ])
-    const [listaTurmas, setListaTurmas] = useState([
+    const listaTurmas =[
         new Turma('Presencial terça/tarde', 'Linguagem', 'Felipe Alves', 'terça-feira', '14h', 'Presencial', 'idA', false),
         new Turma('Online terça/tarde', 'Redação', 'Wellington', 'terça-feira', '14h', 'Online', 'idB', false),
         new Turma('Presencial sábado/tarde', 'Redação', 'Wellington', 'sábado', '14h', 'Presencial', 'idC', false),
-    ])
+    ]
 
     const [nome, setNome] = useState('')
     const [link, setLink] = useState('')

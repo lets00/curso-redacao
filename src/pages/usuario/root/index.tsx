@@ -9,22 +9,30 @@ import Modal from "@/components/Modal";
 import ModalRootPagamento from "@/components/modals/ModalRootPagamento";
 import ModalExcluir from "@/components/modals/ModalExcluir";
 import ModalRootALunos from "@/components/modals/ModalRootAlunos";
+import Turma from "@/core/Turma";
 
 export default function RootAlunos() {
 
     const turmas = [
         new Aluno('Joao Carlos', new Date(2004-10-10), 'PE', 'rua teste', '111-111', 'jasha@gmail',
-    'jose', 'carla', 'rgrgrg', 'cpfcpf', 15, 'Presencial terça/tarde',false , '123', "idTeste", false),
-    new Aluno('teste 1', new Date(2004-10-10), 'PE', 'rua teste', '111-111', 'jasha@gmail',
-    'jose', 'carla', 'rgrgrg', 'cpfcpf', 10, 'Presencial terça/tarde',false , '123', "idTeste1", false),
+    'jose', 'carla', 'rgrgrg', 'cpfcpf', 15, ['idTurma2'],false , '123', "idTeste", false),
+        new Aluno('teste 1', new Date(2004-10-10), 'PE', 'rua teste', '111-111', 'jasha@gmail',
+    'jose', 'carla', 'rgrgrg', 'cpfcpf', 10, ['idTurma3'],false , '123', "idTeste1", false),
         new Aluno('Maria Luiza', new Date(2004-10-10), 'RJ', 'rua testew', '222-111', 'mari@gmail',
-    'pedro', 'ana', 'rg2', 'cpf2', 10, 'Online terça/tarde',true , 'abc', "idTeste2", false),
-    new Aluno('teste 2', new Date(2004-10-10), 'RJ', 'rua testew', '222-111', 'mari@gmail',
-    'pedro', 'ana', 'rg2', 'cpf2', 15, 'Online terça/tarde',true , 'abc', "idTeste3", false),
+    'pedro', 'ana', 'rg2', 'cpf2', 10, ['idTurma1','idTurma3'],true , 'abc', "idTeste2", false),
+        new Aluno('teste 2', new Date(2004-10-10), 'RJ', 'rua testew', '222-111', 'mari@gmail',
+    'pedro', 'ana', 'rg2', 'cpf2', 15, ['idTurma1'],true , 'abc', "idTeste3", false),
     ]
+    const listaTurmas = [
+        new Turma('Presencial terça/tarde', 'Linguagem', 'Felipe Alves', 'terça-feira', '14h', 'Presencial', 'idTurma1', false),
+        new Turma('Online terça/tarde', 'Redação', 'Wellington', 'terça-feira', '14h', 'Online', 'idTurma2', false),
+        new Turma('Presencial sábado/tarde', 'Redação', 'Wellington', 'sábado', '14h', 'Presencial', 'idTurma3', false),
+    ]
+    
     const dados = ['natural','nome','cpf','pagamento']
     const cabecalho = ['Estado', 'Nome', 'CPF', 'Pagamento', 'Ações']
-    const select1 = ['Todos(as)','Presencial terça/tarde', 'Online terça/tarde', 'Presencial sábado/tarde']
+    //aqui o seletor vai mostrar apenas as turmas que existem no BD
+    const select1 = ['Todos(as)', ...listaTurmas.map((turma: { nome: any }) => turma.nome)]
     const select2 = ['Todos(as)','Pagamentos dia 10','Pagamentos dia 15']
 
     const [aluno, setAluno] = useState<Aluno>(Aluno.vazio())
@@ -39,7 +47,11 @@ export default function RootAlunos() {
       const aoClicar = () => {
         let filtragemResultante = listagem;
         if (filtro1 !== "Todos(as)") {
-            filtragemResultante = filtragemResultante.filter(aluno => aluno.turma === filtro1);
+            filtragemResultante = filtragemResultante.filter((aluno) =>
+                aluno.turma.some((turmaId) =>
+                    listaTurmas.find((turma) => turma.id === turmaId && turma.nome === filtro1)
+                )
+            );
         }
         if (filtro2 === "Pagamentos dia 10") {
             filtragemResultante = filtragemResultante.filter(aluno => aluno.mensalidade === 10);

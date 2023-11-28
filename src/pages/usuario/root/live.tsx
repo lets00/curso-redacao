@@ -9,16 +9,16 @@ import Turma from "@/core/Turma";
 import { format } from "date-fns";
 import { useState } from "react";
 
-export default function FuncionarioLive() {
+export default function RootLive() {
 
     const [lives, setLives] = useState([
         new Live("Live de Repertório","online terça/tarde", "Wellington", new Date(2023, 10, 10), "www.google.com", "Id1", false),
     ])
-    const [listaTurmas, setListaTurmas] = useState([
+    const listaTurmas =[
         new Turma('Presencial terça/tarde', 'Linguagem', 'Felipe Alves', 'terça-feira', '14h', 'Presencial', 'idA', false),
         new Turma('Online terça/tarde', 'Redação', 'Wellington', 'terça-feira', '14h', 'Online', 'idB', false),
         new Turma('Presencial sábado/tarde', 'Redação', 'Wellington', 'sábado', '14h', 'Presencial', 'idC', false),
-    ])
+    ]
 
     const [nome, setNome] = useState('')
     const [link, setLink] = useState('')
@@ -95,7 +95,7 @@ export default function FuncionarioLive() {
     }
 
     return (
-        <LayoutUser usuario={'funcionario'} className="text-black">
+        <LayoutUser usuario={'root'} className="text-black">
 
             <Titulo>Marcar Live</Titulo>
             <Checkbox titulo="Turma (as)" opcoes={[...turmasUnicas]} setOpcao={setTurmas}/>

@@ -29,9 +29,9 @@ export default function ListarMateriais() {
     ]
     const alunos = [
         new Aluno('Joao Carlos', new Date(2004-10-10), 'PE', 'rua teste', '111-111', 'jasha@gmail',
-        'jose', 'carla', 'rgrgrg', 'cpfcpf', 15, 'Presencial terça/tarde',false , '123', "id1", false),
-        new Aluno('Maria Luiza', new Date(2004-10-10), 'RJ', 'rua testew', '222-111', 'mari@gmail',
-        'pedro', 'ana', 'rg2', 'cpf2', 10, 'Online terça/tarde',true , 'abc', "id2", false),
+        'jose', 'carla', 'rgrgrg', 'cpfcpf', 15, ['idDeTurma1'],false , '123', "id1", false),
+        new Aluno('Maria Luiza', new Date(2004-10-10), 'RJ', 'rua teste', '222-111', 'mari@gmail',
+        'pedro', 'ana', 'rg2', 'cpf2', 10, ['idDeTurma1'],true , 'abc', "id2", false),
     ]
 
     const dados = ['nome','descricao', 'data']
@@ -63,11 +63,6 @@ export default function ListarMateriais() {
         setMaterial(material);
         setTipoModal('excluir');
         setOpenModal(true)
-    }
-    function salvarMaterial(material: Material){
-    }
-    function novoMaterial(){
-        setMaterial(Material.vazio())
     }
     function exclusao(id: any){
         const materiaisFiltrados = listagem.filter((material) => material.id !== id);

@@ -4,6 +4,8 @@ import { useState } from "react";
 import {Botao} from "../Botao";
 import DatePicker from "../DatePicker";
 import Select from "../Select";
+import Turma from "@/core/Turma";
+import Checkbox from "../Checkbox";
 
 interface ModalRootALunosProps {
     aluno: Aluno
@@ -13,6 +15,12 @@ interface ModalRootALunosProps {
 }
 
 export default function ModalRootALunos(props: ModalRootALunosProps){
+
+    const listaTurmas = [
+        new Turma('Presencial terça/tarde', 'Linguagem', 'Felipe Alves', 'terça-feira', '14h', 'Presencial', 'idTurma1', false),
+        new Turma('Online terça/tarde', 'Redação', 'Wellington', 'terça-feira', '14h', 'Online', 'idTurma2', false),
+        new Turma('Presencial sábado/tarde', 'Redação', 'Wellington', 'sábado', '14h', 'Presencial', 'idTurma3', false),
+    ]
 
     const id = props.aluno?.id
     const [nome, setNome] = useState(props.aluno?.nome ?? '')
@@ -26,27 +34,66 @@ export default function ModalRootALunos(props: ModalRootALunosProps){
     const [rg, setRg] = useState(props.aluno?.rg ?? '')
     const [cpf, setCpf] = useState(props.aluno?.cpf ?? '')
     const [mensalidade, setMensalidade] = useState(props.aluno?.mensalidade ?? '')
-    const [turma, setTurma] = useState(props.aluno?.turma ?? '')
+    const [turma, setTurma] = useState(props.aluno?.turma ?? listaTurmas.map(turma => turma.id));
     const [pagamento, setPagamento] = useState(props.aluno?.pagamento ?? '')
     const [senha, setSenha] = useState(props.aluno?.senha ?? '')
 
+    const handleCheckboxChange = (turmaId: any) => {
+        const isTurmaSelected = turma.includes(turmaId);
+    
+        if (isTurmaSelected) {
+            const updatedTurmasSelecionadas = turma.filter(id => id !== turmaId);
+            setTurma(updatedTurmasSelecionadas);
+        } else {
+            const updatedTurmasSelecionadas = [...turma, turmaId];
+            setTurma(updatedTurmasSelecionadas);
+        }
+    };
+
     return(
         <div>
-            <div className="grid grid-rows-4 grid-flow-col bg-blue-200 rounded-lg p-3 my-3">
+            <div className="grid grid-rows-4 grid-flow-col bg-blue-200 rounded-lg p-3 pl-5 pr-0 my-3 h-80">
                 <EntradaPerfil className="text-white" className2="bg-white rounded-xl text-black" texto="Nome" valor={nome} valorMudou={setNome}/>
-                <DatePicker titulo="Data de Nascimento" setData={setData}/>
+                <DatePicker titulo="Data de Nascimento" setData={setData} classname2="bg-white text-black" classname="text-white"/>
                 <EntradaPerfil className="text-white" className2="bg-white rounded-xl text-black" texto="Naturalidade ( Cidade/Estado )" valor={natural} valorMudou={setNatural}/>
+
+                <div>
+                    <h4 className="font-Montserrant text-white">Turmas</h4>
+                    <div className="flex flex-col overflow-y-auto w-min bg-white rounded-lg max-h-10 hover:max-h-40 transition-all duration-300 ease-in-out">
+                        {listaTurmas.map((turmaItem, index) => {
+                            return (
+                                <div key={index} className="border rounded-md p-2 px-7 pb-4">
+                                    <div className="flex gap-3 items-center">
+                                        {turmaItem.nome} 
+                                        <label className="relative inline-flex items-center mb-5 cursor-pointer">
+                                            <input
+                                                type="checkbox"
+                                                value=""
+                                                className="sr-only peer"
+                                                checked={turma.includes(turmaItem.id || '')}
+                                                onChange={() => handleCheckboxChange(turmaItem.id)}
+                                            />
+                                            <div className={`w-9 h-5 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all dark:border-gray-600 ${turma.includes(turmaItem.id || '') ? 'peer-checked:bg-blue-600' : ''}`}></div>
+                                        </label>
+                                    </div>
+                                </div>
+                            );
+                        })}
+                    </div>
+                </div>
+
                 <EntradaPerfil className="text-white" className2="bg-white rounded-xl text-black" texto="Endereço ( Rua, Nº, Bairro)" valor={endereco} valorMudou={setEndereco}/>
-                <EntradaPerfil className="text-white" className2="bg-white rounded-xl text-black" texto="Número de celular (com DDD)" valor={celular} valorMudou={setCelular}/>
+                <EntradaPerfil className="text-white" className2="bg-white rounded-xl text-black" texto="Celular (com DDD)" valor={celular} valorMudou={setCelular}/>
                 <EntradaPerfil className="text-white" className2="bg-white rounded-xl text-black" texto="E-mail" valor={email} valorMudou={setEmail}/>
                 <EntradaPerfil className="text-white" className2="bg-white rounded-xl text-black" texto="Nome do Pai" valor={pai} valorMudou={setPai}/>
                 <EntradaPerfil className="text-white" className2="bg-white rounded-xl text-black" texto="Nome da Mãe" valor={mae} valorMudou={setMae}/>
                 <EntradaPerfil className="text-white" className2="bg-white rounded-xl text-black" texto="RG" valor={rg} valorMudou={setRg} />
                 <EntradaPerfil className="text-white" className2="bg-white rounded-xl text-black" texto="CPF" valor={cpf} valorMudou={setCpf}/>
-                <EntradaPerfil className="text-white" className2="bg-white rounded-xl text-black" texto="Mensalidade" valor={mensalidade} valorMudou={setMensalidade}/>
-                <Select seletor={['Presencial terça/tarde', 'Online terça/tarde', 'Presencial sábado/tarde']} titulo="Turma" classname2="text-white -m-5" classname="-m-5" setFiltro={setTurma}/>
+                <EntradaPerfil className="text-white" className2="bg-white rounded-xl text-black" texto="Mensalidade" valor={mensalidade} valorMudou={setMensalidade} tipo="number"/>
+                {//<Select seletor={['Presencial terça/tarde', 'Online terça/tarde', 'Presencial sábado/tarde']} titulo="Turmas" classname2="text-white -m-5" classname="-m-5" setFiltro={setTurma}/>
+                }
             </div>
-            <div className="flex place-content-end">
+            <div className="flex place-content-end ">
             <Botao className="p-10 bg-blue-400" cor="blue"
                     onClick={() => {
                         if (id) {

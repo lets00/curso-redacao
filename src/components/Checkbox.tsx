@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 
 interface CheckBoxProps {
-  titulo: string;
+  titulo?: string;
   opcoes: any;
   setOpcao?: (opcoes: string[]) => void;
 }

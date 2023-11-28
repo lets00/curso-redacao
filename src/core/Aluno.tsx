@@ -11,14 +11,14 @@ export default class Aluno {
     #rg: string
     #cpf: string
     #mensalidade: number
-    #turma: string
+    #turma: string[]
     #pagamento: boolean
     #senha: string
     #excluido: boolean
 
     constructor(nome: string, data: Date, natural:string, endereco: string, 
                 celular: string, email: string, pai: string, mae: string, 
-                rg: string, cpf: string, mensalidade: number, turma: string,
+                rg: string, cpf: string, mensalidade: number, turma: string[],
                 pagamento: boolean ,senha: string, id: string, excluido: boolean){
                 this.#nome = nome
                 this.#data = data
@@ -39,7 +39,7 @@ export default class Aluno {
                 }
     
     static vazio() {
-        return new Aluno('',new Date(0),'','','','','','','','',0,'', false, '','',false)
+        return new Aluno('',new Date(0),'','','','','','','','',0,[], false, '','',false)
     }
     
     get id() {

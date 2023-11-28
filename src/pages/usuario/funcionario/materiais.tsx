@@ -20,13 +20,13 @@ export default function Materiais() {
       new Turma('Presencial terça/tarde', 'Linguagem', 'Felipe Alves', 'terça-feira', '14h', 'Presencial', 'idA', false),
       new Turma('Online terça/tarde', 'Redação', 'Wellington', 'terça-feira', '14h', 'Online', 'idB', false),
       new Turma('Presencial sábado/tarde', 'Redação', 'Wellington', 'sábado', '14h', 'Presencial', 'idC', false),
-  ])
+    ])
 
     const [nome, setNome] = useState('')
     const [descricao, setDescricao] = useState('')
     const [arquivo, setArquivo] = useState('')
     const [link, setLink] = useState('')
-    //Nome do usuario professor 
+    //Nome do usuario professor logado atualmente
     const [professor, setProfessor] = useState('Felipe Alves')
     const [data, setData] = useState<Date>(new Date(1000, 10, 10))
     const [turmas, setTurmas] = useState<string[]>([])
