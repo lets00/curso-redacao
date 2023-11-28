@@ -12,15 +12,10 @@ interface ModalRootALunosProps {
     novoAluno?: (aluno: Aluno) => void
     editar?: (aluno: Aluno) => void
     setOpenModal?: (open: boolean) => void
+    listaTurmas: Turma[]
 }
 
 export default function ModalRootALunos(props: ModalRootALunosProps){
-
-    const listaTurmas = [
-        new Turma('Presencial terça/tarde', 'Linguagem', 'Felipe Alves', 'terça-feira', '14h', 'Presencial', 'idTurma1', false),
-        new Turma('Online terça/tarde', 'Redação', 'Wellington', 'terça-feira', '14h', 'Online', 'idTurma2', false),
-        new Turma('Presencial sábado/tarde', 'Redação', 'Wellington', 'sábado', '14h', 'Presencial', 'idTurma3', false),
-    ]
 
     const id = props.aluno?.id
     const [nome, setNome] = useState(props.aluno?.nome ?? '')
@@ -34,7 +29,7 @@ export default function ModalRootALunos(props: ModalRootALunosProps){
     const [rg, setRg] = useState(props.aluno?.rg ?? '')
     const [cpf, setCpf] = useState(props.aluno?.cpf ?? '')
     const [mensalidade, setMensalidade] = useState(props.aluno?.mensalidade ?? '')
-    const [turma, setTurma] = useState(props.aluno?.turma ?? listaTurmas.map(turma => turma.id));
+    const [turma, setTurma] = useState(props.aluno?.turma ?? props.listaTurmas.map(turma => turma.id));
     const [pagamento, setPagamento] = useState(props.aluno?.pagamento ?? '')
     const [senha, setSenha] = useState(props.aluno?.senha ?? '')
 
@@ -60,12 +55,12 @@ export default function ModalRootALunos(props: ModalRootALunosProps){
                 <div>
                     <h4 className="font-Montserrant text-white">Turmas</h4>
                     <div className="flex flex-col overflow-y-auto w-min bg-white rounded-lg max-h-10 hover:max-h-40 transition-all duration-300 ease-in-out">
-                        {listaTurmas.map((turmaItem, index) => {
+                        {props.listaTurmas.map((turmaItem, index) => {
                             return (
                                 <div key={index} className="border rounded-md p-2 px-7 pb-4">
                                     <div className="flex gap-3 items-center">
                                         {turmaItem.nome} 
-                                        <label className="relative inline-flex items-center mb-5 cursor-pointer">
+                                        <label className="relative inline-flex items-center cursor-pointer">
                                             <input
                                                 type="checkbox"
                                                 value=""

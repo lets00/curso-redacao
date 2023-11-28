@@ -29,7 +29,7 @@ export default function ModalRootPagamento(props: ModalRootPagamentoProps){
             <section className="bg-blue-200 rounded-lg p-3 my-3">      
                 <div className="flex items-center gap-2">
                     <DatePicker titulo="Data" classname="text-white" classname2="text-black bg-white outline-none" setData={setData}/>
-                    <EntradaPerfil texto="Valor" className="text-white" className2="bg-white rounded-xl text-black" tipo='number' placeholder="Valor do pagamento" valorMudou={setValor}/>
+                    <EntradaPerfil texto="Valor" className="text-white" className2="bg-white rounded-xl text-black" tipo='number' placeholder="Valor do pagamento" valorMudou={setValor} min={0}/>
                 </div>     
 
                 <div className="bg-white rounded-lg">

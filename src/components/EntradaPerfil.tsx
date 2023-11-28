@@ -1,4 +1,6 @@
 interface PerfilProps{
+    min?: number
+    max?: number
     texto?: string
     tipo?: 'text' | 'number' | 'password' | 'file'
     valor?: any
@@ -16,6 +18,8 @@ export default function PerfilDados(props: PerfilProps){
                 {props.texto}
             </label>
             <input 
+                min={props.min}
+                max={props.max}
                 type={props.tipo ?? 'text'}
                 value={props.valor}
                 readOnly={props.somenteLeitura}

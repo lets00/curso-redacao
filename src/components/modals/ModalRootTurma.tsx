@@ -5,6 +5,7 @@ import ModalTurma from "./ModalTurma";
 
 interface ModalRootTurmaProps {
     turmas: Turma[]
+    setTurmas: (turmas: Turma[]) => void
     turmasSeletor: any
     turmaSelecionada?: (turma: Turma) => void
     setSelect?:(select: string[]) => void
@@ -17,10 +18,9 @@ export default function ModalRootTurma(props: ModalRootTurmaProps){
     const [excluir, setExcluir] = useState<Boolean>(false)
     const [turma, setTurma] = useState<Turma>(Turma.vazio())
     const [seletor, setSeletor] = useState(props.turmasSeletor)
-    const [turmas, setTurmas] = useState(props.turmas)
 
     function selecionarTurma(){
-        const turmaSelecionada = turmas.find((turma) => turma.nome === filtro);
+        const turmaSelecionada = props.turmas.find((turma) => turma.nome === filtro);
 
         if (turmaSelecionada) {
             setTurma(turmaSelecionada);
@@ -30,8 +30,7 @@ export default function ModalRootTurma(props: ModalRootTurmaProps){
         setSelecionou(true)
     }
     function excluirTurma(){
-        const turmaSelecionada = turmas.find((turma) => turma.nome === filtro);
-
+        const turmaSelecionada = props.turmas.find((turma) => turma.nome === filtro);
         if (turmaSelecionada) {
             setTurma(turmaSelecionada);
         } else {
@@ -41,9 +40,9 @@ export default function ModalRootTurma(props: ModalRootTurmaProps){
     }
 
     function exclusao() {
-        const turmaFiltrada = turmas.filter((turma) => turma.nome !== filtro);
+        const turmaFiltrada = props.turmas.filter((turma) => turma.nome !== filtro);
         if (turmaFiltrada.length > 0) {
-          setTurmas(turmaFiltrada);
+          props.setTurmas(turmaFiltrada);
         } else {
           alert("Turma não encontrada");
         }
@@ -56,12 +55,12 @@ export default function ModalRootTurma(props: ModalRootTurmaProps){
       }
 
     function edicao(turmaEditada: Turma) {
-        const indexToEdit = turmas.findIndex((turma) => turma.nome === filtro);
+        const indexToEdit = props.turmas.findIndex((turma) => turma.nome === filtro);
       
         if (indexToEdit !== -1) {
-          const listaAtualizada = [...turmas];
+          const listaAtualizada = [...props.turmas];
           listaAtualizada[indexToEdit] = turmaEditada;
-          setTurmas(listaAtualizada);
+          props.setTurmas(listaAtualizada);
       
           const seletorAtualizado = ['Todos(as)', ...listaAtualizada.map((turma) => turma.nome)];
           setSeletor(seletorAtualizado);
@@ -77,7 +76,7 @@ export default function ModalRootTurma(props: ModalRootTurmaProps){
             alert("Preencha todos os campos obrigatórios.");
             return;
           }
-        setTurmas([...turmas,turmaNova]);
+        props.setTurmas([...props.turmas,turmaNova]);
         setSeletor([...seletor,turmaNova.nome])
         props.setSelect?.([...seletor,turmaNova.nome])
         

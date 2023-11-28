@@ -21,11 +21,11 @@ export default function RootTurmas() {
         new Aluno('teste 2', new Date(2004-10-10), 'RJ', 'rua testew', '222-111', 'mari@gmail',
     'pedro', 'ana', 'rg2', 'cpf2', 15, ['idTurma1'],true , 'abc', "idTeste3", false),
     ]
-    const listaTurmas = [
+    const [listaTurmas, setListaTurmas] = useState([
         new Turma('Presencial terça/tarde', 'Linguagem', 'Felipe Alves', 'terça-feira', '14h', 'Presencial', 'idTurma1', false),
         new Turma('Online terça/tarde', 'Redação', 'Wellington', 'terça-feira', '14h', 'Online', 'idTurma2', false),
         new Turma('Presencial sábado/tarde', 'Redação', 'Wellington', 'sábado', '14h', 'Presencial', 'idTurma3', false),
-    ]
+    ])
 
     const dados = ['natural','nome','cpf','pagamento']
     const cabecalho = ['Estado', 'Nome', 'CPF', 'Pagamento']
@@ -111,9 +111,9 @@ export default function RootTurmas() {
                     
             <Modal isOpen={openModal} isNotOpen={() => setOpenModal(!openModal)} cor='white' titulo={tipoModal == 'selecionado' ? 'Gerenciar turma': tipoModal == 'excluir' ? 'Tem certeza que deseja excluir:' : "Editar Aluno"}
                 subtitulo={tipoModal == 'excluir' ? aluno.nome : ''} >
-                {tipoModal == 'selecionado' ? <ModalRootTurma turmas={listaTurmas} turmasSeletor={select} turmaSelecionada={turmaSelecionada} setSelect={setSelect}/>: 
+                {tipoModal == 'selecionado' ? <ModalRootTurma turmas={listaTurmas} setTurmas={setListaTurmas} turmasSeletor={select} turmaSelecionada={turmaSelecionada} setSelect={setSelect}/>: 
                 tipoModal == 'excluir' ? <ModalExcluir objeto={aluno} exclusao={exclusao}/> :
-                <ModalRootALunos aluno={aluno} novoAluno={alunoSelecionado} editar={edicao}/>}</Modal>
+                <ModalRootALunos aluno={aluno} novoAluno={alunoSelecionado} listaTurmas={listaTurmas} editar={edicao}/>}</Modal>
 
         </LayoutUser>
     )

@@ -92,7 +92,10 @@ export default function LayoutUser(props: LayoutUserProps) {
               </div>
               <div className='flex flex-col bg-blue-300 rounded-lg m-3 p-3 text-white'>
                 <div className='flex flex-row items-center pb-1'>
-                  <figure className={`flex justify-center items-center rounded-full p-2.5 ml-2 mr-2 ${live? "bg-red-600" : "bg-slate-300}"}`}/>
+                  <span className="relative flex h-4 w-4 mx-2">
+                    {live && <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>}
+                    <span className={`relative inline-flex rounded-full h-4 w-4 ${live? "bg-red-600" : "bg-slate-300}"}`}></span>
+                  </span>
                   <h3 className="font-Montserrant">Live</h3>
                 </div>
                 {live? <Link href={live.link} className='bg-white p-2 rounded-lg text-black font-Montserrant text-center'>Participar</Link> : ''}

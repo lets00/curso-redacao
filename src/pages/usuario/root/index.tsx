@@ -42,7 +42,7 @@ export default function RootAlunos() {
     const [filtragem, setFiltragem] = useState(listagem)
     const [filtro1, setFiltro1] = useState('Todos(as)')
     const [filtro2, setFiltro2] = useState('Todos(as)')
-
+    const [recarregar, setRecarregar] = useState(false)
     
       const aoClicar = () => {
         let filtragemResultante = listagem;
@@ -59,6 +59,7 @@ export default function RootAlunos() {
             filtragemResultante = filtragemResultante.filter(aluno => aluno.mensalidade === 15);
         }    
         setFiltragem(filtragemResultante);
+        setRecarregar(false)
       }
     function alunoSelecionado(aluno: Aluno){
         setAluno(aluno)
@@ -79,6 +80,7 @@ export default function RootAlunos() {
         const materiaisFiltrados = listagem.filter((aluno) => aluno.id !== id);
         setListagem(materiaisFiltrados);
         setOpenModal(false);
+        setRecarregar(true);
     }
     function edicao(alunoEditado: Aluno){
         const indexToEdit = listagem.findIndex((funcionario) => funcionario.id === alunoEditado.id);
@@ -90,10 +92,13 @@ export default function RootAlunos() {
         } else {
             setOpenModal(false);
         }
+        setRecarregar(true);
     }
     useEffect(() => {
-        aoClicar();
-      }, [filtro1, filtro2, exclusao]);
+        if (recarregar || filtro1 || filtro2) {
+            aoClicar();
+        }
+    }, [recarregar, filtro1, filtro2]);
 
     return (
         <LayoutUser usuario={'root'} className="text-black">
@@ -119,7 +124,7 @@ export default function RootAlunos() {
             <Modal isOpen={openModal} isNotOpen={() => setOpenModal(!openModal)} cor='white' titulo={tipoModal == 'selecionado' ? 'Pagamento' : tipoModal == 'excluir' ? 'Tem certeza que deseja excluir:': "Editar Aluno"}
             subtitulo={tipoModal == 'excluir' ? aluno.nome : ''}>
             {tipoModal == 'selecionado' ? <ModalRootPagamento objeto={aluno}/>: tipoModal == 'excluir' ? <ModalExcluir objeto={aluno} exclusao={exclusao} />: 
-            <ModalRootALunos aluno={aluno} novoAluno={alunoSelecionado} editar={edicao}/>}</Modal>
+            <ModalRootALunos listaTurmas={listaTurmas} aluno={aluno} novoAluno={alunoSelecionado} editar={edicao}/>}</Modal>
         </LayoutUser>
     )
 }

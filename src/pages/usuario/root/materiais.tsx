@@ -49,6 +49,7 @@ export default function RootMateriais() {
     const [listagem, setListagem] = useState(materiais)
     const [filtragem, setFiltragem] = useState(listagem)
     const [filtro, setFiltro] = useState('Todos(as)')
+    const [recarregar, setRecarregar] = useState(false)
 
     const aoClicar = () => {
         if(filtro == "Todos(as)"){
@@ -57,6 +58,7 @@ export default function RootMateriais() {
             const materiaisFiltrados = listagem.filter((material) => material.disciplina === filtro);
             setFiltragem(materiaisFiltrados);
         }
+        setRecarregar(false)
       }
     function materialSelecionado(material: Material){
         setMaterial(material);
@@ -73,11 +75,14 @@ export default function RootMateriais() {
         setListagem(materiaisFiltrados);
         setOpenModal(false);
         console.log(materiaisFiltrados);
+        setRecarregar(true);
     }
 
     useEffect(() => {
-        aoClicar();
-    }, [filtro, exclusao])
+        if (recarregar || filtro) {
+            aoClicar();
+        }
+    }, [recarregar, filtro]);
 
     return (
         <LayoutUser usuario={'root'} className="text-black">
