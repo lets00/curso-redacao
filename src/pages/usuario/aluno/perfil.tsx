@@ -8,7 +8,6 @@ import ProtectedRoute from "@/components/ProtectedRoute";
 import ImageUploader from "@/components/ImageUploader";
 import PerfilDados from "@/components/EntradaPerfil";
 
-
 interface UserProfile {
     modalidade: string;
     nome: string;

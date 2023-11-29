@@ -10,8 +10,6 @@ import ModalExcluir from "@/components/modals/ModalExcluir";
 
 export default function RootFuncionarios() {
 
-
-
     const funcionarios = [
         new Funcionario('Abner', "111111111", "2222222", "1111-1111", "email@gmail.com", "123", "1", false),
         new Funcionario('Junio', "333333333", "4444444", "1111-1111", "email@gmail.com", "123", "2", false),
@@ -25,7 +23,7 @@ export default function RootFuncionarios() {
     const [tipoModal, setTipoModal] = useState('')
     const [listagem, setListagem] = useState(funcionarios)
 
-    
+
     function funcionarioExcluido(funcionario: Funcionario){
         setFuncionario(funcionario);
         setTipoModal('excluir');

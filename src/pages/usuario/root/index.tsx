@@ -71,7 +71,7 @@ export default function RootAlunos() {
         setTipoModal('excluir');
         setOpenModal(true)
     }
-    function pagamento(){
+    function pagamento(aluno: Aluno){
         setAluno(aluno)
         setTipoModal('selecionado')
         setOpenModal(true)
@@ -122,8 +122,8 @@ export default function RootAlunos() {
                     pagamento={pagamento}
                     />
             <Modal isOpen={openModal} isNotOpen={() => setOpenModal(!openModal)} cor='white' titulo={tipoModal == 'selecionado' ? 'Pagamento' : tipoModal == 'excluir' ? 'Tem certeza que deseja excluir:': "Editar Aluno"}
-            subtitulo={tipoModal == 'excluir' ? aluno.nome : ''}>
-            {tipoModal == 'selecionado' ? <ModalRootPagamento objeto={aluno}/>: tipoModal == 'excluir' ? <ModalExcluir objeto={aluno} exclusao={exclusao} />: 
+            subtitulo={tipoModal == 'excluir' || 'selecionado' ? aluno.nome : ''}>
+            {tipoModal == 'selecionado' ? <ModalRootPagamento aluno={aluno} listaTurmas={listaTurmas}/>: tipoModal == 'excluir' ? <ModalExcluir objeto={aluno} exclusao={exclusao} />: 
             <ModalRootALunos listaTurmas={listaTurmas} aluno={aluno} novoAluno={alunoSelecionado} editar={edicao}/>}</Modal>
         </LayoutUser>
     )

@@ -13,7 +13,6 @@ export default function Login(){
     const [senha, setSenha] = useState(""); 
     const [userProfile, setUserProfile] = useState({}); 
 
-
     async function login() {
 
         try {
