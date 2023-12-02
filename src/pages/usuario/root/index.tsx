@@ -10,6 +10,7 @@ import ModalRootPagamento from "@/components/modals/ModalRootPagamento";
 import ModalExcluir from "@/components/modals/ModalExcluir";
 import ModalRootALunos from "@/components/modals/ModalRootAlunos";
 import Turma from "@/core/Turma";
+import Pagamento from "@/core/Pagamento";
 
 export default function RootAlunos() {
 
@@ -23,17 +24,18 @@ export default function RootAlunos() {
         new Aluno('teste 2', new Date(2004-10-10), 'RJ', 'rua testew', '222-111', 'mari@gmail',
     'pedro', 'ana', 'rg2', 'cpf2', 15, ['idTurma1'],true , 'abc', "idTeste3", false),
     ]
-    const listaTurmas = [
-        new Turma('Presencial terça/tarde', 'Linguagem', 'Felipe Alves', 'terça-feira', '14h', 'Presencial', 'idTurma1', false),
-        new Turma('Online terça/tarde', 'Redação', 'Wellington', 'terça-feira', '14h', 'Online', 'idTurma2', false),
-        new Turma('Presencial sábado/tarde', 'Redação', 'Wellington', 'sábado', '14h', 'Presencial', 'idTurma3', false),
-    ]
+    const [listaTurmas, setListaTurmas] = useState<Turma[]>([])
+
+    const [pagamentos, setPagamentos] = useState([
+        new Pagamento("idTeste1",'', "descrição1", 80, new Date(0), "Id1", false),
+        //Ele quer um select da turma a pagar e que a verificação de pago ou não seja feita de acordo com a lista total de pagamentos "anotação da reuniao"
+    ])
     
     const dados = ['natural','nome','cpf','pagamento']
     const cabecalho = ['Estado', 'Nome', 'CPF', 'Pagamento', 'Ações']
     //aqui o seletor vai mostrar apenas as turmas que existem no BD
-    const select1 = ['Todos(as)', ...listaTurmas.map((turma: { nome: any }) => turma.nome)]
-    const select2 = ['Todos(as)','Pagamentos dia 10','Pagamentos dia 15']
+    const [select1, setSelect1] = useState<string[]>([])
+    const [select2, setSelect2] = useState<string[]>([])
 
     const [aluno, setAluno] = useState<Aluno>(Aluno.vazio())
     const [openModal, setOpenModal] = useState(false)
@@ -71,7 +73,7 @@ export default function RootAlunos() {
         setTipoModal('excluir');
         setOpenModal(true)
     }
-    function pagamento(aluno: Aluno){
+    function abrirPagamento(aluno: Aluno){
         setAluno(aluno)
         setTipoModal('selecionado')
         setOpenModal(true)
@@ -94,11 +96,22 @@ export default function RootAlunos() {
         }
         setRecarregar(true);
     }
+
     useEffect(() => {
         if (recarregar || filtro1 || filtro2) {
             aoClicar();
         }
     }, [recarregar, filtro1, filtro2]);
+
+    useEffect(() => {
+        setListaTurmas([]
+          //Pode apagar o [] 
+          //Obter lista de turmas do banco( )
+        )
+          setSelect1(['Todos(as)', ...listaTurmas.map((turma: { nome: any }) => turma.nome)])
+          const uniqueMensalidades = [...new Set(turmas.map((aluno: {mensalidade: any})=> aluno.mensalidade))];
+          setSelect2(['Todos(as)', ...uniqueMensalidades.map(mensalidade => `pagamentos do dia: ${mensalidade}`)])
+    }, []);
 
     return (
         <LayoutUser usuario={'root'} className="text-black">
@@ -119,11 +132,12 @@ export default function RootAlunos() {
                     cabecalho={cabecalho}
                     objetoSelecionado={alunoSelecionado}
                     objetoExcluido={alunoExcluido}
-                    pagamento={pagamento}
+                    abrirPagamento={abrirPagamento}
+                    pagamentos={pagamentos}
                     />
             <Modal isOpen={openModal} isNotOpen={() => setOpenModal(!openModal)} cor='white' titulo={tipoModal == 'selecionado' ? 'Pagamento' : tipoModal == 'excluir' ? 'Tem certeza que deseja excluir:': "Editar Aluno"}
             subtitulo={tipoModal == 'excluir' || 'selecionado' ? aluno.nome : ''}>
-            {tipoModal == 'selecionado' ? <ModalRootPagamento aluno={aluno} listaTurmas={listaTurmas}/>: tipoModal == 'excluir' ? <ModalExcluir objeto={aluno} exclusao={exclusao} />: 
+            {tipoModal == 'selecionado' ? <ModalRootPagamento aluno={aluno} listaTurmas={listaTurmas} pagamentos={pagamentos} setPagamentos={setPagamentos}/>: tipoModal == 'excluir' ? <ModalExcluir objeto={aluno} exclusao={exclusao} />: 
             <ModalRootALunos listaTurmas={listaTurmas} aluno={aluno} novoAluno={alunoSelecionado} editar={edicao}/>}</Modal>
         </LayoutUser>
     )

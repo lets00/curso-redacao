@@ -16,18 +16,12 @@ export default function FuncionarioTurmas() {
     new Aluno('teste 3', new Date(2004-10-10), 'RJ', 'rua testew', '222-111', 'mari@gmail',
     'pedro', 'ana', 'rg2', 'cpf2', 10, ['idTurma2'],true , 'abc', "idTeste3", false),
     ]
-    const listaTurmas = [
-        new Turma('Presencial terça/tarde', 'Linguagem', 'Felipe Alves', 'terça-feira', '14h', 'Presencial', 'idTurma1', false),
-        new Turma('Online terça/tarde', 'Redação', 'Wellington', 'terça-feira', '14h', 'Online', 'idTurma2', false),
-        new Turma('Presencial sábado/tarde', 'Redação', 'Wellington', 'sábado', '14h', 'Presencial', 'idTurma3', false),
-    ]
+    const [listaTurmas, setListaTurmas] = useState<Turma[]>([])
 
     const dados = ['natural','nome','cpf','pagamento']
     const cabecalho = ['Estado', 'Nome', 'CPF', 'Pagamento']
     //aqui o seletor vai mostrar apenas as turmas que existem no BD
-    const select = ['Todos(as)', ...listaTurmas.map((turma: { nome: any }) => turma.nome)]
-
-    const [aluno, setAluno] = useState<Aluno>(Aluno.vazio())
+    const [select, setSelect] = useState<string[]>([])
     const [listagem, setListagem] = useState(turmas)
     const [filtragem, setFiltragem] = useState(listagem)
     const [filtro, setFiltro] = useState('Todos(as)')
@@ -48,6 +42,14 @@ export default function FuncionarioTurmas() {
     useEffect(() => {
         aoClicar();
     }, [filtro])
+
+    useEffect(() => {
+        setListaTurmas([]
+          //Pode apagar o [] 
+          //Obter lista de turmas do banco( )
+        )
+          setSelect(['Todos(as)', ...listaTurmas.map((turma: { nome: any }) => turma.nome)])
+    }, []);
 
     return (
         <LayoutUser usuario={'funcionario'} className="text-black">

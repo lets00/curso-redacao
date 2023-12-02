@@ -21,15 +21,11 @@ export default function RootTurmas() {
         new Aluno('teste 2', new Date(2004-10-10), 'RJ', 'rua testew', '222-111', 'mari@gmail',
     'pedro', 'ana', 'rg2', 'cpf2', 15, ['idTurma1'],true , 'abc', "idTeste3", false),
     ]
-    const [listaTurmas, setListaTurmas] = useState([
-        new Turma('Presencial terça/tarde', 'Linguagem', 'Felipe Alves', 'terça-feira', '14h', 'Presencial', 'idTurma1', false),
-        new Turma('Online terça/tarde', 'Redação', 'Wellington', 'terça-feira', '14h', 'Online', 'idTurma2', false),
-        new Turma('Presencial sábado/tarde', 'Redação', 'Wellington', 'sábado', '14h', 'Presencial', 'idTurma3', false),
-    ])
+    const [listaTurmas, setListaTurmas] = useState<Turma[]>([])
 
     const dados = ['natural','nome','cpf','pagamento']
     const cabecalho = ['Estado', 'Nome', 'CPF', 'Pagamento']
-    const [select, setSelect] = useState(['Todos(as)', ...listaTurmas.map((turma: { nome: any }) => turma.nome)])
+    const [select, setSelect] = useState<string[]>([])
 
     const [openModal, setOpenModal] = useState(false)
     const [aluno, setAluno] = useState<Aluno>(Aluno.vazio())
@@ -90,7 +86,15 @@ export default function RootTurmas() {
         if (recarregar || filtro) {
             aoClicar();
         }
-    }, [recarregar, filtro]);
+    }, [recarregar, filtro,]);
+
+    useEffect(() => {
+        setListaTurmas([]
+          //Pode apagar o [] 
+          //Obter lista de turmas do banco( )
+        )
+          setSelect(['Todos(as)', ...listaTurmas.map((turma: { nome: any }) => turma.nome)])
+    }, []);
 
     return (
         <LayoutUser usuario={'root'} className="text-black">

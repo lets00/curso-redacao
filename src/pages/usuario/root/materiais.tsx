@@ -33,15 +33,12 @@ export default function RootMateriais() {
         new Aluno('teste 1', new Date(2004-10-10), 'PE', 'rua teste', '111-111', 'jasha@gmail',
     'jose', 'carla', 'rgrgrg', 'cpfcpf', 10, ['idTurma3'],false , '123', "idTeste1", false),
     ]
-    const listaTurmas = [
-        new Turma('Presencial terça/tarde', 'Linguagem', 'Felipe Alves', 'terça-feira', '14h', 'Presencial', 'idTurma1', false),
-        new Turma('Online terça/tarde', 'Redação', 'Wellington', 'terça-feira', '14h', 'Online', 'idTurma2', false),
-        new Turma('Presencial sábado/tarde', 'Redação', 'Wellington', 'sábado', '14h', 'Presencial', 'idTurma3', false),
-    ]
+    const [listaTurmas, setListaTurmas] = useState<Turma[]>([])
+
 
     const dados = ['nome', 'data', 'professor']
     const cabecalho = ['Título', 'Data de publicação', 'Quem publicou', `Ver feedback & Excluir`]
-    const select = ['Todos(as)','Redação','Linguagem','Matemática']
+    const [select, setSelect] = useState<string[]>([])
 
     const [material, setMaterial] = useState<Material>(Material.vazio())
     const [openModal, setOpenModal] = useState(false)
@@ -83,6 +80,14 @@ export default function RootMateriais() {
             aoClicar();
         }
     }, [recarregar, filtro]);
+
+    useEffect(() => {
+        setListaTurmas([]
+          //Pode apagar o [] 
+          //Obter lista de turmas do banco( )
+        )
+          setSelect(['Todos(as)', ...listaTurmas.map((turma: { disciplina: any }) => turma.disciplina)])
+    }, []);
 
     return (
         <LayoutUser usuario={'root'} className="text-black">

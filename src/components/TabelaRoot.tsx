@@ -1,16 +1,18 @@
 import { format } from "date-fns"
-import { IconeFeedback, IconeDeletar } from "./Icones"
+import { IconeDeletar } from "./Icones"
 import Funcionario from "@/core/Funcionario"
+import Pagamento from "@/core/Pagamento"
 
 interface TabelaProps {
     objeto: any
     propriedadesExibidas: any
     cabecalho: string[]
     objetoSelecionado?: (objeto: any) => void
-    pagamento?: (objeto: any) => void
+    abrirPagamento?: (objeto: any) => void
     salvarFuncionario?: (objeto: any) => void
     objetoExcluido?: (objeto: any) => void
     turmas?: boolean
+    pagamentos?: Pagamento[]
 }
 
 export default function Tabela(props: TabelaProps){
@@ -55,13 +57,13 @@ export default function Tabela(props: TabelaProps){
             <div className="flex justify-center">
                 {
                 objeto[propriedade] ?
-                    <button onClick={() => props.pagamento?.(objeto)} className="
+                    <button onClick={() => props.abrirPagamento?.(objeto)} className="
                         flex rounded-full p-2 px-4 -my-1 bg-blue-400 hover:bg-blue-300 text-white font-semibold">
                             Confirmar pagamento
                     </button> :
                     <div className="bg-white rounded-full p-0 -my-1 flex flex-row items-center gap-12">
                         <h4 className="ml-6 font-semibold">PAGO</h4>
-                        <button onClick={() => props.pagamento?.(objeto)} className="
+                        <button onClick={() => props.abrirPagamento?.(objeto)} className="
                             flex rounded-full px-4 py-2 bg-blue-400 hover:bg-blue-300 text-white font-semibold">
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-6 h-6 mr-2">
                                     <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />

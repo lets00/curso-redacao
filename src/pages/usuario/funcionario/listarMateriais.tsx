@@ -8,6 +8,7 @@ import ModalRootMateriais from "@/components/modals/ModalRootMateriais";
 import Aluno from "@/core/Aluno";
 import Comentario from "@/core/Comentario";
 import Material from "@/core/Material";
+import Turma from "@/core/Turma";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
@@ -33,10 +34,11 @@ export default function ListarMateriais() {
         new Aluno('Maria Luiza', new Date(2004-10-10), 'RJ', 'rua teste', '222-111', 'mari@gmail',
         'pedro', 'ana', 'rg2', 'cpf2', 10, ['idDeTurma1'],true , 'abc', "id2", false),
     ]
+    const [listaTurmas, setListaTurmas] = useState<Turma[]>([])
 
     const dados = ['nome','descricao', 'data']
     const cabecalho = ['Nome', 'Descrição', 'Data de publicação', 'Opções']
-    const select = ['Todos(as)','Redação','Linguagem','Matemática']
+    const [select, setSelect] = useState<string[]>([])
 
     const [material, setMaterial] = useState<Material>(Material.vazio())
     const [openModal, setOpenModal] = useState(false)
@@ -73,6 +75,14 @@ export default function ListarMateriais() {
     useEffect(() => {
         aoClicar();
     }, [filtro, exclusao])
+
+    useEffect(() => {
+        setListaTurmas([]
+          //Pode apagar o [] 
+          //Obter lista de turmas do banco( )
+        )
+          setSelect(['Todos(as)', ...listaTurmas.map((turma: { disciplina: any }) => turma.disciplina)])
+    }, []);
 
     return (
         <LayoutUser usuario={'funcionario'} className="text-black">

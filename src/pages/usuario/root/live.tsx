@@ -7,18 +7,14 @@ import Titulo from "@/components/Titulo";
 import Live from "@/core/Live";
 import Turma from "@/core/Turma";
 import { format } from "date-fns";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export default function RootLive() {
 
     const [lives, setLives] = useState([
         new Live("Live de Repertório","online terça/tarde", "Wellington", new Date(2023, 10, 10), "www.google.com", "Id1", false),
     ])
-    const listaTurmas =[
-        new Turma('Presencial terça/tarde', 'Linguagem', 'Felipe Alves', 'terça-feira', '14h', 'Presencial', 'idA', false),
-        new Turma('Online terça/tarde', 'Redação', 'Wellington', 'terça-feira', '14h', 'Online', 'idB', false),
-        new Turma('Presencial sábado/tarde', 'Redação', 'Wellington', 'sábado', '14h', 'Presencial', 'idC', false),
-    ]
+    const [listaTurmas, setListaTurmas] = useState<Turma[]>([])
 
     const [nome, setNome] = useState('')
     const [link, setLink] = useState('')
@@ -28,7 +24,7 @@ export default function RootLive() {
     const liveVazia = Live.vazio()
     const [live, setLive] = useState<Live>(liveVazia)
 
-    const turmasUnicas = listaTurmas.map((turma: { nome: any }) => turma.nome);
+    let turmasUnicas: string[] = [];
 
     function adicao(){
         if (!nome || turmas.length === 0 || !link || data.getTime() === new Date(1000, 10, 10).getTime()) {
@@ -93,6 +89,14 @@ export default function RootLive() {
         setLives(livesFiltrados);
         setLive(liveVazia)
     }
+
+    useEffect(() => {
+        setListaTurmas([]
+          //Pode apagar o [] 
+          //Obter lista de turmas do banco( )
+        )
+          turmasUnicas = listaTurmas.map((turma: { nome: any }) => turma.nome);
+    }, []);
 
     return (
         <LayoutUser usuario={'root'} className="text-black">

@@ -8,7 +8,7 @@ import Titulo from "@/components/Titulo";
 import Material from "@/core/Material";
 import Turma from "@/core/Turma";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export default function Materiais() {
 
@@ -16,11 +16,7 @@ export default function Materiais() {
         new Material('Material da aula sobre Redação 1', 'Descrição breve desse documento', 'ARQUIVO', 'LINK', 'Redação', 'presencial terça/tarde', 'Abner', new Date(0),'idA' , false),
         new Material('Material da aula sobre Redação 2', 'Descrição breve desse documento', 'ARQUIVO2', 'LINK2', 'Redação', 'presencial terça/manhã', 'João', new Date(0),'idB' , false),
     ])
-    const [listaTurmas, setListaTurmas] = useState([
-      new Turma('Presencial terça/tarde', 'Linguagem', 'Felipe Alves', 'terça-feira', '14h', 'Presencial', 'idA', false),
-      new Turma('Online terça/tarde', 'Redação', 'Wellington', 'terça-feira', '14h', 'Online', 'idB', false),
-      new Turma('Presencial sábado/tarde', 'Redação', 'Wellington', 'sábado', '14h', 'Presencial', 'idC', false),
-    ])
+    const [listaTurmas, setListaTurmas] = useState<Turma[]>([])
 
     const [nome, setNome] = useState('')
     const [descricao, setDescricao] = useState('')
@@ -31,8 +27,7 @@ export default function Materiais() {
     const [data, setData] = useState<Date>(new Date(1000, 10, 10))
     const [turmas, setTurmas] = useState<string[]>([])
 
-
-    const turmasUnicas = listaTurmas.map((turma: { nome: any }) => turma.nome);
+    let turmasUnicas: string[] = [];
 
     function adicao() {
       if (!nome || turmas.length === 0 || data.getTime() === new Date(1000, 10, 10).getTime()) {
@@ -58,6 +53,13 @@ export default function Materiais() {
       setLink('');
     }
     
+    useEffect(() => {
+        setListaTurmas([]
+          //Pode apagar o [] 
+          //Obter lista de turmas do banco( )
+        )
+          turmasUnicas = listaTurmas.map((turma: { nome: any }) => turma.nome);
+    }, []);
 
     return (
         <LayoutUser usuario={'funcionario'} className="text-black">

@@ -10,21 +10,19 @@ import Turma from "@/core/Turma";
 interface ModalRootPagamentoProps {
     aluno: Aluno
     listaTurmas: Turma[]
+    pagamentos: Pagamento[]
+    setPagamentos: (pagamentos: Pagamento[]) => void
 }
 
 export default function ModalRootPagamento(props: ModalRootPagamentoProps){
 
-    const [pagamentos, setPagamentos] = useState([
-        new Pagamento("idTeste1", "descrição1", 80, new Date(0), "Id1", false),
-    ])
-    const [idAluno, setIdAluno] = useState(props.aluno?.id ?? '')
     const [valor, setValor] = useState(0)
     const [descricao, setDescricao] = useState('')
     const [data, setData] = useState(new Date(0))
-    const id = props.aluno?.id
+    const [id, setId] = useState()
 
     function adicao(pagamentoNovo: Pagamento){
-        setPagamentos([...pagamentos, pagamentoNovo])
+        props.setPagamentos([...props.pagamentos, pagamentoNovo])
     }
 
     return(
@@ -49,7 +47,7 @@ export default function ModalRootPagamento(props: ModalRootPagamentoProps){
 
                         <section className="flex place-content-end gap-10">
                             <Botao className="p-10 bg-blue-500" cor={"blue"}
-                                    onClick={() => adicao(new Pagamento(props.aluno.id, descricao, valor, data, "id1", false))}>
+                                    onClick={() => adicao(new Pagamento(props.aluno.id,'', descricao, valor, data, id, false))}>
                                 {id? 'Alterar':'Confirmar'}
                             </Botao>
                         </section>
