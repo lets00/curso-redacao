@@ -84,6 +84,9 @@ export default class Aluno {
     get pagamento() {
         return this.#pagamento
     }
+    set pagamento(pagamento: boolean){
+        this.#pagamento = pagamento;
+    }
     get senha() {
         return this.#senha
     }

@@ -39,12 +39,12 @@ export default function ListarMateriais() {
     const dados = ['nome','descricao', 'data']
     const cabecalho = ['Nome', 'Descrição', 'Data de publicação', 'Opções']
     const [select, setSelect] = useState<string[]>([])
-
     const [material, setMaterial] = useState<Material>(Material.vazio())
     const [openModal, setOpenModal] = useState(false)
     const [tipoModal, setTipoModal] = useState('')
     const [listagem, setListagem] = useState(materiais)
     const [filtragem, setFiltragem] = useState(listagem)
+    const [recarregar, setRecarregar] = useState(false)
     const [filtro, setFiltro] = useState('Todos(as)')
     
     
@@ -55,6 +55,7 @@ export default function ListarMateriais() {
             const materiaisFiltrados = listagem.filter((material) => material.disciplina === filtro);
             setFiltragem(materiaisFiltrados);
         }
+        setRecarregar(false);
       }
     function materialSelecionado(material: Material){
         setMaterial(material);
@@ -70,11 +71,14 @@ export default function ListarMateriais() {
         const materiaisFiltrados = listagem.filter((material) => material.id !== id);
         setListagem(materiaisFiltrados);
         setOpenModal(false);
+        setRecarregar(true);
     }
 
     useEffect(() => {
-        aoClicar();
-    }, [filtro, exclusao])
+        if (recarregar || filtro) {
+            aoClicar();
+        }
+    }, [recarregar, filtro]);
 
     useEffect(() => {
         setListaTurmas([]

@@ -4,20 +4,22 @@ export default class Material{
     #idAluno: string
     #descricao: string
     #valor: number
-    #data: Date
+    #prazo: Date
+    #dataPago: Date
     #excluido: boolean
 
-    constructor( idAluno: string, idTurma: string, descricao: string, valor: number, data: Date, id: string | null = null, excluido: boolean ){
+    constructor( idAluno: string, idTurma: string, descricao: string, valor: number, prazo: Date, dataPago: Date, id: string | null = null, excluido: boolean ){
         this.#idAluno = idAluno
         this.#idTurma = idTurma
         this.#descricao = descricao
         this.#valor = valor
-        this.#data = data
+        this.#prazo = prazo
+        this.#dataPago = dataPago
         this.#id = id
         this.#excluido = excluido
     }
     static vazio() {
-        return new Material('','','',0,new Date(0),'',false)
+        return new Material('','','',0,new Date(0),new Date(0),'',false)
     }
 
     get id(){
@@ -35,8 +37,11 @@ export default class Material{
     get valor(){
         return this.#valor
     }
-    get data(){
-        return this.#data
+    get prazo(){
+        return this.#prazo
+    }
+    get dataPago(){
+        return this.#dataPago
     }
     get excluido(){
         return this.#excluido

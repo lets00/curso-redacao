@@ -2,7 +2,7 @@ import { useState } from "react";
 
 interface SelectProps{
     seletor: any
-    titulo: string
+    titulo?: string
     classname?: string
     classname2?: string
     cor?: string

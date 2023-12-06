@@ -2,10 +2,11 @@ import Material from "@/core/Material";
 import {Botao} from "../Botao";
 import DatePicker from "../DatePicker";
 import EntradaPerfil from "../EntradaPerfil";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Pagamento from "@/core/Pagamento";
 import Aluno from "@/core/Aluno";
 import Turma from "@/core/Turma";
+import Select from "../Select";
 
 interface ModalRootPagamentoProps {
     aluno: Aluno
@@ -18,26 +19,98 @@ export default function ModalRootPagamento(props: ModalRootPagamentoProps){
 
     const [valor, setValor] = useState(0)
     const [descricao, setDescricao] = useState('')
-    const [data, setData] = useState(new Date(0))
-    const [id, setId] = useState()
+    const [dataPago, setDataPago] = useState(new Date(0))
+    const [prazo, setPrazo] = useState(new Date(0))
+    const [id, setId] = useState<string>()
+    const [pagamento, setPagamento] = useState(Pagamento.vazio())
+    const [idTurma, setIdTurma] = useState<string>('')
+    const [datasPagamentosTurma, setDatasPagamentosTurma] = useState<string[]>([]);
+    const [turmaSelecionada, setTurmaSelecionada] = useState<Turma>()
 
-    function adicao(pagamentoNovo: Pagamento){
-        props.setPagamentos([...props.pagamentos, pagamentoNovo])
+    const turmasDoAluno: string[] = props.listaTurmas
+    .filter(turma => turma.id && props.aluno.turma.includes(turma.id))
+    .map(turma => turma.nome);
+
+    const [filtro1, setFiltro1] = useState<string>(turmasDoAluno[0])
+    const [filtro2, setFiltro2] = useState<string>('')
+
+    const aoClicar = () => {
+        const turmaSelecionada = props.listaTurmas.find(turma => turma.nome === filtro1);
+
+        if (turmaSelecionada && turmaSelecionada.id) {
+            setIdTurma(turmaSelecionada?.id)
+            
+            const pagamentosAlunoTurmaSelecionada = props.pagamentos.filter(pagamento =>
+                pagamento.idTurma === turmaSelecionada.id && pagamento.idAluno === props.aluno.id
+            );
+            // Filtrar as datas dos pagamentos e formatá-las como strings
+            const datasFormatadas = pagamentosAlunoTurmaSelecionada.map(pagamento => {
+                return new Date(pagamento.prazo).toLocaleDateString(); // Ajuste o formato conforme necessário
+            });
+            setFiltro2(datasFormatadas[0])
+
+            // Armazenar as datas formatadas no estado correspondente
+            setDatasPagamentosTurma(datasFormatadas);
+            aplicarFiltro2(turmaSelecionada);
+        }
+    };
+
+    function aplicarFiltro2(turmaSelecionada: Turma){
+        const pagamentoEncontrado = props.pagamentos.find(pagamento => pagamento.idTurma === turmaSelecionada?.id && pagamento.idAluno === props.aluno.id && pagamento.prazo.toLocaleDateString() == filtro2
+        );
+            if (pagamentoEncontrado) {
+                setPagamento(pagamentoEncontrado);
+            } else {
+                setPagamento(Pagamento.vazio());
+            }
+
+            setValor(pagamentoEncontrado?.valor || 0);
+            setDescricao(pagamentoEncontrado?.descricao || '');
+            setDataPago(pagamentoEncontrado?.dataPago || new Date(0));
+            setPrazo(pagamentoEncontrado?.prazo || new Date(0))
+            setId(pagamentoEncontrado?.id || "id" + Math.random())
     }
+    
+    function adicao(pagamentoNovo: Pagamento){
+        if (!dataPago || !valor) {
+            alert("Preencha todos os campos obrigatórios.");
+            return;
+          }
+        const index = props.pagamentos.findIndex(pagamento => pagamento.id === pagamentoNovo.id);
+
+        if (index === -1) {
+          props.setPagamentos([...props.pagamentos, pagamentoNovo]);
+        } else {
+          const novosPagamentos = [...props.pagamentos];
+          novosPagamentos[index] = pagamentoNovo;
+          props.setPagamentos(novosPagamentos);
+        }
+    }
+
+    useEffect(() => {
+        aoClicar();
+    }, [filtro1,]);
+    useEffect(() => {
+        const turmaSelecionada = props.listaTurmas.find(turma => turma.nome === filtro1);
+        if(turmaSelecionada){
+            aplicarFiltro2(turmaSelecionada);
+        }
+    }, [filtro2]);
 
     return(
         <div className="text-black">
             <div className="flex flex-row pr-3 max-w-xl gap-3 overflow-x-auto">  
-                {props.aluno.turma.map((turmaPagamento, index) => (
-                    <div key={index} className="border rounded-md p-3 my-3 pb-4">
+                <div>
+                    <div className="flex">
+                        <Select seletor={turmasDoAluno} setFiltro={setFiltro1} titulo="Turma"/>
+                        <Select seletor={[...datasPagamentosTurma, 'Novo pag.']} setFiltro={setFiltro2} titulo="Histórico"/>
+                    </div>
 
-                        {props.listaTurmas.find(turma => turma.id === turmaPagamento)?.disciplina+" - " || "Disciplina não encontrada"}
-                        {props.listaTurmas.find(turma => turma.id === turmaPagamento)?.nome || "Turma não encontrada"}
-
-                        <section className="bg-blue-200 rounded-lg p-3 my-3">      
-                            <div className="flex items-center gap-2">
-                                <DatePicker titulo="Data" classname="text-white" classname2="text-black bg-white outline-none" setData={setData}/>
-                                <EntradaPerfil texto="Valor" className="text-white" className2="bg-white rounded-xl text-black" tipo='number' placeholder="Valor do pagamento" valor={valor} valorMudou={setValor} min={0}/>
+                        <section className="bg-blue-200 rounded-lg p-3 mb-3">      
+                            <div className="flex items-center gap-3">
+                                <DatePicker titulo="Data do pagamento" classname="text-white pl-2" classname2="text-black bg-white outline-none" valor={dataPago} setData={setDataPago}/>
+                                <DatePicker titulo="Prazo" classname="text-white" classname2="text-black bg-white outline-none" valor={prazo} setData={setPrazo}/>
+                                <EntradaPerfil texto="Valor" className="text-white w-32" className2="bg-white rounded-xl text-black" tipo='number' placeholder="Valor do pagamento" valor={valor} valorMudou={setValor} min={0}/>
                             </div>     
 
                             <div className="bg-white rounded-lg">
@@ -47,13 +120,13 @@ export default function ModalRootPagamento(props: ModalRootPagamentoProps){
 
                         <section className="flex place-content-end gap-10">
                             <Botao className="p-10 bg-blue-500" cor={"blue"}
-                                    onClick={() => adicao(new Pagamento(props.aluno.id,'', descricao, valor, data, id, false))}>
-                                {id? 'Alterar':'Confirmar'}
+                                    onClick={() => adicao(new Pagamento(props.aluno.id, idTurma, descricao, valor, prazo, dataPago, id, false))}>
+                                {prazo.getTime() !== 0 ? 'Alterar':'Confirmar'}
                             </Botao>
                         </section>
 
                     </div>
-                ))}
+
             </div>
 
         </div>

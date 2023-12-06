@@ -24,10 +24,18 @@ export default function RootAlunos() {
         new Aluno('teste 2', new Date(2004-10-10), 'RJ', 'rua testew', '222-111', 'mari@gmail',
     'pedro', 'ana', 'rg2', 'cpf2', 15, ['idTurma1'],true , 'abc', "idTeste3", false),
     ]
-    const [listaTurmas, setListaTurmas] = useState<Turma[]>([])
+    //const [listaTurmas, setListaTurmas] = useState<Turma[]>([])
+    const [listaTurmas, setListaTurmas] = useState([
+        new Turma('Presencial terça/tarde', 'Linguagem', 'Felipe Alves', 'terça-feira', '14h', 'Presencial', 'idTurma1', false),
+        new Turma('Online terça/tarde', 'Redação', 'Wellington', 'terça-feira', '14h', 'Online', 'idTurma2', false),
+        new Turma('Presencial sábado/tarde', 'Redação', 'Wellington', 'sábado', '14h', 'Presencial', 'idTurma3', false),
+      ])
 
     const [pagamentos, setPagamentos] = useState([
-        new Pagamento("idTeste1",'', "descrição1", 80, new Date(0), "Id1", false),
+        new Pagamento("idTeste",'idTurma2', "Online terça", 80, new Date('2023-8-31'), new Date('2023-8-31'), "IdPagamento", false),
+        new Pagamento("idTeste2",'idTurma3', "Presencial sábado", 25, new Date('2023-9-31'), new Date('2022-11-20'), "IdPagamento2", false),
+        new Pagamento("idTeste2",'idTurma1', "Presencial terça", 20, new Date('2022-8-31'), new Date('2023-09-09'), "IdPagamento3", false),
+        new Pagamento("idTeste2",'idTurma1', "Presencial terça", 100, new Date('2023-12-31'), new Date('2022-09-09'), "IdPagamento3=4", false)
         //Ele quer um select da turma a pagar e que a verificação de pago ou não seja feita de acordo com a lista total de pagamentos "anotação da reuniao"
     ])
     
@@ -46,7 +54,7 @@ export default function RootAlunos() {
     const [filtro2, setFiltro2] = useState('Todos(as)')
     const [recarregar, setRecarregar] = useState(false)
     
-      const aoClicar = () => {
+    const aoClicar = () => {
         let filtragemResultante = listagem;
         if (filtro1 !== "Todos(as)") {
             filtragemResultante = filtragemResultante.filter((aluno) =>
@@ -55,14 +63,53 @@ export default function RootAlunos() {
                 )
             );
         }
-        if (filtro2 === "Pagamentos dia 10") {
-            filtragemResultante = filtragemResultante.filter(aluno => aluno.mensalidade === 10);
-        } else if (filtro2 === "Pagamentos dia 15") {
-            filtragemResultante = filtragemResultante.filter(aluno => aluno.mensalidade === 15);
-        }    
+        if (filtro2 !== "Todos(as)") {
+            const numero = parseInt(filtro2.split(" ").pop() || "0");
+            filtragemResultante = filtragemResultante.filter(aluno => aluno.mensalidade === numero);
+            } 
         setFiltragem(filtragemResultante);
         setRecarregar(false)
-      }
+    }
+
+    function verificarPrazos() {
+    const dataAtual = new Date();
+
+    const alunosAtualizados = turmas.map(aluno => {
+        let todosPagos = true;
+        let algumVencido = false;
+
+        aluno.turma.forEach(idTurma => {
+            const pagamentosAluno = pagamentos.filter(pagamento => pagamento.idTurma === idTurma);
+            const prazos = pagamentosAluno.map(pagamento => pagamento.prazo.getTime());
+
+            if (prazos.length > 0) {
+                const prazoMaisRecente = new Date(Math.max(...prazos));
+
+                if (prazoMaisRecente < dataAtual) {
+                    algumVencido = true;
+                } else {
+                    todosPagos = false;
+                }
+            } else {
+                todosPagos = false;
+            }
+        });
+
+        if (todosPagos) {
+            return new Aluno (aluno.nome, aluno.data, aluno.natural, aluno.endereco, aluno.celular, aluno.email, aluno.pai, aluno.mae, aluno.rg, aluno.cpf, aluno.mensalidade, aluno.turma, true, aluno.senha, aluno.id, aluno.excluido)
+        } else if (algumVencido) {
+            return new Aluno (aluno.nome, aluno.data, aluno.natural, aluno.endereco, aluno.celular, aluno.email, aluno.pai, aluno.mae, aluno.rg, aluno.cpf, aluno.mensalidade, aluno.turma, false, aluno.senha, aluno.id, aluno.excluido)
+
+        } else {
+            return aluno;
+        }
+    });
+
+    setListagem(alunosAtualizados);
+}
+    
+    
+
     function alunoSelecionado(aluno: Aluno){
         setAluno(aluno)
         setTipoModal("editar")
@@ -104,13 +151,14 @@ export default function RootAlunos() {
     }, [recarregar, filtro1, filtro2]);
 
     useEffect(() => {
-        setListaTurmas([]
+        verificarPrazos();
+        setListaTurmas([...listaTurmas]
           //Pode apagar o [] 
           //Obter lista de turmas do banco( )
         )
           setSelect1(['Todos(as)', ...listaTurmas.map((turma: { nome: any }) => turma.nome)])
-          const uniqueMensalidades = [...new Set(turmas.map((aluno: {mensalidade: any})=> aluno.mensalidade))];
-          setSelect2(['Todos(as)', ...uniqueMensalidades.map(mensalidade => `pagamentos do dia: ${mensalidade}`)])
+          const mensalidadeUnicas = [...new Set(turmas.map((aluno: {mensalidade: any})=> aluno.mensalidade))];
+          setSelect2(['Todos(as)', ...mensalidadeUnicas.map(mensalidade => `pagamentos dia  ${mensalidade}`)])
     }, []);
 
     return (
@@ -136,7 +184,7 @@ export default function RootAlunos() {
                     pagamentos={pagamentos}
                     />
             <Modal isOpen={openModal} isNotOpen={() => setOpenModal(!openModal)} cor='white' titulo={tipoModal == 'selecionado' ? 'Pagamento' : tipoModal == 'excluir' ? 'Tem certeza que deseja excluir:': "Editar Aluno"}
-            subtitulo={tipoModal == 'excluir' || 'selecionado' ? aluno.nome : ''}>
+            subtitulo={tipoModal == 'excluir' || 'selecionado' ? aluno.nome+' - Mensalidade: dia '+aluno.mensalidade : ''}>
             {tipoModal == 'selecionado' ? <ModalRootPagamento aluno={aluno} listaTurmas={listaTurmas} pagamentos={pagamentos} setPagamentos={setPagamentos}/>: tipoModal == 'excluir' ? <ModalExcluir objeto={aluno} exclusao={exclusao} />: 
             <ModalRootALunos listaTurmas={listaTurmas} aluno={aluno} novoAluno={alunoSelecionado} editar={edicao}/>}</Modal>
         </LayoutUser>
