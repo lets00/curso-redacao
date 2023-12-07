@@ -7,6 +7,7 @@ import { getStorage, ref, uploadString, getDownloadURL } from "firebase/storage"
 import ProtectedRoute from "@/components/ProtectedRoute";
 import ImageUploader from "@/components/ImageUploader";
 import PerfilDados from "@/components/EntradaPerfil";
+import { differenceInDays, addMonths } from 'date-fns'; // Biblioteca para manipulação de datas
 
 interface UserProfile {
     modalidade: string;
@@ -16,10 +17,14 @@ interface UserProfile {
     cpf: string;
     endereco: string;
     profileImageUrl: string;
+
 }
+const mensalidade = 7;
 
 export default function AlunoPage() {
   const [base64Image, setBase64Image] = useState<string | null>(null);
+  const [diasRestantes, setDiasRestantes] = useState<number>(0);
+  const [porcentagemPercorrida, setPorcentagemPercorrida] = useState<number>(0);
 
   useEffect(() => {
     const auth = getAuth();
@@ -76,6 +81,30 @@ export default function AlunoPage() {
     }
   };
   
+  useEffect(() => {
+    if (userProfile) {
+      const dataAtual = new Date(); // Data atual
+      const dataAtualPagamento = new Date(dataAtual.getFullYear(), dataAtual.getMonth(), mensalidade); // Data do pagamento deste mês
+      let dataProximoPagamento = addMonths(dataAtualPagamento, 1); // Data do próximo pagamento
+  
+      if (dataAtual.getDate() < mensalidade) { // Se o dia atual for menor ou igual ao dia de pagamento deste mês, o próximo pagamento será neste mês
+        dataProximoPagamento = dataAtualPagamento;
+      }
+  
+      const diasRestantes = differenceInDays(dataProximoPagamento, dataAtual);
+      let porcentagem = ((31 - diasRestantes) / 31) * 100; // Calcula a porcentagem inversamente proporcional aos dias restantes
+  
+      if (porcentagem > 100) {
+        porcentagem = 100;
+      } else if (porcentagem < 0) {
+        porcentagem = 0;
+      }
+  
+      setDiasRestantes(diasRestantes+1);
+      setPorcentagemPercorrida(porcentagem);
+    }
+  }, [userProfile]);
+  
 
     return (
       <ProtectedRoute>
@@ -107,9 +136,11 @@ export default function AlunoPage() {
 
                 <div className="bg-white rounded-md w-1/2 h-auto m-2 ml-1 mt-0 p-6
                                 flex flex-col items-center">
-                    <h1 className="pt-5">21 Dias</h1>
+                    <h1 className="pt-5">{diasRestantes} Dias</h1>
                     <h4>Para o próximo pagamento</h4>
-                    <div className="bg-gray-200 h-6 w-80 mt-8 rounded-xl"></div>
+                    <div className="bg-gray-200 h-6 w-80 mt-8 rounded-xl">
+                    <div className="h-6 bg-gradient-to-r from-blue-400 to-pink-600 rounded-xl" style={{ width: `${porcentagemPercorrida}%` }}></div>
+                    </div>
                 </div>
             </div>
         </LayoutUser>

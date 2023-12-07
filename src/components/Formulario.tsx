@@ -29,6 +29,8 @@ interface FormularioProps{
     const [senha, setSenha] = useState(props.aluno?.senha ?? '')
     const [mensalidade, setMensalidade] = useState(props.aluno?.mensalidade ?? '')
     const [termosDeUso, setTermosDeUso] = useState(false);
+    const [confirmarSenha, setConfirmarSenha] = useState('');
+
 
     const auth = getAuth();
 
@@ -44,6 +46,11 @@ interface FormularioProps{
             console.error("A senha deve ter pelo menos 6 caracteres.");
             return;
         }
+
+        if (senha !== confirmarSenha) {
+            console.error("As senhas não coincidem.");
+            return;
+          }
     
         const formData = {
           nome, data, natural, endereco, celular,
@@ -70,6 +77,7 @@ interface FormularioProps{
           setRg("");
           setCpf("");
           setEmail("");
+          setConfirmarSenha('');
           setMensalidade(0);
           setTermosDeUso(false);
 
@@ -95,6 +103,17 @@ interface FormularioProps{
             <Entrada texto="Nome do Pai" valor={pai} valorMudou={(e) => setPai(e.target.value)} />
             <Entrada texto="Nome da Mãe" valor={mae} valorMudou={(e) => setMae(e.target.value)} />
             <Entrada texto="Senha" valor={senha} valorMudou={(e) => setSenha(e.target.value)} tipo="password"/>
+            {senha.length < 6 && (
+                <small className="text-red-500">
+                    A senha deve conter pelo menos 6 caracteres.
+                </small>
+            )}
+            <Entrada texto="Confirmar Senha" valor={confirmarSenha} valorMudou={(e) => setConfirmarSenha(e.target.value)} tipo="password" />
+            {senha.length >= 6 && senha !== confirmarSenha && (
+                <small className="text-red-500">
+                    As senhas não coincidem.
+                </small>
+            )}
             <h2 className="font-Montserrant">Documentação</h2><br />
             <Entrada texto="RG" valor={rg} valorMudou={(e) => setRg(e.target.value)} />
             <Entrada texto="CPF" valor={cpf} valorMudou={(e) => setCpf(e.target.value)} />

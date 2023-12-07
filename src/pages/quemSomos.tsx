@@ -7,7 +7,19 @@ export default function Correcao(){
     <Layout className="text-black">
       
       <section>
-        <InitialSection ordem={false} titulo='Quem Somos' img='/images/IMG_QUEMSOMOS.JPG'>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Quos aliquid cumque iusto velit harum libero adipisci, quod nulla modi praesentium ab nobis nesciunt reprehenderit inventore, magni autem sint maxime beatae.</InitialSection>
+        <InitialSection ordem={false} titulo='Quem Somos' img='/images/IMG_QUEMSOMOS.JPG'>
+          <p className='flex max-h-40 hover:max-h-[700px] transition-all duration-1000 delay-100 ease-in-out overflow-hidden '>
+            O Curso Felipe Alves surgiu em 2020, inicialmente apenas on-line, somente com Redação, em um momento pandêmico, fruto de um desejo enorme de mudar o futuro de diversos jovens brasileiros por meio da educação. A ideia deu tão certo, felizmente, que, em 2021, além de inserirmos Linguagens, iniciamos com as primeiras turmas do curso presencial (compartilhando a sala com um amigo), no município de Garanhuns-PE, e continuamos o trabalho com o curso on-line. 
+            <br/>Em 2022, por sua vez, nosso Curso mudou-se para uma unidade presencial só nossa e montamos nosso estúdio para o curso on-line. Em 2023, resolvemos crescer ainda mais… também trouxemos Matemática para o time das isoladas! Não menos importante, hoje, contamos com material didático autoral, plataforma própria e, claro, a melhor equipe para auxiliar na aprovação de nossos estudantes. Por fim, já colecionamos muitas aprovações nas principais faculdades públicas do país (UFPE, UPE, Ufape, Ufal, UFRGS, IFSC, IFPE, UFRPE)… e não queremos parar por aqui! 
+            <br/>É importante dizer, ainda, que tanto eu (professor Felipe Alves) como Wellington (coidealizador do Curso) acreditamos que a educação é uma das mais potentes e humanas estratégias que podemos utilizar para mudar o mundo, parafraseando Nelson Mandela. Por isso, montamos todo um aparato teórico-didático-metodológico para ajudá-los a usar a escrita como forma de mudar suas vidas, pois, como disse Carolina Maria de Jesus: "ninguém vai apagar as palavras que eu escrevi". 
+            <br/>Portanto, com a disposição de nossos estudantes e com a nossa mediação ao longo, não só das aulas, mas também dos eventos extracurriculares que oferecemos, está sendo possível fazer com que o esforço desenvolvido por eles consiga transformar suas vidas, auxiliando-os a conquistarem a tão sonhada aprovação, como também a reconhecerem-se enquanto cidadãos críticos e atuantes na sociedade em que vivem.
+          </p>
+          <div className='flex justify-center pt-3'>
+            <svg className="w-6 h-6 text-gray-800" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 8">
+              <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 5.326 5.7a.909.909 0 0 0 1.348 0L13 1"/>
+            </svg>
+          </div>
+        </InitialSection>
         <InitialSection ordem={true} titulo='Wellington' img='/images/IMG_3817.jpg'>
           <p className='flex max-h-20 hover:max-h-96 transition-all duration-1000 delay-100 ease-in-out overflow-hidden'>
             Olá, pessoas! Eu sou Wellington Oliveira, coidealizador deste Curso, graduado em Psicologia pelo Centro Universitário do Vale do Ipojuca, como bolsista 100% pelo Prouni, e, agora, estudante de Medicina da Universidade Federal de Alagoas. 
