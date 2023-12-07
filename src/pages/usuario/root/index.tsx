@@ -14,7 +14,7 @@ import Pagamento from "@/core/Pagamento";
 
 export default function RootAlunos() {
 
-    const turmas = [
+    const alunos = [
         new Aluno('Joao Carlos', new Date(2004-10-10), 'PE', 'rua teste', '111-111', 'jasha@gmail',
     'jose', 'carla', 'rgrgrg', 'cpfcpf', 15, ['idTurma2'],false , '123', "idTeste", false),
         new Aluno('teste 1', new Date(2004-10-10), 'PE', 'rua teste', '111-111', 'jasha@gmail',
@@ -32,23 +32,24 @@ export default function RootAlunos() {
       ])
 
     const [pagamentos, setPagamentos] = useState([
-        new Pagamento("idTeste",'idTurma2', "Online terça", 80, new Date('2023-8-31'), new Date('2023-8-31'), "IdPagamento", false),
-        new Pagamento("idTeste2",'idTurma3', "Presencial sábado", 25, new Date('2023-9-31'), new Date('2022-11-20'), "IdPagamento2", false),
-        new Pagamento("idTeste2",'idTurma1', "Presencial terça", 20, new Date('2022-8-31'), new Date('2023-09-09'), "IdPagamento3", false),
-        new Pagamento("idTeste2",'idTurma1', "Presencial terça", 100, new Date('2023-12-31'), new Date('2022-09-09'), "IdPagamento3=4", false)
+        new Pagamento("idTeste",'idTurma2', "Online terça", 80, new Date('2023-11-31'), new Date('2023-8-31'), "IdPagamento", false),
+        new Pagamento("idTeste1",'idTurma3', "Presencial sábado", 25, new Date('2023-12-31'), new Date('2022-11-20'), "IdPagamento1", false),
+        new Pagamento("idTeste2",'idTurma3', "Presencial sábado", 25, new Date('2023-12-31'), new Date('2022-11-20'), "IdPagamento2", false),
+        new Pagamento("idTeste2",'idTurma1', "Presencial terça", 20, new Date('2023-12-31'), new Date('2023-09-09'), "IdPagamento3", false),
+        new Pagamento("idTeste3",'idTurma1', "Presencial terça", 100, new Date('2023-12-31'), new Date('2022-09-09'), "IdPagamento3=4", false)
         //Ele quer um select da turma a pagar e que a verificação de pago ou não seja feita de acordo com a lista total de pagamentos "anotação da reuniao"
     ])
     
     const dados = ['natural','nome','cpf','pagamento']
     const cabecalho = ['Estado', 'Nome', 'CPF', 'Pagamento', 'Ações']
-    //aqui o seletor vai mostrar apenas as turmas que existem no BD
+    //aqui o seletor vai mostrar apenas as alunos que existem no BD
     const [select1, setSelect1] = useState<string[]>([])
     const [select2, setSelect2] = useState<string[]>([])
 
     const [aluno, setAluno] = useState<Aluno>(Aluno.vazio())
     const [openModal, setOpenModal] = useState(false)
     const [tipoModal, setTipoModal] = useState('')
-    const [listagem, setListagem] = useState(turmas)
+    const [listagem, setListagem] = useState(alunos)
     const [filtragem, setFiltragem] = useState(listagem)
     const [filtro1, setFiltro1] = useState('Todos(as)')
     const [filtro2, setFiltro2] = useState('Todos(as)')
@@ -72,44 +73,44 @@ export default function RootAlunos() {
     }
 
     function verificarPrazos() {
-    const dataAtual = new Date();
+        const dataAtual = new Date();
+      
+        alunos.forEach((aluno) => {
+          const turmasAluno = aluno.turma.length; // Número de turmas do aluno
+      
+          const pagamentosAluno = pagamentos.filter(
+            (pagamento) => pagamento.idAluno === aluno.id
+          );
+      
+          const turmasPagas = pagamentosAluno.map((pagamento) => pagamento.idTurma);
 
-    const alunosAtualizados = turmas.map(aluno => {
-        let todosPagos = true;
-        let algumVencido = false;
-
-        aluno.turma.forEach(idTurma => {
-            const pagamentosAluno = pagamentos.filter(pagamento => pagamento.idTurma === idTurma);
-            const prazos = pagamentosAluno.map(pagamento => pagamento.prazo.getTime());
-
-            if (prazos.length > 0) {
-                const prazoMaisRecente = new Date(Math.max(...prazos));
-
-                if (prazoMaisRecente < dataAtual) {
-                    algumVencido = true;
-                } else {
-                    todosPagos = false;
-                }
-            } else {
-                todosPagos = false;
-            }
+          const todasTurmasPagas = aluno.turma.every((turma) =>
+            turmasPagas.includes(turma)
+          );
+      
+          const prazosOrdenados = pagamentosAluno
+            .filter((pagamento) => turmasPagas.includes(pagamento.idTurma)) // Filtrando apenas os pagamentos das turmas do aluno
+            .sort((a, b) => a.prazo.getTime() - b.prazo.getTime()) // Ordenando os pagamentos pela data de prazo (do mais antigo ao mais recente)
+      
+          const prazosMaisFuturos = prazosOrdenados.slice(-turmasAluno); // Selecionando os X prazos mais futuros, onde X é o número de turmas
+      
+          const prazoAtualizado =
+            turmasAluno > 0 && todasTurmasPagas &&
+            prazosMaisFuturos.every((pagamento) => pagamento.prazo >= dataAtual);
+      
+          // Atualizando o status de pagamento do aluno
+          const indexAluno = listagem.findIndex((item) => item.id === aluno.id);
+          if (indexAluno !== -1) {
+            const listaAtualizada = [...listagem];
+            listaAtualizada[indexAluno].pagamento = prazoAtualizado;
+            setListagem(listaAtualizada);
+          }
         });
-
-        if (todosPagos) {
-            return new Aluno (aluno.nome, aluno.data, aluno.natural, aluno.endereco, aluno.celular, aluno.email, aluno.pai, aluno.mae, aluno.rg, aluno.cpf, aluno.mensalidade, aluno.turma, true, aluno.senha, aluno.id, aluno.excluido)
-        } else if (algumVencido) {
-            return new Aluno (aluno.nome, aluno.data, aluno.natural, aluno.endereco, aluno.celular, aluno.email, aluno.pai, aluno.mae, aluno.rg, aluno.cpf, aluno.mensalidade, aluno.turma, false, aluno.senha, aluno.id, aluno.excluido)
-
-        } else {
-            return aluno;
-        }
-    });
-
-    setListagem(alunosAtualizados);
-}
+      }
+      
+      
+      
     
-    
-
     function alunoSelecionado(aluno: Aluno){
         setAluno(aluno)
         setTipoModal("editar")
@@ -147,6 +148,7 @@ export default function RootAlunos() {
     useEffect(() => {
         if (recarregar || filtro1 || filtro2) {
             aoClicar();
+            verificarPrazos();
         }
     }, [recarregar, filtro1, filtro2]);
 
@@ -154,10 +156,10 @@ export default function RootAlunos() {
         verificarPrazos();
         setListaTurmas([...listaTurmas]
           //Pode apagar o [] 
-          //Obter lista de turmas do banco( )
+          //Obter lista de alunos do banco( )
         )
           setSelect1(['Todos(as)', ...listaTurmas.map((turma: { nome: any }) => turma.nome)])
-          const mensalidadeUnicas = [...new Set(turmas.map((aluno: {mensalidade: any})=> aluno.mensalidade))];
+          const mensalidadeUnicas = [...new Set(alunos.map((aluno: {mensalidade: any})=> aluno.mensalidade))];
           setSelect2(['Todos(as)', ...mensalidadeUnicas.map(mensalidade => `pagamentos dia  ${mensalidade}`)])
     }, []);
 
@@ -185,7 +187,7 @@ export default function RootAlunos() {
                     />
             <Modal isOpen={openModal} isNotOpen={() => setOpenModal(!openModal)} cor='white' titulo={tipoModal == 'selecionado' ? 'Pagamento' : tipoModal == 'excluir' ? 'Tem certeza que deseja excluir:': "Editar Aluno"}
             subtitulo={tipoModal == 'excluir' || 'selecionado' ? aluno.nome+' - Mensalidade: dia '+aluno.mensalidade : ''}>
-            {tipoModal == 'selecionado' ? <ModalRootPagamento aluno={aluno} listaTurmas={listaTurmas} pagamentos={pagamentos} setPagamentos={setPagamentos}/>: tipoModal == 'excluir' ? <ModalExcluir objeto={aluno} exclusao={exclusao} />: 
+            {tipoModal == 'selecionado' ? <ModalRootPagamento setRecarregar={setRecarregar} aluno={aluno} listaTurmas={listaTurmas} pagamentos={pagamentos} setPagamentos={setPagamentos}/>: tipoModal == 'excluir' ? <ModalExcluir objeto={aluno} exclusao={exclusao} />: 
             <ModalRootALunos listaTurmas={listaTurmas} aluno={aluno} novoAluno={alunoSelecionado} editar={edicao}/>}</Modal>
         </LayoutUser>
     )

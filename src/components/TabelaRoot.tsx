@@ -57,10 +57,6 @@ export default function Tabela(props: TabelaProps){
             <div className="flex justify-center">
                 {
                 objeto[propriedade] ?
-                    <button onClick={() => props.abrirPagamento?.(objeto)} className="
-                        flex rounded-full p-2 px-4 -my-1 bg-blue-400 hover:bg-blue-300 text-white font-semibold">
-                            Confirmar pagamento
-                    </button> :
                     <div className="bg-white rounded-full p-0 -my-1 flex flex-row items-center gap-12">
                         <h4 className="ml-6 font-semibold">PAGO</h4>
                         <button onClick={() => props.abrirPagamento?.(objeto)} className="
@@ -70,7 +66,11 @@ export default function Tabela(props: TabelaProps){
                                 </svg>
                                 Ver
                         </button>
-                    </div>
+                    </div> : 
+                    <button onClick={() => props.abrirPagamento?.(objeto)} className="
+                    flex rounded-full p-2 px-4 -my-1 bg-blue-400 hover:bg-blue-300 text-white font-semibold">
+                        Confirmar pagamento
+                    </button>
                 }
             </div>
         )

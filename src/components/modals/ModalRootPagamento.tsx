@@ -13,6 +13,7 @@ interface ModalRootPagamentoProps {
     listaTurmas: Turma[]
     pagamentos: Pagamento[]
     setPagamentos: (pagamentos: Pagamento[]) => void
+    setRecarregar: (recarregar: boolean) => void
 }
 
 export default function ModalRootPagamento(props: ModalRootPagamentoProps){
@@ -25,7 +26,7 @@ export default function ModalRootPagamento(props: ModalRootPagamentoProps){
     const [pagamento, setPagamento] = useState(Pagamento.vazio())
     const [idTurma, setIdTurma] = useState<string>('')
     const [datasPagamentosTurma, setDatasPagamentosTurma] = useState<string[]>([]);
-    const [turmaSelecionada, setTurmaSelecionada] = useState<Turma>()
+    const [excluir, setExcluir] = useState(false)
 
     const turmasDoAluno: string[] = props.listaTurmas
     .filter(turma => turma.id && props.aluno.turma.includes(turma.id))
@@ -85,7 +86,19 @@ export default function ModalRootPagamento(props: ModalRootPagamentoProps){
           novosPagamentos[index] = pagamentoNovo;
           props.setPagamentos(novosPagamentos);
         }
+        props.setRecarregar(true);
     }
+
+    function exclusao() {
+        const pagamentosFiltrados = props.pagamentos.filter((pagamento) => pagamento.id !== id);
+        if (pagamentosFiltrados.length > 0) {
+          props.setPagamentos(pagamentosFiltrados);
+        } else {
+          alert("Pagamento não encontrado");
+        }
+        setExcluir(false);
+        props.setRecarregar(true);
+      }
 
     useEffect(() => {
         aoClicar();
@@ -97,9 +110,10 @@ export default function ModalRootPagamento(props: ModalRootPagamentoProps){
         }
     }, [filtro2]);
 
+
     return(
         <div className="text-black">
-            <div className="flex flex-row pr-3 max-w-xl gap-3 overflow-x-auto">  
+            {excluir === false ?
                 <div>
                     <div className="flex">
                         <Select seletor={turmasDoAluno} setFiltro={setFiltro1} titulo="Turma"/>
@@ -118,17 +132,21 @@ export default function ModalRootPagamento(props: ModalRootPagamentoProps){
                             </div>
                         </section>
 
-                        <section className="flex place-content-end gap-10">
+                        <section className="flex place-content-end gap-2">
+                            <Botao onClick={()=>{setExcluir(true)}} className="bg-red-600 text-white py-2 px-4 rounded-md font-bold">Deletar</Botao>
+
                             <Botao className="p-10 bg-blue-500" cor={"blue"}
                                     onClick={() => adicao(new Pagamento(props.aluno.id, idTurma, descricao, valor, prazo, dataPago, id, false))}>
                                 {prazo.getTime() !== 0 ? 'Alterar':'Confirmar'}
                             </Botao>
                         </section>
 
-                    </div>
-
-            </div>
-
+                    </div> :
+                <div className="flex flex-col items-center content-center p-4 px-5 gap-3">
+                    <h3>Deseja excluir o pagamento de {pagamento.prazo.toLocaleDateString()}?</h3>
+                    <button onClick={exclusao} className="p-3 bg-red-600 text-white font-bold rounded-lg">Sim, Excluir</button>
+                </div>
+            }
         </div>
     )
 }
