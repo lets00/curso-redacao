@@ -1,0 +1,228 @@
+import LayoutUser from "@/components/LayoutUser";
+import Select from "@/components/Select";
+import TabelaRoot from "@/components/TabelaRoot";
+import Titulo from "@/components/Titulo";
+import { useEffect, useState } from "react";
+import Aluno from "@/core/Aluno";
+import {Botao} from "@/components/Botao";
+import Modal from "@/components/Modal";
+import ModalRootTurma from "@/components/modals/ModalRootTurma";
+import ModalExcluir from "@/components/modals/ModalExcluir";
+import ModalRootALunos from "@/components/modals/ModalRootAlunos";
+import Turma from "@/core/Turma";
+import { getDocs, query, collection, addDoc, updateDoc, doc, getDoc, deleteDoc, DocumentData } from 'firebase/firestore';
+import { db } from '@/backend/config';
+
+export default function RootTurmas() {
+
+    const [listaTurmas, setListaTurmas] = useState<Turma[]>([]);
+    const dados = ['natural','nome','cpf','pagamento']
+    const cabecalho = ['Estado', 'Nome', 'CPF', 'Pagamento']
+    const [select, setSelect] = useState<string[]>([])
+    const [alunos, setSlunos] = useState([])
+    const [openModal, setOpenModal] = useState(false)
+    const [aluno, setAluno] = useState<Aluno>(Aluno.vazio())
+    const [tipoModal, setTipoModal] = useState('')
+    const [listagem, setListagem] = useState<Aluno[]>(alunos);
+    const [filtragem, setFiltragem] = useState(listagem)
+    const [filtro, setFiltro] = useState('Todos(as)')
+    const [recarregar, setRecarregar] = useState(false)
+
+    
+    const aoClicar = async () => {
+        if (filtro === "Todos(as)") {
+            const alunosRef = collection(db, "Estudante");
+            const alunosQuery = query(alunosRef);
+            const snapshot = await getDocs(alunosQuery);
+            const alunos = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() })) as Aluno[];
+            setFiltragem(alunos);
+        } else {
+            const alunosFiltrados = listagem.filter((aluno) =>
+                aluno.turma.some((turmaId: string) =>
+                    listaTurmas.find((turma) => turma.id === turmaId && turma.nome === filtro)
+                )
+            );
+    
+            setFiltragem(alunosFiltrados);
+        }
+        setRecarregar(false);
+    };
+
+    useEffect(() => {
+        const carregarTurmas = async () => {
+          try {
+            const turmasRef = collection(db, "Turmas"); 
+            const turmasQuery = query(turmasRef);
+            const snapshot = await getDocs(turmasQuery);
+            const turmas = snapshot.docs.map((doc) => doc.data().nome);
+            setSelect(turmas); 
+          } catch (error) {
+            console.error("Erro ao carregar turmas:", error);
+          }
+        };
+    
+        carregarTurmas();
+      }, []);
+    
+    
+      useEffect(() => {
+        aoClicar();
+      }, [filtro]);
+    
+
+    async function adicao(turmaNova: Turma){
+        try{
+            const turmaData = {
+                nome: turmaNova.nome,
+                disciplina: turmaNova.disciplina,
+                dia: turmaNova.dia,
+                professor: turmaNova.professor,
+                horario: turmaNova.horario,
+                modalidade: turmaNova.modalidade,
+            };
+
+            const docref = await addDoc(collection(db, "Turmas"), turmaData);
+            console.log("Turma adicionada com o ID:", docref.id);
+            
+            setOpenModal(false);
+        } catch (error){
+            console.error("Erro ao adicionar a Turma ao Firestore", error);
+        }
+    }
+
+    
+    function alunoSelecionado(aluno: Aluno){
+        setAluno(aluno)
+        setTipoModal("editar")
+        setOpenModal(true)
+    }
+    function alunoExcluido(aluno: Aluno){
+        setAluno(aluno);
+        setTipoModal('excluir')
+        setOpenModal(true)
+    }
+    function turmaSelecionada(){
+        setTipoModal('selecionado')
+        setOpenModal(true)
+    }
+
+    function exclusao(id: any) {
+        
+        const alunoFiltrado = listagem.find((aluno) => aluno.id === id);
+    
+        if (alunoFiltrado) {
+            const alunoId = alunoFiltrado.id;
+    
+            const deletarAlunoFirestore = async () => {
+                try {
+                    const alunoDocRef = doc(db, 'Estudante', alunoId);
+                    await deleteDoc(alunoDocRef);
+                    console.log('Aluno excluído do Firestore');
+                } catch (error) {
+                    console.error('Erro ao excluir aluno do Firestore', error);
+                }
+            };
+    
+            deletarAlunoFirestore();
+        }
+    
+        const materiaisFiltrados = listagem.filter((aluno) => aluno.id !== id);
+        setListagem(materiaisFiltrados);
+    
+        console.log('After Deletion - listagem:', listagem);
+    
+        setOpenModal(false);
+        setRecarregar(true);
+    }
+    
+    function edicao(alunoEditado: Aluno) {
+        const alunoId = alunoEditado.id;
+      
+        const atualizarAlunoFirestore = async () => {
+          try {
+            const alunoDocRef = doc(db, 'Estudante', alunoId);
+            await updateDoc(alunoDocRef, {
+              nome: alunoEditado.nome,
+              data: alunoEditado.data,
+              natural: alunoEditado.natural,
+              endereco: alunoEditado.endereco,
+              celular: alunoEditado.celular,
+              email: alunoEditado.email,
+              pai: alunoEditado.pai,
+              mae: alunoEditado.mae,
+              rg: alunoEditado.rg,
+              cpf: alunoEditado.cpf,
+              mensalidade: alunoEditado.mensalidade,
+              turma: alunoEditado.turma,
+              pagamento: alunoEditado.pagamento,
+              senha: alunoEditado.senha,
+            });
+      
+            console.log('Aluno atualizado no Firestore');
+          } catch (error) {
+            console.error('Erro ao atualizar aluno no Firestore', error);
+          }
+        };
+      
+        atualizarAlunoFirestore();
+
+        const indexToEdit = listagem.findIndex((aluno) => aluno.id === alunoId);
+        if (indexToEdit !== -1) {
+          const listaAtualizada = [...listagem];
+          listaAtualizada[indexToEdit] = alunoEditado;
+          setListagem(listaAtualizada);
+          setOpenModal(false);
+        } else {
+          setOpenModal(false);
+        }
+        setRecarregar(true);
+      }
+
+    useEffect(() => {
+        const carregarTurmas = async () => {
+            try {
+                const turmasSnapshot = await getDocs(collection(db, "Turmas"));
+                const turmasData = turmasSnapshot.docs.map(doc => ({
+                    id: doc.id,
+                    ...doc.data(),
+                })) as Turma[];
+                
+                setListaTurmas(turmasData);
+    
+                const seletorAtualizado = ['Todos(as)', ...turmasData.map(turma => turma.nome)];
+                setSelect(seletorAtualizado);
+            } catch (error) {
+                console.error("Erro ao carregar turmas do Firestore", error);
+            }
+        };
+    
+        carregarTurmas();
+    }, []);
+    
+
+    return (
+        <LayoutUser usuario={'root'} className="text-black">
+            <div className="flex place-content-between">
+                <Titulo>Turmas</Titulo>
+                <Botao onClick={() => turmaSelecionada()} className="mx-8 px-10">Gerenciar Turmas</Botao>
+            </div>
+            <Select seletor={select}
+                    titulo="Turma"
+                    setFiltro={setFiltro}/>
+            <TabelaRoot objeto={filtragem}
+                    propriedadesExibidas={dados}
+                    cabecalho={cabecalho}
+                    objetoSelecionado={alunoSelecionado}
+                    objetoExcluido={alunoExcluido}
+                    turmas
+                    />
+                    
+            <Modal isOpen={openModal} isNotOpen={() => setOpenModal(!openModal)} cor='white' titulo={tipoModal == 'selecionado' ? 'Gerenciar turma': tipoModal == 'excluir' ? 'Tem certeza que deseja excluir:' : "Editar Aluno"}
+                subtitulo={tipoModal == 'excluir' ? aluno.nome : ''} >
+                {tipoModal == 'selecionado' ? <ModalRootTurma turmas={listaTurmas} setTurmas={setListaTurmas} turmasSeletor={select} turmaSelecionada={turmaSelecionada} setSelect={setSelect}/>: 
+                tipoModal == 'excluir' ? <ModalExcluir objeto={aluno} exclusao={exclusao}/> :
+                <ModalRootALunos aluno={aluno} novoAluno={alunoSelecionado} listaTurmas={listaTurmas} editar={edicao}/>}</Modal>
+
+        </LayoutUser>
+    )
+}

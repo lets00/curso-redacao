@@ -18,7 +18,6 @@ import { getStorage, ref, uploadString, getDownloadURL } from "firebase/storage"
 import ProtectedRoute from "@/components/ProtectedRoute";
 import ImageUploader from "@/components/ImageUploader";
 
-
 interface UserProfile {
     modalidade: string;
     nome: string;

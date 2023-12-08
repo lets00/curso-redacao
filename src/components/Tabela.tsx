@@ -12,7 +12,7 @@ export default function Tabela(props: TabelaProps){
 
     const exibirAcoes = props.professorExcluido || props.professorSelecionado
 
-    function renderizarCabecalho(){
+    function renderizarCabecalho() {
         return (
             <tr>
                 <th>Nome</th>
@@ -67,5 +67,5 @@ export default function Tabela(props: TabelaProps){
                 {renderizarDados()}
             </tbody>
         </table>
-    )
-}
+      );
+    }
