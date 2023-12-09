@@ -44,6 +44,7 @@ export default function ModalRootTurma(props: ModalRootTurmaProps){
         } catch (error) {
           console.error('Erro ao excluir a turma no Firebase:', error);
         }
+        setExcluir(true);
       }
       
 
@@ -130,8 +131,8 @@ export default function ModalRootTurma(props: ModalRootTurmaProps){
                 <div className="flex flex-col items-end gap-2 mt-12">
                     {filtro !== 'Todos(as)' ? (
                     <>
-                        <button onClick={() => exclusao()} className="p-3 bg-red-600 text-white font-bold rounded-lg">Sim, Excluir</button>
-                        <button onClick={selecionarTurma} className="bg-pink-500 text-white py-2 px-4 rounded-md font-bold">{editando ? 'Salvar Edição' : 'Editar'}</button>
+                        <button onClick={excluirTurma} className="bg-pink-500 text-white py-2 px-4 rounded-md font-bold">Deletar</button>
+                        <button onClick={selecionarTurma} className="bg-pink-500 text-white py-2 px-4 rounded-md font-bold">Editar</button>
                     </>
                     ) : null}
                 </div>

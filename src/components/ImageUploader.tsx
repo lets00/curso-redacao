@@ -2,7 +2,7 @@ import { useState } from "react";
 import Image from "next/image";
 import { ref, uploadString, getDownloadURL, getStorage } from "firebase/storage";
 import { doc, updateDoc, collection, query, where, getDocs, setDoc, getFirestore} from "firebase/firestore";
-import { getAuth, User } from "firebase/auth";
+import {  User, getAuth } from "firebase/auth";
 import {storage} from "@/backend/config";
 import { initializeApp } from "firebase/app";
 

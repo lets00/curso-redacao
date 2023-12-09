@@ -1,6 +1,6 @@
 interface EntradaProps{
     texto: string;
-    tipo?: 'text' | 'number';
+    tipo?: 'text' | 'number' | 'password' | 'file'
     valor?: any;
     somenteLeitura?: boolean;
     valorMudou: (e: any) => void;
@@ -9,7 +9,7 @@ interface EntradaProps{
 }
 export default function Entrada(props: EntradaProps){
     return (
-        <div className={`flex flex-col ${props.className}`}>
+        <div className={`flex flex-col ${props.className} text-black`}>
             <label className="font-Montserrant">
                 {props.texto}
             </label>

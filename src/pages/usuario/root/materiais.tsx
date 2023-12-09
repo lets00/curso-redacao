@@ -6,11 +6,8 @@ import Titulo from "@/components/Titulo";
 import ModalExcluir from "@/components/modals/ModalExcluir";
 import ModalRootMateriais from "@/components/modals/ModalRootMateriais";
 import Material from "@/core/Material";
-import Aluno from "@/core/Aluno";
-import Comentario from "@/core/Comentario";
 import { useEffect, useState } from "react";
-import { getAuth } from "firebase/auth";
-import { getFirestore, collection, getDocs, deleteDoc, doc } from "firebase/firestore";
+import { collection, getDocs, deleteDoc, doc } from "firebase/firestore";
 import { db } from '@/backend/config';
 
 export default function RootMateriais() {

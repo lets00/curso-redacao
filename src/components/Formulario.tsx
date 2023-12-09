@@ -1,13 +1,11 @@
 import Entrada from "./Entrada";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Aluno from "@/core/Aluno";
 import { Botao } from "./Botao";
 import DatePicker from "./DatePicker";
-import AlunoRepositorio from "@/core/AlunoRepositorio";
-import {db, storage} from "@/backend/config"
+import {db} from "@/backend/config"
 import { collection, addDoc } from "firebase/firestore";
-import { createUserWithEmailAndPassword, getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
-import useAuth from "@/data/hook/useAuth";
+import { createUserWithEmailAndPassword, getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth"; 
 
 
 interface FormularioProps{
@@ -30,8 +28,9 @@ interface FormularioProps{
     const [cpf, setCpf] = useState(props.aluno?.cpf ?? '')
     const [senha, setSenha] = useState(props.aluno?.senha ?? '')
     const [mensalidade, setMensalidade] = useState(props.aluno?.mensalidade ?? '')
-    const [alunos, setAlunos] = useState<Aluno[]>([])
     const [termosDeUso, setTermosDeUso] = useState(false);
+    const [confirmarSenha, setConfirmarSenha] = useState('');
+
 
     const auth = getAuth();
 
@@ -47,20 +46,16 @@ interface FormularioProps{
             console.error("A senha deve ter pelo menos 6 caracteres.");
             return;
         }
+
+        if (senha !== confirmarSenha) {
+            console.error("As senhas não coincidem.");
+            return;
+          }
     
         const formData = {
-          nome,
-          data,
-          natural,
-          endereco,
-          celular,
-          email,
-          pai,
-          mae,
-          rg,
-          cpf,
-          senha,
-          mensalidade,
+          nome, data, natural, endereco, celular,
+          email, pai, mae, rg, cpf,
+          senha, mensalidade,
         };
     
         try {
@@ -82,6 +77,7 @@ interface FormularioProps{
           setRg("");
           setCpf("");
           setEmail("");
+          setConfirmarSenha('');
           setMensalidade(0);
           setTermosDeUso(false);
 
@@ -99,14 +95,25 @@ interface FormularioProps{
         <div>
             <form onSubmit={handleSubmit}>
             <Entrada texto="Nome" valor={nome} valorMudou={(e) => setNome(e.target.value)} placeholder="Digite seu nome COMPLETO" />
-            <DatePicker/>
+            <DatePicker classname="text-black" titulo="Data de Nascimento" dataMax={new Date()}/>
             <Entrada texto="Naturalidade ( Cidade/Estado )" valor={natural} valorMudou={(e) => setNatural(e.target.value)} />
             <Entrada texto="Endereço ( Rua, Nº, Bairro)" valor={endereco} valorMudou={(e) => setEndereco(e.target.value)} />
             <Entrada texto="Número de celular (com DDD)" valor={celular} valorMudou={(e) => setCelular(e.target.value)} placeholder="(**)****-****" />
             <Entrada texto="E-mail" valor={email} valorMudou={(e) => setEmail(e.target.value)} />
             <Entrada texto="Nome do Pai" valor={pai} valorMudou={(e) => setPai(e.target.value)} />
             <Entrada texto="Nome da Mãe" valor={mae} valorMudou={(e) => setMae(e.target.value)} />
-            <Entrada texto="Senha" valor={senha} valorMudou={(e) => setSenha(e.target.value)} />
+            <Entrada texto="Senha" valor={senha} valorMudou={(e) => setSenha(e.target.value)} tipo="password"/>
+            {senha.length < 6 && (
+                <small className="text-red-500">
+                    A senha deve conter pelo menos 6 caracteres.
+                </small>
+            )}
+            <Entrada texto="Confirmar Senha" valor={confirmarSenha} valorMudou={(e) => setConfirmarSenha(e.target.value)} tipo="password" />
+            {senha.length >= 6 && senha !== confirmarSenha && (
+                <small className="text-red-500">
+                    As senhas não coincidem.
+                </small>
+            )}
             <h2 className="font-Montserrant">Documentação</h2><br />
             <Entrada texto="RG" valor={rg} valorMudou={(e) => setRg(e.target.value)} />
             <Entrada texto="CPF" valor={cpf} valorMudou={(e) => setCpf(e.target.value)} />

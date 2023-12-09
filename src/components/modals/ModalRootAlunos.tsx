@@ -3,9 +3,8 @@ import EntradaPerfil from "../EntradaPerfil";
 import { useState } from "react";
 import {Botao} from "../Botao";
 import DatePicker from "../DatePicker";
-import Select from "../Select";
 import Turma from "@/core/Turma";
-import Checkbox from "../Checkbox";
+
 
 interface ModalRootALunosProps {
     aluno: Aluno
@@ -85,8 +84,6 @@ export default function ModalRootALunos(props: ModalRootALunosProps){
                 <EntradaPerfil className="text-white" className2="bg-white rounded-xl text-black" texto="RG" valor={rg} valorMudou={setRg} />
                 <EntradaPerfil className="text-white" className2="bg-white rounded-xl text-black" texto="CPF" valor={cpf} valorMudou={setCpf}/>
                 <EntradaPerfil className="text-white" className2="bg-white rounded-xl text-black" texto="Mensalidade" valor={mensalidade} valorMudou={setMensalidade} tipo="number"/>
-                {//<Select seletor={['Presencial terça/tarde', 'Online terça/tarde', 'Presencial sábado/tarde']} titulo="Turmas" classname2="text-white -m-5" classname="-m-5" setFiltro={setTurma}/>
-                }
             </div>
             <div className="flex place-content-end ">
             <Botao className="p-10 bg-blue-400" cor="blue"

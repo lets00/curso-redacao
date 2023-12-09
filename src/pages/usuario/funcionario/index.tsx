@@ -13,6 +13,9 @@ interface UserProfile {
     celular: string;
     cpf: string;
     email: string;
+    rg: string;
+    senha: string;
+    id: string;
 }
 
 export default function PerfilFuncionario() {
@@ -42,6 +45,17 @@ export default function PerfilFuncionario() {
         }
       }, []);
 
+        const [nome, setNome] = useState(userProfile?.nome ?? '')
+        const [celular, setCelular] = useState(userProfile?.celular ?? '')
+        const [cpf, setCpf] = useState(userProfile?.cpf ?? '')
+        const [email, setEmail] = useState(userProfile?.email ?? '')
+        const [rg, setRg] = useState(userProfile?.rg ?? '')
+        const [id, setId] = useState(userProfile?.id ?? '')
+        const [senha, setSenha] = useState(userProfile?.senha ?? '')
+
+        function salvarFuncionario(funcionario: Funcionario){
+            setEditar(!editar)
+        }
 
     return (
         <LayoutUser usuario={'funcionario'} className="flex flex-col gap-2 text-black" divisoes>
@@ -54,8 +68,10 @@ export default function PerfilFuncionario() {
                             throw new Error("Function not implemented.");
                         } }/>
                     </figure>
-                    <h2 className="mt-10 ml-5 ">{userProfile?.nome}</h2>
-                    <Botao onClick={() => setEditar(!editar)} className="m-10 p-10 bg-blue-400" cor="blue">{editar == true ? 'Alterar':'Salvar'}</Botao>
+                    <h2 className="mt-10 ml-5 ">{nome}</h2>
+                    <Botao onClick={() => salvarFuncionario(
+                        new Funcionario(nome, cpf, rg, celular, email, senha, id, false))} 
+                    className="m-10 p-10 bg-blue-400">{editar == true ? 'Alterar':'Salvar'}</Botao>
                 </div>
             </section>
 
@@ -64,10 +80,10 @@ export default function PerfilFuncionario() {
             {userProfile &&(
                 <section className="bg-white rounded-md w-1/2 h-auto m-2 mr-1 mt-0 p-6
                                 grid grid-cols-2">
-                    <EntradaPerfil texto="Nome" valor={userProfile.nome} somenteLeitura={editar} />
-                    <EntradaPerfil texto="Número" valor={userProfile.celular}  somenteLeitura={editar} />
-                    <EntradaPerfil texto="Email" valor={userProfile.email}  somenteLeitura={editar} />
-                    <EntradaPerfil texto="CPF" valor={userProfile.cpf}  somenteLeitura={editar} />
+                    <EntradaPerfil texto="Nome" valor={userProfile.nome} somenteLeitura={editar} valorMudou={setNome} />
+                    <EntradaPerfil texto="Número" valor={userProfile.celular}  somenteLeitura={editar} valorMudou={setCelular} />
+                    <EntradaPerfil texto="Email" valor={userProfile.email}  somenteLeitura={editar} valorMudou={setEmail} />
+                    <EntradaPerfil texto="CPF" valor={userProfile.cpf}  somenteLeitura={editar} valorMudou={setCpf} />
                 </section>
                 )}
                 <figure className="bg-white rounded-md w-1/2 h-auto m-2 ml-1 mt-0 

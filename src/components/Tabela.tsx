@@ -1,65 +1,84 @@
-import Aluno from "@/core/Aluno"
-import Professor from "@/core/Professor"
-import { IconeFeedback, IconeDeletar } from "./Icones"
+import { format } from "date-fns"
+import { IconeComentario, IconeDeletar, IconeEnviar } from "./Icones"
+import Link from "next/link"
 
 interface TabelaProps {
-    professores: Professor[]
-    professorSelecionado?: (professor: Professor) => void
-    professorExcluido?: (professor: Professor) => void
+    objeto: any
+    propriedadesExibidas: any
+    cabecalho: string[]
+    objetoSelecionado?: (objeto: any) => void
+    objetoExcluido?: (objeto: any) => void
+    linkDoObjeto?: any 
 }
 
 export default function Tabela(props: TabelaProps){
 
-    const exibirAcoes = props.professorExcluido || props.professorSelecionado
+    const exibirAcoes = props.objetoExcluido || props.objetoSelecionado
 
     function renderizarCabecalho() {
         return (
             <tr>
-                <th>Nome</th>
-                <th>CPF</th>
-                <th>RG</th>
-                {exibirAcoes ? <th>Ações</th> : false}
+                {props.cabecalho.map((coluna: any, index: any) => (
+                <th key={index}>{coluna}</th>
+                ))}
             </tr>
         )
     }
 
-    function renderizarAcoes(professor: Professor){
+    function renderizarAcoes(objeto: any){
         return (
             <td className="flex justify-center gap-2">
-                {props.professorSelecionado ? (
-                    <button onClick={() => props.professorSelecionado?.(professor)} className="
+                {props.objetoSelecionado ? (
+                    <button onClick={() => props.objetoSelecionado?.(objeto)} className="
                         flex justify-center items-center
                         rounded-full p-2 m-1 bg-slate-300 hover:bg-white">
-                            {IconeFeedback}
+                            {IconeComentario}
                     </button>
                 ) : false}
-                {props.professorExcluido ? (
-                    <button onClick={() => props.professorExcluido?.(professor)} className="
+                {props.objetoExcluido ? (
+                    <button onClick={() => props.objetoExcluido?.(objeto)} className="
                         flex justify-center items-center
                         rounded-full p-2 m-1 bg-slate-300 hover:bg-white">
                             {IconeDeletar}
                     </button>
+                ) : false}
+                {props.linkDoObjeto ? (
+                    <Link href={objeto.link} className="
+                        flex justify-center items-center
+                        rounded-full p-2 m-1 bg-slate-300 hover:bg-white">
+                            {IconeEnviar}
+                    </Link>
                 ) : false}
             </td>
         )
     }
 
     function renderizarDados(){
-        return props.professores?.map((professor, i) => {
+        return props.objeto?.map((objeto: any, index: any) => {
             return (
-                <tr key={professor.id}
-                    className={`${i % 2 === 0 ? 'bg-slate-100' : 'bg-slate-200'}`}>
-                    <td className="text-center p-2">{professor.nome}</td>
-                    <td className="text-center p-2">{professor.cpf}</td>
-                    <td className="text-center p-2">{professor.rg}</td>
-                    {exibirAcoes ? renderizarAcoes(professor): false}
+                <tr key={objeto.id}
+                    className={`${index % 2 === 0 ? 'bg-slate-100' : 'bg-slate-200'}`}>
+                    {props.propriedadesExibidas.map((propriedade: any, propIndex: any) => (
+                        <td key={propIndex} className="text-center p-2">
+                            {propriedade === 'pagamento'
+                                ? objeto[propriedade]
+                                    ? 'Pago'
+                                    : 'Não pago'
+                                :objeto[propriedade] instanceof Date ?
+                                format(objeto[propriedade], 'dd-MM-yyyy')
+                                 : (
+                                objeto[propriedade]
+                            )}
+                        </td>
+                    ))}
+                    {exibirAcoes ? renderizarAcoes(objeto): false}
                 </tr>
             )
         })
     }
 
     return (
-        <table className="w-full border-separate border-spacing-y-2">
+        <table className="w-full border-separate border-spacing-y-2 text-black">
             <thead>
                 {renderizarCabecalho()}
             </thead>

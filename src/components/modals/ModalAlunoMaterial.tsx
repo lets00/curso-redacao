@@ -14,6 +14,7 @@ interface ModalAlunoMaterial {
     editarComentario: (comentarioEditado: Comentario) => void;
     excluirComentario: (comentarioExcluido: Comentario) => Promise<void>;
 }
+//CONFERIR
 
 export default function ModalAlunoMaterial(props: ModalAlunoMaterial){
     const idMaterial = (props.material.id ?? '')

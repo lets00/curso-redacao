@@ -1,4 +1,3 @@
-import Botao from "@/components/Botao";
 import LayoutUser from "@/components/LayoutUser";
 import Modal from "@/components/Modal";
 import Tabela from "@/components/Tabela";
@@ -13,7 +12,7 @@ import {db, storage} from "@/backend/config"
 import ListarMateriais from "../funcionario/listarMateriais";
 import { Firestore, DocumentData } from 'firebase/firestore';
 
-export default function Aluno() {
+export default function AlunoIndex() {
 
     useEffect(() => {
         const carregarDados = async () => {
@@ -47,8 +46,6 @@ export default function Aluno() {
     const [comentario, setComentario] = useState<Comentario>(Comentario.vazio())
     const [botaoAtivo, setBotaoAtivo] = useState<string>('redacao');
     const [openModal, setOpenModal] = useState(false)
-    const [professor, setProfessor] = useState<Professor>(Professor.vazio())
-
     
     //Filtro da lista
     const aoClicar = (conteudo: any, botao: any) => {
@@ -89,10 +86,6 @@ export default function Aluno() {
         
     setComentarios([...comentarios, comentarioNovo]);       
     setOpenModal(false);
-    }
-    function novoProfessor(){
-        setProfessor(Professor.vazio())
-        setOpenModal(true)
     }
 
     async function editarComentario(comentarioEditado: Comentario){
