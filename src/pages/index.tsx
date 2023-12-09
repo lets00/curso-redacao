@@ -26,6 +26,8 @@ export default function Home(){
               <br/>*contratados à parte. 
               <br/>**eventos comprados à parte.
             </h3>
+
+
             <div className='flex justify-center pt-3'>
               <svg className="w-6 h-6 text-gray-800" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 8">
                 <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 5.326 5.7a.909.909 0 0 0 1.348 0L13 1"/>
@@ -58,6 +60,8 @@ export default function Home(){
               <br/><span className='font-bold'>& muito mais!</span>
               <br/>*contratados à parte.
             </h3>
+
+
             <div className='flex justify-center pt-3'>
               <svg className="w-6 h-6 text-gray-800" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 8">
                 <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 5.326 5.7a.909.909 0 0 0 1.348 0L13 1"/>
@@ -75,6 +79,7 @@ export default function Home(){
             <div className="bg-slate-700 p-9 text-white rounded-md shadow-2xl">
               <div className="rounded-full h-12 w-12 bg-blue-300 mb-6"/>
               <h1 className="font-bold font-Montserrant text-2xl text-white">Presencial</h1><br/>
+              
               <h3>
                 Quanto aos valores para 2024, no presencial, nossa matrícula custará R$ 300,00. <br/>
                 ➡️ Pelo valor da matrícula, você receberá apostilas impressas, caderno de anotações, nova camiseta do Curso, mochila e copo. 
@@ -83,18 +88,23 @@ export default function Home(){
                 <br/>⚪ R$ 200,00* - para o combo (Linguagens, Redação e Matemática). 
                 <br/>⚪ R$ 100,00* - só Matemática. 
                 <br/><br/> *para pagamento até a data de vencimento (dia 05 ou dia 10). Após o vencimento, haverá acréscimo de R$ 15,00 na parcela.
-              </h3><br/>
+              </h3>
+              
+              <br/>
               <button className="text-3xl text-slate-700 bg-white px-10 py-3 rounded-md">Comprar</button>
             </div>
             <div className="p-9 shadow-2xl rounded-md">
               <div className="rounded-full h-12 w-12 bg-pink-400 mb-6"></div>
               <h1 className="font-bold font-Montserrant text-2xl">Online</h1><br/>
+              
               <h3>
               ⚠️No caso do curso on-line, em 2024, será cobrada taxa única. <br/> 
               <br/>🔴 R$ 399,00* - Curso completo de Linguagens e Redação, 10 meses de acesso, com 1 aula semanal gravada para cada disciplina + 20 créditos de correções. Além disso, também acompanha todos os benefícios do padrão CFA (consultá-los abaixo). 
               <br/>🔴 R$ 499,00* - Curso completo de Linguagens, Redação e Matemática, 10 meses de acesso, com 1 aula gravada semanal para cada disciplina + 20 créditos de correções. Além disso, também acompanha todos os benefícios do padrão CFA (consultá-los abaixo). 
               <br/><br/> *Cursos vendidos apenas à vista, via boleto bancário, pix ou cartão de crédito. Em até 3x, parcelamento sem juros. Acima disso, o cliente assume o valor adicional do parcelamento.
-              </h3><br/>
+              </h3>
+              
+              <br/>
               <button className="text-3xl text-white bg-pink-400 px-10 py-3 rounded-md">Comprar</button>
             </div>
           </div>
