@@ -15,6 +15,7 @@ interface TabelaProps {
     turmas?: boolean
     pagamentos?: Pagamento[]
     funcionario?: any
+    children?: never[]
 }
 
 export default function Tabela(props: TabelaProps){

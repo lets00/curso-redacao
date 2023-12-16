@@ -10,6 +10,7 @@ interface TabelaProps {
     objetoSelecionado?: (objeto: any) => void
     objetoExcluido?: (objeto: any) => void
     linkDoObjeto?: any 
+    children?: never[]
 }
 
 export default function Tabela(props: TabelaProps){
