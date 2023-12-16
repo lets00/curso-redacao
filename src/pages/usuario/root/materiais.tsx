@@ -33,7 +33,7 @@ export default function RootMateriais() {
         new Aluno('teste 1', new Date(2004-10-10), 'PE', 'rua teste', '111-111', 'jasha@gmail',
     'jose', 'carla', 'rgrgrg', 'cpfcpf', 10, ['idTurma3'],false , '123', "idTeste1", false),
     ]
-    const [listaTurmas, setListaTurmas] = useState<Turma[]>([])
+    const [listaDisciplinas, setListaDisciplinas] = useState<Turma[]>([])
 
 
     const dados = ['nome', 'data', 'professor']
@@ -82,11 +82,11 @@ export default function RootMateriais() {
     }, [recarregar, filtro]);
 
     useEffect(() => {
-        setListaTurmas([]
+        setListaDisciplinas([]
           //Pode apagar o [] 
           //Obter lista de turmas do banco( )
         )
-          setSelect(['Todos(as)', ...listaTurmas.map((turma: { disciplina: any }) => turma.disciplina)])
+          setSelect(['Todos(as)', ...listaDisciplinas.map((disciplina: { nome: any }) => disciplina.nome)])
     }, []);
 
     return (

@@ -6,36 +6,44 @@ import Material from "@/core/Material";
 import Comentario from "@/core/Comentario";
 import Aluno from "@/core/Aluno";
 import { useState } from "react";
+import Turma from "@/core/Turma";
 
 export default function AlunoIndex() {
 
     const materiais = [
-        new Material('Material da aula sobre Redação 1', 'Descrição breve desse documento', 'ARQUIVO', 'https://correcao.cursofelipealves.com.br/student/login', 'Redação', 'presencial terça/tarde', 'Abner', new Date(),'id1' , false),
-        new Material('Material da aula sobre Redação 2', 'Descrição breve desse documento', 'ARQUIVO2', 'LINK2', 'Redação', 'presencial terça/manhã', 'João', new Date(),'id2' , false)
-    ]
-    const materiais2 = [
-        new Material('Material de teste', 'Descrição breve desse documento', 'ARQUIVO', 'LINK', 'Redação', 'presencial terça/tarde', 'Abner', new Date(),'id3' , false),
-        new Material('Material de teste', 'Descrição breve desse documento', 'ARQUIVO2', 'LINK2', 'Redação', 'presencial terça/manhã', 'João', new Date(),'id4' , false)
+        new Material('Material da aula sobre Redação 1', 'Descrição breve desse documento', 'ARQUIVO', 'https://correcao.cursofelipealves.com.br/student/login', 'Redação', 'Presencial terça/tarde', 'Abner', new Date(),'id1' , false),
+        new Material('Material da aula sobre Redação 2', 'Descrição breve desse documento', 'ARQUIVO2', 'LINK2', 'Redação', 'Presencial terça/tarde', 'João', new Date(),'id2' , false),
+        new Material('Material da aula sobre Redação 2', 'Descrição breve desse documento', 'ARQUIVO2', 'LINK2', 'Redação', 'Presencial sábado/tarde', 'João', new Date(),'id3' , false)
     ]
     const dados = ['nome', 'descricao', 'data']
     const cabecalho = ['Título', 'Descrição', 'Data de publicação', `Avaliar & Enviar redações`]
     const select = ['Redação','Linguagem','Matemática']
 
     const [comentarios, setComentarios] = useState<Comentario[]>([])
-    const [lista, setLista] = useState(materiais)
     const [material, setMaterial] = useState<Material>(Material.vazio())
-    //Esse aqui seria o aluno logado
-    const [aluno, setAluno] = useState<Aluno>(Aluno.vazio())
     const [comentario, setComentario] = useState<Comentario>(Comentario.vazio())
-    const [botaoAtivo, setBotaoAtivo] = useState('redacao');
     const [openModal, setOpenModal] = useState(false)
+
+    //Aluno que seria o aluno logado
+    const aluno = new Aluno('Maria Luiza', new Date('2023-11-31'), 'RJ', 'rua testew', '222-111', 'mari@gmail',
+    'pedro', 'ana', 'rg2', 'cpf2', 10, ["idTurma1", "idTurma3"],true , 'abc', "idTeste2", false);
+    const [listaTurmas, setListaTurmas] = useState([
+        new Turma('Presencial terça/tarde', 'Linguagem', 'Felipe Alves', 'terça-feira', '14h', 'Presencial', 'idTurma1', false),
+        new Turma('Online terça/tarde', 'Redação', 'Wellington', 'terça-feira', '14h', 'Online', 'idTurma2', false),
+        new Turma('Presencial sábado/tarde', 'Redação', 'Wellington', 'sábado', '14h', 'Presencial', 'idTurma3', false)
+      ])
+    const turmasDoAluno = listaTurmas.filter(turma =>
+        aluno.turma.some(alunoTurmaId => alunoTurmaId === turma.id)
+    );
+    const [materiaisFiltrados, setMateriaisFiltrados] = useState<Material[]>(aluno.turma.length != 0 ? materiais.filter((material) => material.turma === turmasDoAluno[0]?.nome) : [])
+    const [azul, setAzul] = useState(aluno.turma.length != 0 ? turmasDoAluno[0].nome : '')
 
     
     //Filtro da lista
-    const aoClicar = (conteudo: any, botao: any) => {
-        setLista(conteudo);
-        setBotaoAtivo(botao);
-      };
+    const aoClicar = (turma: string) => {
+        setMateriaisFiltrados(materiais.filter((material) => material.turma === turma));
+        setAzul(turma)
+    };
 
     //Lista
     function materialSelecionado(material: Material) {
@@ -102,14 +110,16 @@ export default function AlunoIndex() {
             <section className="bg-white rounded-md w-auto h-4/5 m-2 mb-0">
                 <div className="ml-8 py-4">
                     <h3 className="font-Monteserrant font-semibold">Materiais</h3>
-                    <div className="flex ml-3 gap-2">
-                        <button onClick={() => aoClicar(materiais, 'redacao')} 
-                        className={`border-b-2 ${botaoAtivo === 'redacao' ? 'border-blue-400' : 'border-slate-200'} hover:border-blue-400`}>Redação</button>
-                        <button onClick={() => aoClicar(materiais2, 'linguagem')} 
-                        className={`border-b-2 ${botaoAtivo === 'linguagem' ? 'border-blue-400' : 'border-slate-200'} hover:border-blue-400`}>Linguagem</button>
-                    </div>
+                    {turmasDoAluno.map(turma => (
+                        <button
+                            key={turma.id}
+                            onClick={() => aoClicar(turma.nome)}
+                            className={`border-b-2 hover:border-blue-400 mr-4 ${turma.nome == azul ? 'border-blue-400' : ''}`}>
+                            {turma.disciplina}
+                        </button>
+                    ))}
                 </div>
-                <Tabela objeto={lista} 
+                <Tabela objeto={materiaisFiltrados} 
                         propriedadesExibidas={dados}
                         cabecalho={cabecalho}
                         objetoSelecionado={materialSelecionado}

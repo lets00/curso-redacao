@@ -13,6 +13,7 @@ interface TabelaProps {
     objetoExcluido?: (objeto: any) => void
     turmas?: boolean
     pagamentos?: Pagamento[]
+    funcionario?: any
 }
 
 export default function Tabela(props: TabelaProps){
@@ -81,8 +82,7 @@ export default function Tabela(props: TabelaProps){
             <>
                 {props.objeto?.map((objeto: any, index: any) => {
                     return (
-                        <tr key={objeto.id}
-                            className={`${index % 2 === 0 ? 'bg-slate-100' : 'bg-slate-200'}`}>
+                        <tr key={objeto.id} className={`${index % 2 === 0 ? 'bg-slate-100' : 'bg-slate-200'}`}>
                             {props.propriedadesExibidas.map((propriedade: any, propIndex: any) => (
                                 <td key={propIndex} className="text-center p-2">
                                     {propriedade === 'pagamento'
@@ -109,15 +109,15 @@ export default function Tabela(props: TabelaProps){
     function renderizarFuncionario(objeto: any){
         return(
             <>
-                {props.objeto[props.objeto.length - 1] instanceof Funcionario && (
+                { props.funcionario? 
                     <tr>
                         <td colSpan={props.propriedadesExibidas.length} className="text-right p-1 pr-6">
                             <button onClick={() => props.salvarFuncionario?.(objeto)} className="px-10 py-1 bg-blue-400 text-white 
                             font-semibold rounded-full"
                             >Criar novo funcionário</button>    
                         </td>
-                    </tr>
-                )}
+                    </tr> : ''
+                }
             </>
         )
     }

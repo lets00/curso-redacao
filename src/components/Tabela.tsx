@@ -1,6 +1,7 @@
 import { format } from "date-fns"
 import { IconeComentario, IconeDeletar, IconeEnviar } from "./Icones"
 import Link from "next/link"
+import { Timestamp } from "firebase/firestore"
 
 interface TabelaProps {
     objeto: any
@@ -64,8 +65,8 @@ export default function Tabela(props: TabelaProps){
                                 ? objeto[propriedade]
                                     ? 'Pago'
                                     : 'Não pago'
-                                :objeto[propriedade] instanceof Date ?
-                                format(objeto[propriedade], 'dd-MM-yyyy')
+                                :objeto[propriedade] instanceof Timestamp ?
+                                format(objeto[propriedade].toDate(), 'dd-MM-yyyy')
                                  : (
                                 objeto[propriedade]
                             )}

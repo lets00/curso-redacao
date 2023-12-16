@@ -1,5 +1,6 @@
 import InitialSection from '@/components/InitialSection'
 import Layout from '../components/Layout'
+import Link from 'next/link'
 
 export default function Home(){
   return(
@@ -9,24 +10,26 @@ export default function Home(){
         <section>
           <InitialSection ordem={true} titulo='Sabe o que vamos estudar por aqui?' img='/images/Estudaraqui.jpg' className='font-bold'>Olha só esses 3 jeitinhos que você pode estar estudando com a gente:</InitialSection>
           <InitialSection ordem={false} titulo='Presencial' img='/images/IMG_3834.jpg'>
-            <h3 className=' max-h-40 hover:max-h-[700px] transition-all duration-1000 delay-100 ease-in-out overflow-hidden '>
-              Estes são os benefícios da nossa modalidade presencial: 
-              <br/>〰️ Aulas dinâmicas semanais e presencias com duração de <span className='font-bold'>4h para Linguagens e Redação</span> (sendo 2h de Linguagens e 2h de Redação) e <span className='font-bold'>3h de Matemática.</span> 
-              <br/>〰️ Material próprio (produzido por mim, <span className='font-bold'>Felipe Alves</span>, coautor também do material de Redação do curso on-line Me Salva! e pelo professor de Matemática, <span className='font-bold'>Thiago Fernandes</span>, especialista em Enem e vestibulares).
-              <br/>〰️ <span className='font-bold'>#SOSRED</span> (monitorias individuais de Redação e de Matemática).
-              <br/>〰️ <span className='font-bold'>#SOSCORREÇÃO </span>(quadro de correção de redação ao vivo, no YouTube). 
-              <br/>〰️ <span className='font-bold'>#CORRIGECOMOPROF</span> (plantões de correções presenciais).
-              <br/>〰️ <span className='font-bold'>#SENTAQUELÁVEMREPERTÓRIO</span> (momentos coletivos de discussões de repertórios socioculturais). 
-              <br/>〰️ <span className='font-bold'>#CORRIGEDECASA</span> (correções personalizadas em nosso sistema). 
-              <br/>〰️ <span className='font-bold'>#MOMENTODOCUIDADO</span> (apoio emocional e psicológico). 
-              <br/>〰️ <span className='font-bold'>#REDAÇÃOÉCULTURA</span> (eventos culturais). 
-              <br/>〰️ <span className='font-bold'>#TÔLIGADONOENEM</span> (simulados das cinco áreas do conhecimento pela Evolucional)*.
-              <br/>〰️ <span className='font-bold'>#AULADECAMPOCHEEEECK</span> (viagens adicionais para aulas de campo em regiões do Nordeste brasileiro)**.
-              <br/><span className='font-bold'>& muito mais! </span>
-              <br/>*contratados à parte. 
-              <br/>**eventos comprados à parte.
-            </h3>
 
+            <div className=' max-h-40 hover:max-h-[700px] transition-all duration-1000 delay-100 ease-in-out overflow-hidden '>
+              <h3>
+                Estes são os benefícios da nossa modalidade presencial: 
+                <br/>〰️ Aulas dinâmicas semanais e presencias com duração de <span className='font-bold'>4h para Linguagens e Redação</span> (sendo 2h de Linguagens e 2h de Redação) e <span className='font-bold'>3h de Matemática.</span> 
+                <br/>〰️ Material próprio (produzido por mim, <span className='font-bold'>Felipe Alves</span>, coautor também do material de Redação do curso on-line Me Salva! e pelo professor de Matemática, <span className='font-bold'>Thiago Fernandes</span>, especialista em Enem e vestibulares).
+                <br/>〰️ <span className='font-bold'>#SOSRED</span> (monitorias individuais de Redação e de Matemática).
+                <br/>〰️ <span className='font-bold'>#SOSCORREÇÃO </span>(quadro de correção de redação ao vivo, no YouTube). 
+                <br/>〰️ <span className='font-bold'>#CORRIGECOMOPROF</span> (plantões de correções presenciais).
+                <br/>〰️ <span className='font-bold'>#SENTAQUELÁVEMREPERTÓRIO</span> (momentos coletivos de discussões de repertórios socioculturais). 
+                <br/>〰️ <span className='font-bold'>#CORRIGEDECASA</span> (correções personalizadas em nosso sistema). 
+                <br/>〰️ <span className='font-bold'>#MOMENTODOCUIDADO</span> (apoio emocional e psicológico). 
+                <br/>〰️ <span className='font-bold'>#REDAÇÃOÉCULTURA</span> (eventos culturais). 
+                <br/>〰️ <span className='font-bold'>#TÔLIGADONOENEM</span> (simulados das cinco áreas do conhecimento pela Evolucional)*.
+                <br/>〰️ <span className='font-bold'>#AULADECAMPOCHEEEECK</span> (viagens adicionais para aulas de campo em regiões do Nordeste brasileiro)**.
+                <br/><span className='font-bold'>& muito mais! </span>
+                <br/>*contratados à parte. 
+                <br/>**eventos comprados à parte.
+              </h3>
+            </div>
 
             <div className='flex justify-center pt-3'>
               <svg className="w-6 h-6 text-gray-800" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 8">
@@ -35,32 +38,36 @@ export default function Home(){
             </div>
           </InitialSection>
             <div className="flex justify-center">
-              <h4 className='flex flex-col p-10 mb-20 w-11/12 bg-slate-700 rounded-lg text-white'>
-                <h2>Informações das Turmas Presenciais</h2>
-              <br/>🗓️ Em 2024, nosso início está previsto para 30 de janeiro, ok? Depende do dia em que você for fazer a isolada, conforme quadro de horários a seguir: 
-              <br/>⚪ - Matemática (nas terças-feiras, à tarde, das 14h às 17h; nas terças-feiras, à noite, das 18h às 21h). 
-              <br/>⚪ - Linguagens (nas quintas-feiras, à tarde, das 13h às 15h; nas quintas-feiras, à noite, das 18h às 20h; nos sábados, de manhã, das 8h às 10h). 
-              <br/>⚪ - Redação (nas quintas-feiras, à tarde, das 15h15 às 17h15; nas quintas-feiras, à noite, das 20h15 às 22h15; nos sábados, de manhã, das 10h15 às 12h15). 
-              ⚠️ Para cada disciplina, você escolhe um dia e horário. No caso de Linguagens e Redação, é interessante que a escolha seja feita no mesmo dia para as duas disciplinas.
-              </h4>
+              <div className='flex flex-col p-10 mb-20 w-11/12 bg-slate-700 rounded-lg text-white'>
+                  <h2>Informações das Turmas Presenciais</h2>
+                <h4>
+                  <br/>🗓️ Em 2024, nosso início está previsto para 30 de janeiro, ok? Depende do dia em que você for fazer a isolada, conforme quadro de horários a seguir: 
+                  <br/>⚪ - Matemática (nas terças-feiras, à tarde, das 14h às 17h; nas terças-feiras, à noite, das 18h às 21h). 
+                  <br/>⚪ - Linguagens (nas quintas-feiras, à tarde, das 13h às 15h; nas quintas-feiras, à noite, das 18h às 20h; nos sábados, de manhã, das 8h às 10h). 
+                  <br/>⚪ - Redação (nas quintas-feiras, à tarde, das 15h15 às 17h15; nas quintas-feiras, à noite, das 20h15 às 22h15; nos sábados, de manhã, das 10h15 às 12h15). 
+                  ⚠️ Para cada disciplina, você escolhe um dia e horário. No caso de Linguagens e Redação, é interessante que a escolha seja feita no mesmo dia para as duas disciplinas.
+                </h4>
+              </div>
             </div>
           <InitialSection ordem={true} titulo='Online' img='/images/IMG_3810.jpg'>
-            <h3 className=' max-h-[140px] hover:max-h-[400px] transition-all duration-1000 delay-100 ease-in-out overflow-hidden '>
-              Estes são os benefícios da nossa modalidade <span className='font-bold'>on-line</span>:
-              <br/>〰️ <span className='font-bold'>1 aula gravada</span> para cada disciplina <span className='font-bold'>por semana.</span>
-              <br/>〰️ <span className='font-bold'>Monitoria coletiva</span> semanal com o professor Felipe Alves. 
-              <br/>〰️ <span className='font-bold'></span> Material próprio (produzido por mim, <span className='font-bold'>Felipe Alves</span>, coautor também do material de Redação do curso on-line Me Salva! e pelo professor <span className='font-bold'>Thiago Fernandes</span>, de Matemática).
-              <br/>〰️ <span className='font-bold'>#SOSRED</span> (monitorias individuais).
-              <br/>〰️ <span className='font-bold'>#SOSCORREÇÃO</span>  (quadro de correção de redação ao vivo, no YouTube).
-              <br/>〰️ <span className='font-bold'>#SENTAQUELÁVEMREPERTÓRIO</span> (momentos coletivos de discussões de repertórios socioculturais). 
-              <br/>〰️ <span className='font-bold'>#CORRIGEDECASA</span> (correções personalizadas em nosso sistema). 
-              <br/>〰️ <span className='font-bold'>#MOMENTODOCUIDADO</span> (apoio emocional e psicológico). 
-              <br/>〰️ <span className='font-bold'>#REDAÇÃOÉCULTURA</span> (eventos culturais). 
-              <br/>〰️ <span className='font-bold'>#TÔLIGADONOENEM</span> (simulados das cinco áreas do conhecimento pela Evolucional)*.
-              <br/><span className='font-bold'>& muito mais!</span>
-              <br/>*contratados à parte.
-            </h3>
 
+            <div className=' max-h-[140px] hover:max-h-[400px] transition-all duration-1000 delay-100 ease-in-out overflow-hidden '>
+              <h3>
+                Estes são os benefícios da nossa modalidade <span className='font-bold'>on-line</span>:
+                <br/>〰️ <span className='font-bold'>1 aula gravada</span> para cada disciplina <span className='font-bold'>por semana.</span>
+                <br/>〰️ <span className='font-bold'>Monitoria coletiva</span> semanal com o professor Felipe Alves. 
+                <br/>〰️ <span className='font-bold'></span> Material próprio (produzido por mim, <span className='font-bold'>Felipe Alves</span>, coautor também do material de Redação do curso on-line Me Salva! e pelo professor <span className='font-bold'>Thiago Fernandes</span>, de Matemática).
+                <br/>〰️ <span className='font-bold'>#SOSRED</span> (monitorias individuais).
+                <br/>〰️ <span className='font-bold'>#SOSCORREÇÃO</span>  (quadro de correção de redação ao vivo, no YouTube).
+                <br/>〰️ <span className='font-bold'>#SENTAQUELÁVEMREPERTÓRIO</span> (momentos coletivos de discussões de repertórios socioculturais). 
+                <br/>〰️ <span className='font-bold'>#CORRIGEDECASA</span> (correções personalizadas em nosso sistema). 
+                <br/>〰️ <span className='font-bold'>#MOMENTODOCUIDADO</span> (apoio emocional e psicológico). 
+                <br/>〰️ <span className='font-bold'>#REDAÇÃOÉCULTURA</span> (eventos culturais). 
+                <br/>〰️ <span className='font-bold'>#TÔLIGADONOENEM</span> (simulados das cinco áreas do conhecimento pela Evolucional)*.
+                <br/><span className='font-bold'>& muito mais!</span>
+                <br/>*contratados à parte.
+              </h3>
+            </div>
 
             <div className='flex justify-center pt-3'>
               <svg className="w-6 h-6 text-gray-800" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 8">
@@ -91,7 +98,7 @@ export default function Home(){
               </h3>
               
               <br/>
-              <button className="text-3xl text-slate-700 bg-white px-10 py-3 rounded-md">Comprar</button>
+              <Link href={"https://api.whatsapp.com/send/?phone=5587981640749&text=matr%C3%ADculas+23&type=phone_number&app_absent=0"} className="text-3xl text-slate-700 bg-white px-10 py-3 rounded-md">Comprar</Link>
             </div>
             <div className="p-9 shadow-2xl rounded-md">
               <div className="rounded-full h-12 w-12 bg-pink-400 mb-6"></div>
@@ -105,7 +112,7 @@ export default function Home(){
               </h3>
               
               <br/>
-              <button className="text-3xl text-white bg-pink-400 px-10 py-3 rounded-md">Comprar</button>
+              <Link href={"https://api.whatsapp.com/send/?phone=5587981640749&text=matr%C3%ADculas+23&type=phone_number&app_absent=0"} className="text-3xl text-white bg-pink-400 px-10 py-3 rounded-md">Comprar</Link>
             </div>
           </div>
         </section>

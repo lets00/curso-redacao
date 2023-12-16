@@ -14,12 +14,16 @@ export default function FuncionarioLive() {
     const [lives, setLives] = useState([
         new Live("Live de Repertório","online terça/tarde", "Wellington", new Date(2023, 10, 10), "www.google.com", "Id1", false),
     ])
-    const [listaTurmas, setListaTurmas] = useState<Turma[]>([])
+    const [listaTurmas, setListaTurmas] = useState([
+        new Turma('Presencial terça/tarde', 'Linguagem', 'Felipe Alves', 'terça-feira', '14h', 'Presencial', 'idTurma1', false),
+        new Turma('Online terça/tarde', 'Redação', 'Wellington', 'terça-feira', '14h', 'Online', 'idTurma2', false),
+        new Turma('Presencial sábado/tarde', 'Redação', 'Wellington', 'sábado', '14h', 'Presencial', 'idTurma3', false)
+      ])
 
     const [nome, setNome] = useState('')
     const [link, setLink] = useState('')
     const [professor, setProfessor] = useState('Professor Teste')
-    const [data, setData] = useState<Date>(new Date(1000, 10, 10))
+    const [data, setData] = useState<Date>(new Date(0))
     const [turmas, setTurmas] = useState<string[]>([])
     const liveVazia = Live.vazio()
     const [live, setLive] = useState<Live>(liveVazia)
@@ -27,7 +31,7 @@ export default function FuncionarioLive() {
     let turmasUnicas: string[] = [];
 
     function adicao(){
-        if (!nome || turmas.length === 0 || !link || data.getTime() === new Date(1000, 10, 10).getTime()) {
+        if (!nome || turmas.length === 0 || !link || data.getTime() == 0) {
             alert("Preencha todos os campos obrigatórios.");
             return;
           }
@@ -56,6 +60,7 @@ export default function FuncionarioLive() {
             alert("Lives criadas com sucesso!")
             setNome('');
             setLink('');
+            setData(new Date(0))
         } else {
             if(turmas.length > 1){
                 alert("Insira a alteração a apenas uma turma")
@@ -70,6 +75,7 @@ export default function FuncionarioLive() {
                     setNome('');
                     setLink('');    
                     setLive(liveVazia)
+                    setData(new Date(0))
                 } else {
                     alert("Live não encontrada")
                 }
@@ -107,7 +113,7 @@ export default function FuncionarioLive() {
                 <div>
                     <EntradaPerfil texto="Título" placeholder="Digite o título da live" className={'ml-9 mt-2 w-full'} valor={nome} valorMudou={setNome}/>
                     <EntradaPerfil texto="Link" placeholder="Link para acessar a live" className={'ml-9 mt-2 w-full'} valor={link} valorMudou={setLink}/>
-                    <DatePicker titulo="Data Selecionada" classname="ml-9" setData={setData} dataMin={new Date()}/>
+                    <DatePicker titulo="Data Selecionada" classname="ml-9" setData={setData} dataMin={new Date()} valor={data}/>
                     <Botao onClick={adicao} className="w-36 bg-blue-400 ml-9 mt-4" cor={'blue'}>Marcar</Botao>
                 </div>
                 

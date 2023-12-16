@@ -34,7 +34,11 @@ export default function ListarMateriais() {
         new Aluno('Maria Luiza', new Date(2004-10-10), 'RJ', 'rua teste', '222-111', 'mari@gmail',
         'pedro', 'ana', 'rg2', 'cpf2', 10, ['idDeTurma1'],true , 'abc', "id2", false),
     ]
-    const [listaTurmas, setListaTurmas] = useState<Turma[]>([])
+    const [listaTurmas, setListaTurmas] = useState([
+        new Turma('Presencial terça/tarde', 'Linguagem', 'Felipe Alves', 'terça-feira', '14h', 'Presencial', 'idTurma1', false),
+        new Turma('Online terça/tarde', 'Redação', 'Wellington', 'terça-feira', '14h', 'Online', 'idTurma2', false),
+        new Turma('Presencial sábado/tarde', 'Redação', 'Wellington', 'sábado', '14h', 'Presencial', 'idTurma3', false)
+      ])
 
     const dados = ['nome','descricao', 'data']
     const cabecalho = ['Nome', 'Descrição', 'Data de publicação', 'Opções']

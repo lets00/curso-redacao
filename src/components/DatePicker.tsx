@@ -13,26 +13,31 @@ interface DateProps {
 
 export default function DatePicker(props: DateProps) {
   const [selectedDate, setSelectedDate] = useState<string>(
-    props.valor && props.valor.getTime() !== 0 ? format(props.valor, 'yyyy-MM-dd') : ''
+    props.valor ? format(props.valor, 'yyyy-MM-dd') : ''
   );
 
   useEffect(() => {
     if (props.valor && props.valor.getTime() !== 0) {
       setSelectedDate(format(props.valor, 'yyyy-MM-dd'));
+    } else {
+      setSelectedDate(''); // Definir como uma string vazia quando não houver valor
     }
   }, [props.valor]);
 
   const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const selectedDateString = e.target.value;
-    const selectedDateObj = new Date(selectedDateString + 'T00:00:00Z');
 
-    if (selectedDateObj.getTime() !== 0) {
-      setSelectedDate(selectedDateString);
+    if (selectedDateString) {
+      const selectedDateObj = new Date(selectedDateString + 'T00:00:00Z');
 
-      if (props.setData) {
-        const newDate = new Date(selectedDateObj);
-        newDate.setDate(newDate.getDate() + 1);
-        props.setData(newDate);
+      if (!isNaN(selectedDateObj.getTime())) {
+        setSelectedDate(selectedDateString);
+
+        if (props.setData) {
+          const newDate = new Date(selectedDateObj);
+          newDate.setDate(newDate.getDate() + 1);
+          props.setData(newDate);
+        }
       }
     }
   };
@@ -53,3 +58,4 @@ export default function DatePicker(props: DateProps) {
     </div>
   );
 }
+

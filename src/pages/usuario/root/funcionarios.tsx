@@ -88,6 +88,7 @@ export default function RootFuncionarios() {
                     objetoSelecionado={editarFuncionario}
                     objetoExcluido={funcionarioExcluido}
                     salvarFuncionario={salvarFuncionario}
+                    funcionario
                     />
 
             <Modal isOpen={openModal} isNotOpen={() => setOpenModal(!openModal)} cor='white' titulo={tipoModal == 'selecionado' ? 'Criar novo funcionário': 'Tem certeza que deseja excluir:'}

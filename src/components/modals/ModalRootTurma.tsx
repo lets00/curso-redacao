@@ -76,6 +76,11 @@ export default function ModalRootTurma(props: ModalRootTurmaProps){
             alert("Preencha todos os campos obrigatórios.");
             return;
           }
+        if (props.turmas.some(turma => turma.nome === turmaNova.nome)) {
+            alert("Já existe uma turma com esse nome.");
+        return;
+        }
+
         props.setTurmas([...props.turmas,turmaNova]);
         setSeletor([...seletor,turmaNova.nome])
         props.setSelect?.([...seletor,turmaNova.nome])

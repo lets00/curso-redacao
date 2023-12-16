@@ -73,10 +73,19 @@ export default function ModalRootPagamento(props: ModalRootPagamentoProps){
     }
     
     function adicao(pagamentoNovo: Pagamento){
-        if (!dataPago || !valor) {
+        if (!valor || dataPago === new Date(1969, 12, 31) || prazo === new Date(1969, 12, 31)) {
             alert("Preencha todos os campos obrigatórios.");
             return;
           }
+        if (filtro2 == 'Novo pag.' || filtro2 ==''){
+            if ( props.pagamentos.some(
+                pagamento => pagamento.idTurma === idTurma && pagamento.idAluno === props.aluno.id && pagamento.prazo === prazo
+            ) ) {
+                alert("Escolha outro prazo para esse pagamento.");
+                return;
+            }
+        }
+
         const index = props.pagamentos.findIndex(pagamento => pagamento.id === pagamentoNovo.id);
 
         if (index === -1) {
@@ -102,7 +111,10 @@ export default function ModalRootPagamento(props: ModalRootPagamentoProps){
 
     useEffect(() => {
         aoClicar();
-    }, [filtro1,]);
+    }, [filtro1]);
+    useEffect(() => {
+        aoClicar();
+    }, []);
     useEffect(() => {
         const turmaSelecionada = props.listaTurmas.find(turma => turma.nome === filtro1);
         if(turmaSelecionada){
