@@ -2,6 +2,7 @@ import { format } from "date-fns"
 import { IconeDeletar } from "./Icones"
 import Funcionario from "@/core/Funcionario"
 import Pagamento from "@/core/Pagamento"
+import { Timestamp } from "firebase/firestore"
 
 interface TabelaProps {
     objeto: any
@@ -13,6 +14,7 @@ interface TabelaProps {
     objetoExcluido?: (objeto: any) => void
     turmas?: boolean
     pagamentos?: Pagamento[]
+    funcionario?: any
 }
 
 export default function Tabela(props: TabelaProps){
@@ -81,42 +83,50 @@ export default function Tabela(props: TabelaProps){
     }
 
     function renderizarDados() {
-        return (
-          <>
-            {props.objeto?.map((objeto: any, index: any) => (
+      return (
+        <>
+          {props.objeto?.map((objeto: any, index: any) => {
+            return (
               <tr key={index} className={`${index % 2 === 0 ? 'bg-slate-100' : 'bg-slate-200'}`}>
                 {props.propriedadesExibidas.map((propriedade: any, propIndex: any) => (
                   <td key={propIndex} className="text-center p-2">
-                    {objeto[propriedade]} 
+                    {propriedade === 'pagamento'
+                      ? props.turmas
+                        ? objeto[propriedade]
+                          ? 'Pago'
+                          : 'Não pago'
+                        : renderizarPagamento(objeto, propriedade)
+                      : objeto[propriedade] instanceof Timestamp
+                      ? format(objeto[propriedade]?.toDate(), 'dd-MM-yyyy').toString()
+                      : objeto[propriedade]}
                   </td>
                 ))}
                 {exibirAcoes ? renderizarAcoes(objeto, index) : false}
               </tr>
-            ))}
-          </>
-        );
-      } {//PROBLEMA
+            );
+          })}
+        </>
+      );
     }
+    
       
       
 
     function renderizarFuncionario(objeto: any){
-        return(
-            <>
-                {props.objeto[props.objeto.length - 1] instanceof Funcionario && (
-                    <tr>
-                        <td colSpan={props.propriedadesExibidas.length} className="text-right p-1 pr-6">
-                            <button onClick={() => props.salvarFuncionario?.(objeto)} className="px-10 py-1 bg-blue-400 text-white 
-                            font-semibold rounded-full"
-                            >Criar novo funcionário</button>    
-                        </td>
-                        <td colSpan={props.cabecalho.length - 1}></td>{//PROBLEMA
-                        }
-                    </tr>
-                )}
-            </>
-        )
-    }
+      return(
+          <>
+              { props.funcionario?
+                  <tr>
+                      <td colSpan={props.propriedadesExibidas.length} className="text-right p-1 pr-6">
+                          <button onClick={() => props.salvarFuncionario?.(objeto)} className="px-10 py-1 bg-blue-400 text-white 
+                          font-semibold rounded-full"
+                          >Criar novo funcionário</button>    
+                      </td>
+                  </tr> : ''
+              }
+          </>
+      )
+  }
 
     return (
         <table className="w-full border-separate border-spacing-y-2 text-black">

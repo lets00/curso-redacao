@@ -9,10 +9,10 @@ import EntradaPerfil from "../EntradaPerfil";
 interface ModalAlunoMaterial {
     material: Material
     comentario: Comentario
-    aluno?: Aluno
+    aluno?: Aluno | null
     salvarComentario?: (comentario: Comentario) => void
     editarComentario: (comentarioEditado: Comentario) => void;
-    excluirComentario: (comentarioExcluido: Comentario) => Promise<void>;
+    excluirComentario: (comentarioExcluido: Comentario) => void
 }
 //CONFERIR
 

@@ -21,7 +21,7 @@ export default function PerfilDados(props: PerfilProps){
                 min={props.min}
                 max={props.max}
                 type={props.tipo ?? 'text'}
-                value={props.valor}
+                value={props.valor ?? ''}
                 readOnly={props.somenteLeitura}
                 required={props.obrigatorio}
                 onChange={e => props.valorMudou?.(e.target.value)}

@@ -36,19 +36,18 @@ export default function ModalRootALunos(props: ModalRootALunosProps){
         const isTurmaSelected = turma.includes(turmaId);
     
         if (isTurmaSelected) {
-            const updatedTurmasSelecionadas = turma.filter(id => id !== turmaId);
-            setTurma(updatedTurmasSelecionadas);
+            setTurma(updatedTurmasSelecionadas => updatedTurmasSelecionadas.filter(id => id !== turmaId));
         } else {
-            const updatedTurmasSelecionadas = [...turma, turmaId];
-            setTurma(updatedTurmasSelecionadas);
+            setTurma(updatedTurmasSelecionadas => [...updatedTurmasSelecionadas, turmaId]);
         }
     };
+    
 
     return(
         <div>
             <div className="grid grid-rows-4 grid-flow-col bg-blue-200 rounded-lg p-3 pl-5 pr-0 my-3 h-80">
                 <EntradaPerfil className="text-white" className2="bg-white rounded-xl text-black" texto="Nome" valor={nome} valorMudou={setNome}/>
-                <DatePicker titulo="Data de Nascimento" setData={setData} classname2="bg-white text-black" classname="text-white"/>
+                <DatePicker titulo="Data de Nascimento" setData={setData} classname2="bg-white text-black" classname="text-white" valor={data}/>
                 <EntradaPerfil className="text-white" className2="bg-white rounded-xl text-black" texto="Naturalidade ( Cidade/Estado )" valor={natural} valorMudou={setNatural}/>
 
                 <div>
@@ -83,7 +82,21 @@ export default function ModalRootALunos(props: ModalRootALunosProps){
                 <EntradaPerfil className="text-white" className2="bg-white rounded-xl text-black" texto="Nome da Mãe" valor={mae} valorMudou={setMae}/>
                 <EntradaPerfil className="text-white" className2="bg-white rounded-xl text-black" texto="RG" valor={rg} valorMudou={setRg} />
                 <EntradaPerfil className="text-white" className2="bg-white rounded-xl text-black" texto="CPF" valor={cpf} valorMudou={setCpf}/>
-                <EntradaPerfil className="text-white" className2="bg-white rounded-xl text-black" texto="Mensalidade" valor={mensalidade} valorMudou={setMensalidade} tipo="number"/>
+                <div>
+                    <label className="text-white font-Montserrant">Data para pagamento</label>
+                    <div className="flex flex-row items-center gap-3 ">
+                        <div className="flex items-center">
+                            <input onChange={() => setMensalidade(10)}id="default-radio-1" type="radio" value="" name="default-radio" className="w-4 h-4 text-pink-600 bg-gray-100" 
+                            checked={mensalidade==10}/>
+                            <label htmlFor="default-radio-1" className="ml-2 text-sm font-medium text-gray-900 ">Dia 10 </label>
+                        </div>
+                        <div className="flex items-center">
+                            <input onChange={() => setMensalidade(15)}id="default-radio-2" type="radio" value="" name="default-radio" className="w-4 h-4 text-pink-600 bg-gray-100" 
+                            checked={mensalidade==15}/>
+                            <label htmlFor="default-radio-2" className="ml-2 text-sm font-medium text-gray-900 ">Dia 15</label>
+                        </div>
+                    </div>
+                </div>
             </div>
             <div className="flex place-content-end ">
             <Botao className="p-10 bg-blue-400" cor="blue"

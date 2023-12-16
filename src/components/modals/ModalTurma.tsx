@@ -46,6 +46,12 @@ export default function ModalRootTurma(props: ModalRootTurmaProps){
           } else {
             const docRef = await addDoc(collection(db, 'Turmas'), formData);
             console.log('Turma adicionada com o ID:', docRef.id);
+
+            const disciplinaRef = await addDoc(collection(db, 'Disciplina'), {
+              nome_disciplina: disciplina,
+          });
+
+          console.log('Disciplina adicionada com o ID:', disciplinaRef.id);
       
             const turmaSnapshot = await getDoc(doc(db, 'Turmas', docRef.id));
             const novaTurma = turmaSnapshot.data() as Turma;

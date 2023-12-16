@@ -4,7 +4,7 @@ import { useState } from "react";
 import {Botao} from "../Botao";
 import { addDoc, updateDoc, doc, getDoc, deleteDoc, DocumentData, collection, Firestore } from 'firebase/firestore';
 import { db } from '@/backend/config';
-import {  getAuth, createUserWithEmailAndPassword } from "firebase/auth"; 
+import { createUserWithEmailAndPassword, getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth"; 
 import { getFirestore} from 'firebase/firestore';
 import { initializeApp } from "firebase/app";
 
@@ -42,39 +42,43 @@ interface ModalRootFuncionarioProps {
           };
 
           try {
-            const userCredential = await createUserWithEmailAndPassword(auth, email, senha);
-            const user = userCredential.user;
-        
-            const docRef = await addDoc(collection(db, "Funcionario"), formData);
-        
-            console.log("Dados do funcionário salvos com ID:", docRef.id);
-        
-            const funcionarioSnapshot = await getDoc(doc(db, 'Funcionario', docRef.id));
-            const novoFuncionario = funcionarioSnapshot.data() as Funcionario;
-        
+            if (id) {
+                const funcionarioRef = doc(db, 'Funcionario', id);
+                await updateDoc(funcionarioRef, formData);
+
+                console.log('Dados do funcionário atualizados com sucesso.');
+                const funcionarioSnapshot = await getDoc(funcionarioRef);
+                const funcionarioAtualizado = funcionarioSnapshot.data() as Funcionario;
+
+                props.editar?.(funcionarioAtualizado);
+            } else {
+
+              const userCredential = await createUserWithEmailAndPassword(auth, email, senha);
+              const user = userCredential.user;
+      
+              const docRef = await addDoc(collection(db, "Funcionario"), formData);
+      
+              console.log("Dados do funcionário salvos com ID:", docRef.id);
+      
+              const funcionarioSnapshot = await getDoc(doc(db, 'Funcionario', docRef.id));
+              const novoFuncionario = funcionarioSnapshot.data() as Funcionario;
+      
+              props.adicao?.(novoFuncionario);
+            }
+      
             setNome("");
             setCpf("");
             setRg("");
             setCelular("");
             setEmail("");
-        
-            props.adicao?.(novoFuncionario);
+      
             props.setOpenModal?.(false);
-        } catch (error) {
+          } catch (error) {
             console.error("Erro ao salvar os dados no Firestore", error);
+          }
         }
-    }
 
-    const updateFuncionario = async (formData: any) => {
-      try {
-          await updateDoc(doc(db, 'Funcionario'), formData);
-          props.editar?.(new Funcionario(formData.nome, formData.cpf, formData.rg, formData.celular, formData.email, formData.senha, props.funcionario.id, false));
-          props.setOpenModal?.(false);
-      } catch (error) {
-          console.error("Erro ao atualizar os dados no Firestore", error);
-      }
-  }
-
+        
   async function excluirFuncionario(id: any) {
     try {
         console.log('ID do Funcionário a ser excluído:', id);
@@ -129,7 +133,7 @@ async function exclusao() {
                 <Botao className="p-10 bg-blue-400" cor="blue"
                     onClick={() => {
                       if (id) {
-                          updateFuncionario({ nome, cpf, rg, celular, email, senha });
+                          props.editar?.(new Funcionario(nome, cpf, rg, celular, email, senha, id, false));
                           console.log("funcionou")
                           props.setOpenModal?.(false);
                       } else {

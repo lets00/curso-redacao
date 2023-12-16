@@ -20,8 +20,8 @@ export default function Layout(props: any) {
             <footer style={{ backgroundColor: '#373E48', color: 'white' }}>
                 <div className="p-14 px-20">
                     <h1 className="font-Montserrant text-2xl">Curso Felipe Alves</h1>
-                    <h4>emailexemplo@gmail.com</h4>
-                    <h4>(00) 00000-0000</h4>
+                    <h4>contato@cursofelipealves.com.br</h4>
+                    <h4>(87) 98164-0749</h4>
                 </div>
             </footer>
         </div>

@@ -99,22 +99,37 @@ export default function ModalRootTurma(props: ModalRootTurmaProps){
     }
         
     
+
+    async function adicao(turmaNova: Turma) {
+        if (!turmaNova.nome || !turmaNova.disciplina || !turmaNova.dia || !turmaNova.horario) {
+            alert('Preencha todos os campos obrigatórios.');
+            return;
+        }
     
-
-  function adicao(turmaNova: Turma) {
-    if (!turmaNova.nome || !turmaNova.disciplina || !turmaNova.dia || !turmaNova.horario) {
-        alert('Preencha todos os campos obrigatórios.');
-        return;
+        if (props.turmas.some(turma => turma.nome === turmaNova.nome)) {
+            alert("Já existe uma turma com esse nome.");
+            return;
+        }
+    
+        try {
+            const docRef = await addDoc(collection(db, 'Turmas'), turmaNova);
+            console.log('Turma adicionada com o ID:', docRef.id);
+    
+            const disciplinaDocRef = await addDoc(collection(db, 'Disciplina'), {
+                nome: turmaNova.disciplina,
+                turmaId: docRef.id,
+            });
+    
+            console.log('Disciplina adicionada com o ID:', disciplinaDocRef.id);
+    
+            props.setTurmas([...props.turmas, turmaNova]);
+            setSeletor([...seletor, turmaNova.nome]);
+            props.setSelect?.([...seletor, turmaNova.nome]);
+        } catch (error) {
+            console.error('Erro ao adicionar a turma no Firebase:', error);
+        }
     }
-
-    addDoc(collection(db, 'Turmas'), turmaNova).then((docRef) => {
-        console.log('Turma adicionada com o ID:', docRef.id);
-    });
-
-    props.setTurmas([...props.turmas, turmaNova]);
-    setSeletor([...seletor, turmaNova.nome]);
-    props.setSelect?.([...seletor, turmaNova.nome]);
-}
+    
 
 
     return (

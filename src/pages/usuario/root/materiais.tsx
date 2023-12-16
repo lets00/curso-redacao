@@ -7,7 +7,7 @@ import ModalExcluir from "@/components/modals/ModalExcluir";
 import ModalRootMateriais from "@/components/modals/ModalRootMateriais";
 import Material from "@/core/Material";
 import { useEffect, useState } from "react";
-import { collection, getDocs, deleteDoc, doc } from "firebase/firestore";
+import { collection, getDocs, deleteDoc, doc, query } from "firebase/firestore";
 import { db } from '@/backend/config';
 
 export default function RootMateriais() {
@@ -21,31 +21,55 @@ export default function RootMateriais() {
     const [material, setMaterial] = useState<Material>(Material.vazio())
     const [openModal, setOpenModal] = useState(false)
     const [tipoModal, setTipoModal] = useState('')
-    const [listagem, setListagem] = useState(materiais)
-    const [filtragem, setFiltragem] = useState(listagem)
+    const [listagem, setListagem] = useState<Material[]>([]);
+    const [filtragem, setFiltragem] = useState<Material[]>([]);
     const [filtro, setFiltro] = useState('Todos(as)')
+    const [disciplinas, setDisciplinas] = useState<{ value: string; label: string }[]>([]);
 
     useEffect(() => {
-        const fetchDisciplinas = async () => {
-          try {
-            const disciplinasCollection = collection(db, "Turmas");
-            const querySnapshot = await getDocs(disciplinasCollection);
-            const disciplinasData = querySnapshot.docs.map((doc) => {
-              const data = doc.data();
-              return {
-                value: doc.id,
-                label: data && data.nome,
-              };
-            });
-    
-            setSelect(disciplinasData); 
-          } catch (error) {
-            console.error('Erro ao buscar disciplinas:', error);
-          }
+        const fetchMaterials = async () => {
+            try {
+                const materialsCollection = collection(db, "Material");
+                const querySnapshot = await getDocs(materialsCollection);
+                const materials = querySnapshot.docs.map((doc) => {
+                    const data = doc.data();
+                    return {
+                        ...data,
+                        id: doc.id,
+                    } as Material;
+                });
+                setListagem(materials);
+                console.log(materials)
+            } catch (error) {
+                console.error('Erro ao buscar materiais:', error);
+            }
         };
-    
+
+        const fetchDisciplinas = async () => {
+            try {
+                const disciplinasCollection = collection(db, "Disciplina");
+                const disciplinaQuery = query(disciplinasCollection);
+                const querySnapshot = await getDocs(disciplinaQuery);
+                const disciplinasData = querySnapshot.docs.map((doc) => {
+                    const data = doc.data();
+                    return {
+                        value: doc.id,
+                        label: data && data.nome,
+                    };
+                });
+                setDisciplinas(disciplinasData);
+
+                const seletorDisciplinas = ['Todos(as)', ...disciplinasData.map((disciplina) => disciplina.label)];
+                setSelect(seletorDisciplinas);
+            } catch (error) {
+                console.error('Erro ao buscar disciplinas:', error);
+            }
+        };
+
+        fetchMaterials();
         fetchDisciplinas();
-      }, []);
+    }, []);
+
 
     const aoClicar = () => {
         if (filtro === 'Todos(as)') {
@@ -60,27 +84,6 @@ export default function RootMateriais() {
         aoClicar();
     }, [filtro, listagem]);
 
-    useEffect(() => {
-        const fetchMaterials = async () => {
-            try {
-                const materialsCollection = collection(db, "Material"); 
-                const querySnapshot = await getDocs(materialsCollection);
-                const materials = querySnapshot.docs.map((doc) => {
-                    const data = doc.data();
-                    return {
-                        ...data,
-                        id: doc.id, 
-                    } as Material;
-                });
-                setListagem(materials);
-            } catch (error) {
-                console.error('Erro ao buscar materiais:', error);
-            }
-        };
-    
-        fetchMaterials();
-    }, []);
-
     function materialSelecionado(material: Material){
         setMaterial(material);
         setTipoModal('selecionado')
@@ -91,13 +94,35 @@ export default function RootMateriais() {
         setTipoModal('excluir')
         setOpenModal(true)
     }
-    function exclusao(id: any){
-        const materiaisFiltrados = listagem.filter((material) => material.id !== id);
-        setListagem(materiaisFiltrados);
-        setOpenModal(false);
-        console.log(materiaisFiltrados);
-    }
 
+    const excluirMaterialFirestore = async (materialId: string) => {
+        try {
+          if (typeof materialId !== 'string' || materialId.trim() === '') {
+            console.error('ID do material inválido');
+            return;
+          }
+      
+          const materialRef = doc(db, 'Material', materialId);
+          await deleteDoc(materialRef);
+          console.log('Material excluído com sucesso do Firestore');
+        } catch (error) {
+          console.error('Erro ao excluir material do Firestore:', error);
+        }
+      };
+      
+
+      const exclusao = async (id: any) => {
+        try {
+          await excluirMaterialFirestore(id);
+    
+          const materiaisFiltrados = listagem.filter((material) => material.id !== id);
+          setListagem(materiaisFiltrados);
+    
+          setOpenModal(false);
+        } catch (error) {
+          console.error('Erro ao excluir material:', error);
+        }
+      };
     useEffect(() => {
         aoClicar();
     }, [filtro, exclusao])
@@ -108,15 +133,17 @@ export default function RootMateriais() {
                 <Titulo>Materiais</Titulo>
             </div>
             <Select
-            seletor={select.map(item => ({ value: item.value, label: item.label }))}
+            seletor={select}
             titulo="Disciplina"
             setFiltro={setFiltro}
             />
+
             <Tabela objeto={filtragem} 
                     propriedadesExibidas={dados}
                     cabecalho={cabecalho}
                     objetoSelecionado={materialSelecionado}
-                    objetoExcluido={materialExcluido}></Tabela>   
+                    objetoExcluido={materialExcluido}>
+            </Tabela>   
             <Modal isOpen={openModal} isNotOpen={() => setOpenModal(!openModal)} cor='white' titulo={tipoModal == 'selecionado' ? 'Análise de Feedback': 'Tem certeza que deseja excluir:'}
             subtitulo={material.nome}>{tipoModal == 'selecionado' ? <ModalRootMateriais comentarios={comentarios} material={material} alunos={alunos} />:<ModalExcluir objeto={material} exclusao={exclusao}/>}</Modal>         
         </LayoutUser>

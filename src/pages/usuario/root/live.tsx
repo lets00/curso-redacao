@@ -14,13 +14,13 @@ import { collection, addDoc, getDocs, deleteDoc, doc, updateDoc } from "firebase
 export default function RootLive() {
 
 //CONFERIR
-
+    const [modoEdicao, setModoEdicao] = useState(false);
     const [lives, setLives] = useState<Live[]>([]);
     const [listaTurmas, setListaTurmas] = useState<Turma[]>([]);
     const [nome, setNome] = useState('')
     const [link, setLink] = useState('')
     const [professor, setProfessor] = useState('')
-    const [data, setData] = useState<Date>(new Date(1000, 10, 10))
+    const [data, setData] = useState<Date>(new Date(0))
     const [turmas, setTurmas] = useState<string[]>([])
     const liveVazia = Live.vazio()
     const [live, setLive] = useState<Live>(liveVazia)
@@ -52,7 +52,7 @@ export default function RootLive() {
       }, []);
   
       async function adicao() {
-        if (!nome || turmas.length === 0 || !link || !data) {
+        if (!nome || turmas.length === 0 || !link || data.getTime() == 0) {
           alert("Preencha todos os campos obrigatórios.");
           return;
         }
@@ -95,6 +95,7 @@ export default function RootLive() {
             setLink('');
             setProfessor('');
             setData(new Date(0));
+            setTurmas([]);
           }
         } catch (error) {
           console.error("Erro ao adicionar/atualizar a live:", error);
@@ -106,12 +107,15 @@ export default function RootLive() {
       
       
 
-    function edicao(live: Live){
-        setNome(live.nome)
-        setLink(live.link)
-        setData(live.data)
-        setLive(live)
-    }
+      function edicao(live: Live) {
+        setNome(live.nome);
+        setLink(live.link);
+        setData(live.data);
+        setTurmas([live.turma]); 
+        setModoEdicao(true);
+        setLive(live);
+      }
+    
 
     async function exclusao(live: Live) {
         try {
@@ -142,7 +146,7 @@ export default function RootLive() {
       
           await updateDoc(doc(db, "Live", live.id), {
             nome,
-            turma: live.turma, 
+            turma: turmas[0], 
             professor,
             data,
             link,
@@ -161,7 +165,9 @@ export default function RootLive() {
             return liveCopia;
           });
       
+          setModoEdicao(false);
           setLive(liveVazia);
+
       
           alert("Live atualizada com sucesso!");
         } catch (error) {
@@ -180,7 +186,7 @@ export default function RootLive() {
                 <div>
                     <EntradaPerfil texto="Título" placeholder="Digite o título da live" className={'ml-9 mt-2 w-full'} valor={nome} valorMudou={setNome}/>
                     <EntradaPerfil texto="Link" placeholder="Link para acessar a live" className={'ml-9 mt-2 w-full'} valor={link} valorMudou={setLink}/>
-                    <DatePicker titulo="Data Selecionada" classname="ml-9" setData={setData} dataMin={new Date()}/>
+                    <DatePicker titulo="Data Selecionada" classname="ml-9" setData={setData}  valor={data} dataMin={new Date()}/>
                     <Botao onClick={adicao} className="w-36 bg-blue-400 ml-9 mt-4" cor={'blue'}>Marcar</Botao>
                 </div>
                 

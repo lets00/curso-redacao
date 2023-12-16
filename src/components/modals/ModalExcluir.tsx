@@ -8,6 +8,7 @@ interface ModalAlunoMaterialProps {
 }
 
 export default function ModalAlunoMaterial(props: ModalAlunoMaterialProps) {
+
     return (
         <div className="bg-white flex justify-center rounded-lg p-3">
             <button onClick={() => props.exclusao(props.objeto)} className="bg-red-500 text-white font-bold p-3 rounded-lg">

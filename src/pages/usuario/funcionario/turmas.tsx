@@ -12,10 +12,33 @@ export default function FuncionarioTurmas() {
   const cabecalho = ["Estado", "Nome", "CPF", "Pagamento"];
   const [select, setSelect] = useState<string[]>([])
   const [aluno, setAluno] = useState<Aluno>(Aluno.vazio());
-  const [listagem, setListagem] = useState<DocumentData[]>([]);
+  const [listagem, setListagem] = useState<Aluno[]>([]);
   const [filtragem, setFiltragem] = useState<DocumentData[]>(listagem);
   const [filtro, setFiltro] = useState("Todos(as)");
   const [turmas, setTurmas] = useState<string[]>([]);
+  const [listaTurmas, setListaTurmas] = useState<Aluno[]>([]);
+
+  useEffect(() => {
+    const carregarTurmas = async () => {
+        try {
+            const turmasSnapshot = await getDocs(collection(db, "Turmas"));
+            const turmasData = turmasSnapshot.docs.map(doc => ({
+                id: doc.id,
+                ...doc.data(),
+            })) as Aluno[];
+            
+            setListaTurmas(turmasData);
+
+            const seletorAtualizado = ['Todos(as)', ...turmasData.map(turma => turma.nome)];
+            setSelect(seletorAtualizado);
+        } catch (error) {
+            console.error("Erro ao carregar turmas do Firestore", error);
+        }
+    };
+
+    carregarTurmas();
+}, []);
+
 
   const aoClicar = async () => {
     try {
@@ -26,33 +49,21 @@ export default function FuncionarioTurmas() {
         const alunos = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
         setFiltragem(alunos); 
       } else {
-        const alunosRef = collection(db, "Estudante");
-        const alunosQuery = query(alunosRef, where("turma", "==", filtro));
-        const snapshot = await getDocs(alunosQuery);
-        const alunos = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
-        setFiltragem(alunos); 
+        const turmaSelecionada = listaTurmas.find((turma) => turma.nome === filtro);
+        if (turmaSelecionada) {
+          const alunosRef = collection(db, "Estudante");
+          const alunosQuery = query(alunosRef, where("turma", "array-contains", turmaSelecionada.id));
+          const snapshot = await getDocs(alunosQuery);
+          const alunos = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() })) as Aluno[];
+          setFiltragem(alunos);
+        } else {
+          console.error("Turma não encontrada:", filtro);
+        }
       }
     } catch (error) {
       console.error("Erro ao carregar alunos:", error);
     }
   };
-
-  useEffect(() => {
-    const carregarTurmas = async () => {
-      try {
-        const turmasRef = collection(db, "Turmas"); 
-        const turmasQuery = query(turmasRef);
-        const snapshot = await getDocs(turmasQuery);
-        const turmas = snapshot.docs.map((doc) => doc.data().nome);
-        setTurmas(turmas);
-        setSelect(turmas); 
-      } catch (error) {
-        console.error("Erro ao carregar turmas:", error);
-      }
-    };
-
-    carregarTurmas();
-  }, []);
 
 
   useEffect(() => {
@@ -64,7 +75,7 @@ export default function FuncionarioTurmas() {
       <div className="flex place-content-between">
         <Titulo>Turmas</Titulo>
       </div>
-      <Select seletor={["Todos(as)", ...select]} titulo="Turma" setFiltro={setFiltro} />
+      <Select seletor={select} titulo="Turma" setFiltro={setFiltro} />
 
       <Tabela
         objeto={filtragem}

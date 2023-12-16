@@ -6,131 +6,230 @@ import Material from "@/core/Material";
 import Comentario from "@/core/Comentario";
 import Aluno from "@/core/Aluno";
 import { useEffect, useState } from "react";
-import { addDoc, updateDoc, deleteDoc, getFirestore, doc, collection, getDocs} from 'firebase/firestore';
-import {getStorage, ref, getDownloadURL } from 'firebase/storage'
-import {db, storage} from "@/backend/config"
-import ListarMateriais from "../funcionario/listarMateriais";
-import { Firestore, DocumentData } from 'firebase/firestore';
+import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { getFirestore, collection, getDocs, where, getDoc,addDoc, updateDoc, deleteDoc, doc, query } from "firebase/firestore";
+import { db } from '@/backend/config';
+import Turma from "@/core/Turma";
+
 
 export default function AlunoIndex() {
 
-    useEffect(() => {
-        const carregarDados = async () => {
-          const querySnapshot = await getDocs(collection(db, 'materiais'));
-          const dadosFirestore = querySnapshot.docs.map((doc) => ({
-            id: doc.id,
-            ...doc.data(),
-          }));
-    
-          const dadosComLinks = await Promise.all(
-            dadosFirestore.map(async (material) => {
-              const url = await getDownloadURL(ref(storage, `materiais/${material.id}.pdf`));
-              return { ...material, url };
-            })
-          );
-    
-          setLista(dadosComLinks);
-        };
-    
-        carregarDados();
-      }, []);
-
+  const [disciplinaSelecionada, setDisciplinaSelecionada] = useState<string | null>(null);
+    const [materiais, setMateriais] = useState<Material[]>([]);
     const dados = ['nome', 'descricao', 'data']
     const cabecalho = ['Título', 'Descrição', 'Data de publicação', `Avaliar & Enviar redações`]
-    const select = ['Redação','Linguagem','Matemática']
-
-    const [comentarios, setComentarios] = useState<Comentario[]>([]);
-    const [lista, setLista] = useState<{ url: string; id: string }[]>([]);
-    const [material, setMaterial] = useState<Material>(Material.vazio());
-    const [aluno, setAluno] = useState<Aluno>(Aluno.vazio())
+    const [select, setSelect] = useState<{ value: string; label: string }[]>([]);
+    const [comentarios, setComentarios] = useState<Comentario[]>([])
+    const [material, setMaterial] = useState<Material>(Material.vazio())
     const [comentario, setComentario] = useState<Comentario>(Comentario.vazio())
-    const [botaoAtivo, setBotaoAtivo] = useState<string>('redacao');
     const [openModal, setOpenModal] = useState(false)
-    
-    //Filtro da lista
-    const aoClicar = (conteudo: any, botao: any) => {
-        setLista(conteudo);
-        setBotaoAtivo(botao);
-      };
+    const [aluno, setAluno] = useState<Aluno | null>(null);
+    const [azul, setAzul] = useState("");
+    const [turmasDoAluno, setTurmasDoAluno] = useState<Turma[]>([]);
+    const [materiaisFiltrados, setMateriaisFiltrados] = useState<Material[]>([]);
+    const [nomeUsuario, setNomeUsuario] = useState<string>("");
+    const [materiaisFiltradosDisciplina, setMateriaisFiltradosDisciplina] = useState<Material[]>([]);
+    const auth = getAuth();
+    const user = auth.currentUser; 
 
-     // Lista
-     function materialSelecionado(material: Material | { id: string }) {
-      
-      const comentariosFiltrados = comentarios.filter(
-          (comentario) => comentario.idMaterial === material.id && comentario.idUsuario === aluno.id
-      );
-      if (comentariosFiltrados.length > 0) {
-          setComentario(comentariosFiltrados[0]);
-      } else {
-          setComentario(Comentario.vazio());
+    useEffect(() => {
+      const fetchData = async () => {
+        if (user) {
+          const userEmail = user.email;
+    
+          const q = query(collection(db, "Estudante"), where("email", "==", userEmail));
+          const querySnapshot = await getDocs(q);
+    
+          if (!querySnapshot.empty) {
+            const userDoc = querySnapshot.docs[0];
+            const userData = userDoc.data();
+            setNomeUsuario(userData.nome || "");
+            const turmasDoEstudante = userData.turma || [];
+            setTurmasDoAluno(turmasDoEstudante);
+    
+            const turmasData: Turma[] = [];
+    
+            for (const turmaId of turmasDoEstudante) {
+              const turmaDocRef = doc(db, "Turmas", turmaId);
+              const turmaDocSnap = await getDoc(turmaDocRef);
+    
+              if (turmaDocSnap.exists()) {
+                const turmaData = turmaDocSnap.data() as Turma;
+                turmasData.push(turmaData);
+              }
+            }
+            setTurmasDoAluno(turmasData);
+          }
+        }
+      };
+    
+      fetchData();
+    }, [user]);
+    
+    useEffect(() => {
+      const fetchMateriais = async () => {
+        const materiaisData: Material[] = [];
+    
+        for (const turma of turmasDoAluno) {
+          if (disciplinaSelecionada) {
+            const qMateriais = query(
+              collection(db, "Material"),
+              where("disciplina", "==", disciplinaSelecionada),
+              where("turma", "==", turma.nome)
+            );
+            const querySnapshotMateriais = await getDocs(qMateriais);
+    
+            querySnapshotMateriais.forEach((materialDoc) => {
+              const materialData = materialDoc.data() as Material;
+              materiaisData.push(materialData);
+            });
+          }
+        }
+    
+        setMateriais(materiaisData);
+        setMateriaisFiltrados(materiaisData);
+        setMateriaisFiltradosDisciplina(materiaisData);
+      };
+    
+      if (disciplinaSelecionada && turmasDoAluno.length > 0) {
+        fetchMateriais();
       }
-      setOpenModal(true);
-  }
-  
+    }, [disciplinaSelecionada, turmasDoAluno]);
+    
+    
+    
+
+    //Filtro da lista
+    const aoClicarDisciplina = async (disciplina: string) => {
+      if (aluno) {
+        setDisciplinaSelecionada(disciplina);
+        setAzul(disciplina);
+        const materiaisData: Material[] = [];
+    
+        for (const turma of turmasDoAluno) {
+          if (disciplinaSelecionada) {
+            console.log("Disciplina Selecionada:", disciplinaSelecionada);
+            const qMateriais = query(
+              collection(db, "Material"),
+              where("disciplina", "==", disciplinaSelecionada),
+              where("turma", "==", turma.nome)
+            );
+            const querySnapshotMateriais = await getDocs(qMateriais);
+    
+            querySnapshotMateriais.forEach((materialDoc) => {
+              const materialData = materialDoc.data() as Material;
+              console.log("Materiais Data:", materiaisData);
+              materiaisData.push(materialData);
+            });
+          }
+        }
+    
+        setMateriaisFiltrados(materiaisData);
+        setMateriaisFiltradosDisciplina(materiaisData);
+        setAzul(disciplina);
+      }
+    };
+    
+      
+
+    //Lista
+    function materialSelecionado(material: Material) {
+        if (aluno) {
+          setMaterial(material);
+          // Filtrar os comentários com base no idMaterial
+          const comentariosFiltrados = comentarios.filter(
+            (comentario) => comentario.idMaterial === material.id && comentario.idUsuario === aluno.id
+          );
+          // Verificar se há algum comentário correspondente
+          if (comentariosFiltrados.length > 0) {
+            // Definir o estado setComentario com o primeiro comentário encontrado
+            setComentario(comentariosFiltrados[0]);
+          } else {
+            // Se não houver nenhum comentário correspondente, definir setComentario com um novo Comentario.vazio()
+            setComentario(Comentario.vazio());
+          }
+          setOpenModal(true);
+        }
+      }
 
     //Comentário
-    async function salvarComentario(comentarioNovo: Comentario){
-        if (!comentarioNovo.texto || !comentarioNovo.estrelas) {
-            alert("Preencha todos os campos obrigatórios.");
-            return;
-          }
-
-          const comentarioRef = await addDoc(collection(db, 'comentarios'), {
-            idMaterial: material.id,
-            idUsuario: aluno.id,
-            texto: comentarioNovo.texto,
-            estrelas: comentarioNovo.estrelas,
-            data: new Date().toISOString(),
-          });
-      
-        
-    setComentarios([...comentarios, comentarioNovo]);       
-    setOpenModal(false);
-    }
-
-    async function editarComentario(comentarioEditado: Comentario){
-        const indexToEdit = comentarios.findIndex((comentario) => comentario.id === comentarioEditado.id);
-      
-        if (!comentarioEditado.id) {
-          console.error("ID do funcionário não definido.");
-          setOpenModal(false);
-          return;
-      } 
-
-        if (indexToEdit !== -1) {
-          const comentarioDoc = doc(db, 'comentarios', comentarioEditado.id);
-            await updateDoc(comentarioDoc, {
-              texto: comentarioEditado.texto,
-              estrelas: comentarioEditado.estrelas,
-            });
-        
-            const listaAtualizada = [...comentarios];
-            listaAtualizada[indexToEdit] = comentarioEditado;
-            setComentarios(listaAtualizada);
-        } else {
-          alert("Comentário não encontrado");
-        }
-        setOpenModal(false)
+    async function salvarComentario(comentarioNovo: Comentario) {
+      if (!comentarioNovo.texto || !comentarioNovo.estrelas) {
+        alert("Preencha todos os campos obrigatórios.");
+        return;
       }
-
-      async function excluirComentario(comentarioExcluido: Comentario) {
-        if (!comentarioExcluido.id) {
-            console.error("ID do comentário não definido.");
-            setOpenModal(false);
-            return;
-        }
     
-        const comentarioDoc = doc(db, 'comentarios', comentarioExcluido.id);
-        await deleteDoc(comentarioDoc);
+      try {
+        const comentarioRef = await addDoc(collection(db, 'comentario'), comentarioNovo);
+        console.log('Comentário salvo com sucesso. ID:', comentarioRef.id);
+      } catch (error) {
+        console.error('Erro ao salvar o comentário:', error);
+        alert('Erro ao salvar o comentário. Por favor, tente novamente.');
+      }
     
-        const comentariosFiltrados = comentarios.filter((comentarioLista) => comentarioLista.id !== comentarioExcluido.id);
-        setComentarios(comentariosFiltrados);
-        setOpenModal(false);
+      setComentarios([...comentarios, comentarioNovo]);
+    
+      setOpenModal(false);
     }
     
+
+    async function editarComentario(comentarioEditado: Comentario) {
+      const indexToEdit = comentarios.findIndex((comentario) => comentario.id === comentarioEditado.id);
+    
+      if (!comentarioEditado.id) {
+        console.error("ID do comentário não definido.");
+        setOpenModal(false);
+        return;
+    } 
+
+      if (indexToEdit !== -1) {
+        try {
+          const comentarioDocRef = doc(db, 'comentario', comentarioEditado.id);
+
+          console.log('Comentário atualizado com sucesso.');
+        } catch (error) {
+          console.error('Erro ao atualizar o comentário:', error);
+          alert('Erro ao atualizar o comentário. Por favor, tente novamente.');
+          return;
+        }
+    
+        const listaAtualizada = [...comentarios];
+        listaAtualizada[indexToEdit] = comentarioEditado;
+        setComentarios(listaAtualizada);
+      } else {
+        alert("Comentário não encontrado");
+      }
+    
+      setOpenModal(false);
+    }
+    
+
+    async function excluirComentario() {
+      if (!comentario.id) {
+        console.error("ID do comentário não definido.");
+        setOpenModal(false);
+        return;
+      }
+    
+      try {
+        const comentarioDocRef = doc(db, 'comentario', comentario.id);
+        await deleteDoc(comentarioDocRef);
+        console.log('Comentário excluído com sucesso.');
+      } catch (error) {
+        console.error('Erro ao excluir o comentário:', error);
+        alert('Erro ao excluir o comentário. Por favor, tente novamente.');
+        return;
+      }
+    
+      const comentariosFiltrados = comentarios.filter((comentarioLista) => comentarioLista.id !== comentario.id);
+      setComentarios(comentariosFiltrados);
+      setOpenModal(false);
+    }
+    
+
 
     return (
-        <LayoutUser divisoes usuario={'aluno'} className="text-black">
+        <LayoutUser divisoes usuario={"aluno"} className="text-black">
 
             <section className="bg-white rounded-md w-auto h-auto m-2 mb-0 p-3">
                 <div className="flex place-content-left items-center">
@@ -138,7 +237,7 @@ export default function AlunoIndex() {
                         flex justify-center items-center
                         rounded-full p-4 ml-4 mr-0 bg-slate-300"/>
                     <div className="ml-5 mt-1 font-Montserrant">
-                        <h4 className="ml-1">Olá, Nome do Aluno,</h4>
+                        <h4 className="ml-1">Olá, {nomeUsuario}</h4>
                         <h2>Bem vindo de volta!</h2>
                     </div>
                 </div>
@@ -147,18 +246,21 @@ export default function AlunoIndex() {
             <section className="bg-white rounded-md w-auto h-4/5 m-2 mb-0">
                 <div className="ml-8 py-4">
                     <h3 className="font-Monteserrant font-semibold">Materiais</h3>
-                    <div className="flex ml-3 gap-2">
-                        <button onClick={() => aoClicar(lista, 'redacao')} 
-                        className={`border-b-2 ${botaoAtivo === 'redacao' ? 'border-blue-400' : 'border-slate-200'} hover:border-blue-400`}>Redação</button>
-                        <button onClick={() => aoClicar(ListarMateriais, 'linguagem')} 
-                        className={`border-b-2 ${botaoAtivo === 'linguagem' ? 'border-blue-400' : 'border-slate-200'} hover:border-blue-400`}>Linguagem</button>
-                    </div>
+                    {turmasDoAluno.map(turma => (
+                        <button
+                            key={turma.id}
+                            onClick={() => aoClicarDisciplina(turma.disciplina)}
+                            className={`border-b-2 hover:border-blue-400 mr-4 ${turma.nome == azul ? 'border-blue-400' : ''}`}
+                        >
+                            {turma.disciplina}
+                        </button>
+                    ))}
                 </div>
-                <Tabela objeto={lista} 
+                <Tabela objeto={materiaisFiltradosDisciplina}
                         propriedadesExibidas={dados}
                         cabecalho={cabecalho}
                         objetoSelecionado={materialSelecionado}
-                        ></Tabela>
+                        linkDoObjeto></Tabela>
             </section>
             
             <Modal isOpen={openModal} isNotOpen={() => setOpenModal(!openModal)} cor='white' titulo='Avalie o material'

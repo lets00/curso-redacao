@@ -9,7 +9,7 @@ import Material from "@/core/Material";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { getAuth } from "firebase/auth";
-import { getFirestore, collection, getDocs, deleteDoc, doc } from "firebase/firestore";
+import { getFirestore, collection, getDocs, deleteDoc, doc, query } from "firebase/firestore";
 import { db } from '@/backend/config';
 
 export default function ListarMateriais() {
@@ -29,7 +29,7 @@ export default function ListarMateriais() {
     useEffect(() => {
         const fetchDisciplinas = async () => {
             try {
-                const disciplinasCollection = collection(db, "Turmas"); 
+                const disciplinasCollection = collection(db, "Disciplina");
                 const querySnapshot = await getDocs(disciplinasCollection);
                 const disciplinasData = querySnapshot.docs.map((doc) => {
                     const data = doc.data();
@@ -39,6 +39,9 @@ export default function ListarMateriais() {
                     };
                 });
                 setDisciplinas(disciplinasData);
+
+                const seletorDisciplinas = ['Todos(as)', ...disciplinasData.map((disciplina) => disciplina.nome)];
+                setSelect(seletorDisciplinas);
             } catch (error) {
                 console.error('Erro ao buscar disciplinas:', error);
             }
@@ -47,7 +50,7 @@ export default function ListarMateriais() {
         fetchDisciplinas();
     }, []);
 
-    const aoClicar = () => {
+    const aoClicar = async () => {
         if (filtro === 'Todos(as)') {
             setFiltragem(listagem);
         } else {

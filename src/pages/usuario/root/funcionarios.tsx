@@ -12,6 +12,7 @@ import {Botao} from "@/components/Botao";
 
 export default function RootFuncionarios() {
 
+
     const dados = ['nome','cpf', 'email']
     const cabecalho = ['Nome', 'CPF', 'Email', "Ações"]
 
@@ -19,17 +20,22 @@ export default function RootFuncionarios() {
     const [funcionario, setFuncionario] = useState<Funcionario>(Funcionario.vazio())
     const [tipoModal, setTipoModal] = useState('')
     const [listagem, setListagem] = useState<Funcionario[]>([]);
+    const [recarregar, setRecarregar] = useState(false)
 
     useEffect(() => {
-        async function fetchFuncionarios() {
-            const funcionariosCollection = collection(db, 'Funcionario');
-            const funcionariosSnapshot = await getDocs(funcionariosCollection);
-            const funcionariosData = funcionariosSnapshot.docs.map(doc => doc.data() as Funcionario);
-            setListagem(funcionariosData);
+        if(recarregar){
+            async function fetchFuncionarios() {
+                const funcionariosCollection = collection(db, 'Funcionario');
+                const funcionariosSnapshot = await getDocs(funcionariosCollection);
+                const funcionariosData = funcionariosSnapshot.docs.map(doc => doc.data() as Funcionario);
+                setListagem(funcionariosData);
+            }
+    
+            fetchFuncionarios();
+            setRecarregar(false)
         }
+    }, [recarregar]);
 
-        fetchFuncionarios();
-    }, []);
     
     function funcionarioExcluido(funcionario: Funcionario) {
         if (funcionario && funcionario.id) {
@@ -47,7 +53,7 @@ export default function RootFuncionarios() {
     }
     function editarFuncionario(funcionario: Funcionario) {
         setFuncionario(funcionario);
-        setTipoModal('editar'); 
+        setTipoModal('selecionado'); 
         setOpenModal(true);
     } 
     
@@ -70,6 +76,7 @@ export default function RootFuncionarios() {
             setOpenModal(false);
     
             console.log("Funcionário excluído com sucesso!");
+            setRecarregar(true)
         } catch (error) {
             console.error("Erro ao excluir o funcionário no Firestore", error);
             setOpenModal(false);
@@ -103,6 +110,7 @@ export default function RootFuncionarios() {
                 setListagem(listaAtualizada);
                 setOpenModal(false);
             }
+            setRecarregar(true)
         } catch (error) {
             console.error("Erro ao editar o funcionário no Firestore", error);
             setOpenModal(false);
@@ -129,7 +137,7 @@ export default function RootFuncionarios() {
     
                 setListagem([...listagem, novoFuncionario]);
                 setOpenModal(false);
-            
+            setRecarregar(true)
             } catch (error) {
                 console.error("Erro ao adicionar o funcionário ao Firestore", error);
             }
@@ -156,7 +164,6 @@ export default function RootFuncionarios() {
         <LayoutUser usuario={'root'} className="text-black">
             <div className="flex place-content-between mb-10">
                 <Titulo>Funcionários</Titulo>
-                <Botao onClick={() => salvarFuncionario()} cor="blue">Adicionar Funcionário</Botao>
             </div>
             <TabelaRoot
             objeto={listagem}
@@ -165,6 +172,7 @@ export default function RootFuncionarios() {
             objetoSelecionado={editarFuncionario}
             objetoExcluido={funcionarioExcluido}
             salvarFuncionario={salvarFuncionario}
+            funcionario
             />
 
             <Modal isOpen={openModal} isNotOpen={() => setOpenModal(!openModal)} cor='white' titulo={tipoModal == 'selecionado' ? 'Criar novo funcionário': 'Tem certeza que deseja excluir:'}

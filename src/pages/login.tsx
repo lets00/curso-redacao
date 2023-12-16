@@ -14,32 +14,39 @@ export default function Login(){
     const [userProfile, setUserProfile] = useState({}); 
 
     async function login() {
-
         try {
             const auth = getAuth();
-            const userCredential = await signInWithEmailAndPassword(auth, email, senha);
-            const user = userCredential.user;
-
-        console.log("Usuário logado com ID:", user.uid);
-
-        const firestore = getFirestore();
-        const alunosRef = collection(firestore, "Estudante");
-        const q = query(alunosRef, where("email", "==", email));
-        const querySnapshot = await getDocs(q);
-
-        if (querySnapshot.empty) {
-            console.error("Nenhum aluno encontrado com este email.");
-            return;
+            const firestore = getFirestore();
+    
+            const alunosRef = collection(firestore, "Estudante");
+            const alunosQuery = query(alunosRef, where("email", "==", email));
+            const alunosSnapshot = await getDocs(alunosQuery);
+    
+            if (!alunosSnapshot.empty) {
+                const alunoData = alunosSnapshot.docs[0].data();
+                setUserProfile(alunoData);
+                router.push("/usuario/aluno/perfil");
+                return;
+            }
+    
+            const funcionariosRef = collection(firestore, "Funcionario");
+            const funcionariosQuery = query(funcionariosRef, where("email", "==", email));
+            const funcionariosSnapshot = await getDocs(funcionariosQuery);
+    
+            if (!funcionariosSnapshot.empty) {
+                const funcionarioData = funcionariosSnapshot.docs[0].data();
+                setUserProfile(funcionarioData);
+                router.push("/usuario/funcionario");  
+                return;
+            }
+    
+            
+            console.error("Nenhum usuário encontrado com este email.");
+        } catch (error) {
+            console.error("Erro ao fazer login:", error);
         }
-
-        const alunoData = querySnapshot.docs[0].data();
-        setUserProfile(alunoData);
-
-        router.push("/usuario/aluno/perfil");
-    } catch (error) {
-        console.error("Erro ao fazer login:", error);
     }
-    }
+    
 
     async function adicionarDocumento() {
         try {
