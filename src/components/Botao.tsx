@@ -2,7 +2,7 @@ interface BotaoProps {
     cor?: String
     className?: string
     children: React.ReactNode 
-    onClick?: () => void
+    onClick?: (e: React.FormEvent) => void
     type?: "button" | "submit" | "reset"
 }
 

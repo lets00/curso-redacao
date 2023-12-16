@@ -1,4 +1,4 @@
-export default class Material{
+export default class Live{
     #id: string | null
     #nome: string
     #turma: string
@@ -17,7 +17,7 @@ export default class Material{
         this.#excluido = excluido
     }
     static vazio() {
-        return new Material('','','',new Date(0),'','',false)
+        return new Live('','','',new Date(0),'','',false)
     }
 
     get id(){

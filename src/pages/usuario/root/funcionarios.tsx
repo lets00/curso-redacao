@@ -1,99 +1,185 @@
 import LayoutUser from "@/components/LayoutUser";
 import TabelaRoot from "@/components/TabelaRoot";
 import Titulo from "@/components/Titulo";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Funcionario from "@/core/Funcionario";
 import Modal from "@/components/Modal";
-import ModalRootFuncionario from "@/components/modals/ModalRootFuncionario";
+import ModalRootFuncionario from '@/components/modals/ModalRootFuncionario'
 import ModalExcluir from "@/components/modals/ModalExcluir";
-
+import { getDocs, collection, addDoc, updateDoc, doc, getDoc, deleteDoc, DocumentData } from 'firebase/firestore';
+import { db } from '@/backend/config';
+import {Botao} from "@/components/Botao";
 
 export default function RootFuncionarios() {
 
-    const funcionarios = [
-        new Funcionario('Abner', "111111111", "2222222", "1111-1111", "email@gmail.com", "123", "1", false),
-        new Funcionario('Junio', "333333333", "4444444", "1111-1111", "email@gmail.com", "123", "2", false),
-        new Funcionario('Valdir', "555555555", "6666666", "1111-1111", "email@gmail.com", "123", "3", false)
-    ]
+
     const dados = ['nome','cpf', 'email']
     const cabecalho = ['Nome', 'CPF', 'Email', "Ações"]
 
     const [openModal, setOpenModal] = useState(false)
     const [funcionario, setFuncionario] = useState<Funcionario>(Funcionario.vazio())
     const [tipoModal, setTipoModal] = useState('')
-    const [listagem, setListagem] = useState(funcionarios)
+    const [listagem, setListagem] = useState<Funcionario[]>([]);
+    const [recarregar, setRecarregar] = useState(false)
 
+    useEffect(() => {
+        if(recarregar){
+            async function fetchFuncionarios() {
+                const funcionariosCollection = collection(db, 'Funcionario');
+                const funcionariosSnapshot = await getDocs(funcionariosCollection);
+                const funcionariosData = funcionariosSnapshot.docs.map(doc => doc.data() as Funcionario);
+                setListagem(funcionariosData);
+            }
+    
+            fetchFuncionarios();
+            setRecarregar(false)
+        }
+    }, [recarregar]);
 
-    function funcionarioExcluido(funcionario: Funcionario){
-        setFuncionario(funcionario);
-        setTipoModal('excluir');
-        setOpenModal(true)
-    }
+    
+    function funcionarioExcluido(funcionario: Funcionario) {
+        if (funcionario && funcionario.id) {
+            setFuncionario(funcionario);
+            setTipoModal('excluir');
+            setOpenModal(true);
+        } else {
+            console.error("Funcionário ou ID não definido.");
+        }
+    }   
     function salvarFuncionario(){
-        setFuncionario(Funcionario.vazio())
-        setTipoModal('selecionado')
-        setOpenModal(true)
-    }
-    function editarFuncionario(funcionario: Funcionario){
         setFuncionario(funcionario)
         setTipoModal('selecionado')
         setOpenModal(true)
     }
-    function exclusao(id: any){
-        const materiaisFiltrados = listagem.filter((funcionario) => funcionario.id !== id);
-        setListagem(materiaisFiltrados);
-        setOpenModal(false);
-    }
-    function edicao(funcionarioEditado: Funcionario){
-        const indexToEdit = listagem.findIndex((funcionario) => funcionario.id === funcionarioEditado.id);
-        if (indexToEdit !== -1) {
-            const listaAtualizada = [...listagem];
-            listaAtualizada[indexToEdit] = funcionarioEditado;
+    function editarFuncionario(funcionario: Funcionario) {
+        setFuncionario(funcionario);
+        setTipoModal('selecionado'); 
+        setOpenModal(true);
+    } 
+    
+    async function exclusao(funcionarioId: string | null) {
+        try {
+            console.log("ID do Funcionário:", funcionarioId);
+
+            if (!funcionarioId) {
+                console.error("ID do funcionário não definido.");
+                setOpenModal(false);
+                return;
+            }
+    
+            const funcionarioRef = doc(db, 'Funcionario', funcionarioId);
+    
+            await deleteDoc(funcionarioRef);
+    
+            const listaAtualizada = listagem.filter((funcionario) => funcionario.id !== funcionarioId);
             setListagem(listaAtualizada);
             setOpenModal(false);
-        } else {
+    
+            console.log("Funcionário excluído com sucesso!");
+            setRecarregar(true)
+        } catch (error) {
+            console.error("Erro ao excluir o funcionário no Firestore", error);
             setOpenModal(false);
         }
     }
-    function adicao(funcionarioNovo: Funcionario){
-        console.log(funcionarioNovo)
-        if (verificaObjetoInvalido(funcionarioNovo) === true){
-            setListagem([...listagem, funcionarioNovo])
+
+    async function edicao(funcionarioEditado: Funcionario) {
+        try {
+
+            if (!funcionarioEditado.id) {
+                console.error("ID do funcionário não definido.");
+                setOpenModal(false);
+                return;
+            } 
+
+            const funcionarioRef = doc(db, 'Funcionario', funcionarioEditado.id);
             
-        } else {
-            alert("Objeto Inválido")
-            console.log(funcionarioNovo)
+            await updateDoc(funcionarioRef, {
+                nome: funcionarioEditado.nome,
+                cpf: funcionarioEditado.cpf,
+                rg: funcionarioEditado.rg,
+                celular: funcionarioEditado.celular,
+                email: funcionarioEditado.email,
+                senha: funcionarioEditado.senha,
+            });
+    
+            const indexToEdit = listagem.findIndex((funcionario) => funcionario.id === funcionarioEditado.id);
+            if (indexToEdit !== -1) {
+                const listaAtualizada = [...listagem];
+                listaAtualizada[indexToEdit] = funcionarioEditado;
+                setListagem(listaAtualizada);
+                setOpenModal(false);
+            }
+            setRecarregar(true)
+        } catch (error) {
+            console.error("Erro ao editar o funcionário no Firestore", error);
+            setOpenModal(false);
         }
-        
+    }
+    
+    async function adicao(funcionarioNovo: Funcionario) {
+        if (verificaObjetoInvalido(funcionarioNovo)) {
+            try {
+                const funcionarioData = {
+                    nome: funcionarioNovo.nome,
+                    cpf: funcionarioNovo.cpf,
+                    rg: funcionarioNovo.rg,
+                    celular: funcionarioNovo.celular,
+                    email: funcionarioNovo.email,
+                    senha: funcionarioNovo.senha,
+                };
+    
+                const docRef = await addDoc(collection(db, "Funcionario"), funcionarioData);
+                console.log("Funcionário adicionado com ID:", docRef.id);
+    
+                const funcionarioSnapshot = await getDoc(doc(db, 'Funcionario', docRef.id));
+                const novoFuncionario = funcionarioSnapshot.data() as Funcionario;
+    
+                setListagem([...listagem, novoFuncionario]);
+                setOpenModal(false);
+            setRecarregar(true)
+            } catch (error) {
+                console.error("Erro ao adicionar o funcionário ao Firestore", error);
+            }
+        } else {
+            alert("Objeto Inválido");
+        }
     }
     function verificaObjetoInvalido(funcionarioNovo: Funcionario) {
         if (
-            !funcionarioNovo.id || !funcionarioNovo.nome || !funcionarioNovo.cpf ||
-            !funcionarioNovo.rg ||  !funcionarioNovo.celular || !funcionarioNovo.email ||
+            !funcionarioNovo.nome ||
+            !funcionarioNovo.cpf ||
+            !funcionarioNovo.rg ||
+            !funcionarioNovo.celular ||
+            !funcionarioNovo.email ||
             !funcionarioNovo.senha
-          ) {
+        ) {
             return false;
-          }
-          return true;
         }
+        return true;
+    }
+
 
     return (
         <LayoutUser usuario={'root'} className="text-black">
             <div className="flex place-content-between mb-10">
                 <Titulo>Funcionários</Titulo>
             </div>
-            <TabelaRoot objeto={listagem}
-                    propriedadesExibidas={dados}
-                    cabecalho={cabecalho}
-                    objetoSelecionado={editarFuncionario}
-                    objetoExcluido={funcionarioExcluido}
-                    salvarFuncionario={salvarFuncionario}
-                    funcionario
-                    />
+            <TabelaRoot
+            objeto={listagem}
+            propriedadesExibidas={dados}
+            cabecalho={cabecalho}
+            objetoSelecionado={editarFuncionario}
+            objetoExcluido={funcionarioExcluido}
+            salvarFuncionario={salvarFuncionario}
+            funcionario
+            />
 
             <Modal isOpen={openModal} isNotOpen={() => setOpenModal(!openModal)} cor='white' titulo={tipoModal == 'selecionado' ? 'Criar novo funcionário': 'Tem certeza que deseja excluir:'}
-            subtitulo={tipoModal == 'excluir' ? funcionario.nome : ''}
-            > {tipoModal == 'selecionado' ? <ModalRootFuncionario funcionario={funcionario} setOpenModal={setOpenModal} editar={edicao} adicao={adicao}/>:<ModalExcluir objeto={funcionario} exclusao={exclusao}/>} </Modal>
+            subtitulo={tipoModal == 'excluir' && funcionario ? funcionario.nome : ''}
+            > {tipoModal == 'selecionado' ?
+            <ModalRootFuncionario funcionario={funcionario} setOpenModal={setOpenModal} editar={edicao} adicao={adicao}/>:<ModalExcluir objeto={funcionario} exclusao={() => exclusao(funcionario?.id)} />
+        } </Modal>
 
         </LayoutUser>
     )

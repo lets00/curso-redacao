@@ -8,63 +8,143 @@ import Titulo from "@/components/Titulo";
 import Material from "@/core/Material";
 import Turma from "@/core/Turma";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useState, useEffect } from "react";
+import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { collection, addDoc, getDocs} from "firebase/firestore";
+import { getAuth } from "firebase/auth";
+import {db, storage} from "@/backend/config"
 
 export default function Materiais() {
 
-    const [materiais, setMateriais] = useState([
-        new Material('Material da aula sobre Redação 1', 'Descrição breve desse documento', 'ARQUIVO', 'LINK', 'Redação', 'presencial terça/tarde', 'Abner', new Date(0),'idA' , false),
-        new Material('Material da aula sobre Redação 2', 'Descrição breve desse documento', 'ARQUIVO2', 'LINK2', 'Redação', 'presencial terça/manhã', 'João', new Date(0),'idB' , false),
-    ])
-    const [listaTurmas, setListaTurmas] = useState([
-        new Turma('Presencial terça/tarde', 'Linguagem', 'Felipe Alves', 'terça-feira', '14h', 'Presencial', 'idTurma1', false),
-        new Turma('Online terça/tarde', 'Redação', 'Wellington', 'terça-feira', '14h', 'Online', 'idTurma2', false),
-        new Turma('Presencial sábado/tarde', 'Redação', 'Wellington', 'sábado', '14h', 'Presencial', 'idTurma3', false)
-      ])
+    const [materiais, setMateriais] = useState<Material[]>([]);
+    const [listaTurmas, setListaTurmas] = useState<Turma[]>([]);
+    const [nome, setNome] = useState('');
+    const [descricao, setDescricao] = useState('');
+    const [arquivo, setArquivo] = useState<File | null>(null);
+    const [link, setLink] = useState('');
+    const [professor, setProfessor] = useState('');
+    const [data, setData] = useState(new Date(0));
+    const [turmas, setTurmas] = useState<string[]>([]);
+    const turmasUnicas = listaTurmas.map((turma) => turma.nome);
 
-    const [nome, setNome] = useState('')
-    const [descricao, setDescricao] = useState('')
-    const [arquivo, setArquivo] = useState('')
-    const [link, setLink] = useState('')
-    //Nome do usuario professor logado atualmente
-    const [professor, setProfessor] = useState('Felipe Alves')
-    const [data, setData] = useState<Date>(new Date(1000, 10, 10))
-    const [turmas, setTurmas] = useState<string[]>([])
-
-    let turmasUnicas: string[] = [];
-
-    function adicao() {
-      if (!nome || turmas.length === 0 || data.getTime() === new Date(1000, 10, 10).getTime()) {
-        alert("Preencha todos os campos obrigatórios.");
-        return;
-      }
-    
-      const novosMateriais = turmas.map((turmaSelecionada) => {
-        const disciplinaTurma = listaTurmas.find((turma) => turma.nome === turmaSelecionada);
-        if (disciplinaTurma) {
-          return new Material(nome, descricao, arquivo, link, disciplinaTurma.disciplina, turmaSelecionada, professor, data, "id" + Math.random(), false);
-        }
-        return null; 
-      });
-    
-      const materiaisValidos = novosMateriais.filter((material) => material !== null) as Material[];
-      const novaLista = ([...materiais, ...materiaisValidos]);
-      setMateriais(novaLista);
-      alert("Materiais criados com sucesso!");
-    
-      setNome('');
-      setDescricao('');
-      setLink('');
-    }
-    
     useEffect(() => {
-        setListaTurmas([]
-          //Pode apagar o [] 
-          //Obter lista de turmas do banco( )
-        )
-          turmasUnicas = listaTurmas.map((turma: { nome: any }) => turma.nome);
+      const fetchTurmas = async () => {
+        try {
+          const turmasSnapshot = await getDocs(collection(db, "Turmas"));
+          const turmasData = turmasSnapshot.docs.map((doc) => doc.data() as Turma);
+          setListaTurmas(turmasData);
+        } catch (error) {
+          console.error("Erro ao buscar turmas no Firestore:", error);
+        }
+      };
+  
+      fetchTurmas();
     }, []);
 
+    async function enviarArquivo() {
+      const auth = getAuth();
+      const user = auth.currentUser;
+
+      if(!user){
+      if (!arquivo) return null;
+    
+      const storage = getStorage();
+      const storageRef = ref(storage, 'material/');
+    
+      try {
+        const snapshot = await uploadBytes(storageRef, arquivo);
+        const url = await getDownloadURL(snapshot.ref);
+    
+        return {
+          url: url,
+          caminho: storageRef.fullPath,
+        };
+      } catch (error) {
+        console.error("Erro ao enviar arquivo para o Firebase Storage:", error);
+        return null;
+      }
+      console.error("User not authenticated");
+      return;
+    }
+  }
+    
+
+    async function adicao() {
+    console.log("Valores:", nome, turmas, arquivo);
+    
+    if (!nome || turmas.length === 0) {
+      alert("Preencha todos os campos obrigatórios.");
+      return;
+    }
+
+    const infoArquivo = await enviarArquivo();
+
+    if (!infoArquivo) {
+      alert("Erro ao enviar o arquivo. Tente novamente.");
+      return;
+    }
+    
+    const novosMateriais = turmas.map((turmaSelecionada) => {
+      const disciplinaTurma = listaTurmas.find(
+        (turma) => turma.nome === turmaSelecionada
+      );
+      if (disciplinaTurma) {
+        return new Material(
+          nome,
+          descricao,
+          infoArquivo.url,
+          link,
+          disciplinaTurma.disciplina,
+          turmaSelecionada,
+          professor,
+          data,
+          "id" + Math.random(),
+          false
+        );
+      }
+      return null;
+    });
+
+    const materiaisValidos = novosMateriais.filter(
+      (material) => material !== null
+    ) as Material[];
+
+    const novaLista = [...materiais, ...materiaisValidos];
+
+    novaLista.forEach(async (material) => {
+      const docRef = await addDoc(collection(db, "Material"), {
+        nome: material.nome,
+        descricao: material.descricao,
+        arquivo: material.arquivo,
+        link: material.link,
+        disciplina: material.disciplina,
+        turma: material.turma,
+        professor: material.professor,
+        data: material.data,
+        id: material.id,
+      });
+
+      const turmaDoc = await getDocs(collection(db, "Turmas"));
+      turmaDoc.forEach(async (doc) => {
+        if (material.turma === doc.data().nome) {
+          await addDoc(collection(db, "Turmas", doc.id, "Material"), {
+            materialId: docRef.id,
+          });
+        }
+      });
+    });
+  
+      setMateriais(novaLista);
+      alert("Materiais criados com sucesso!");
+  
+      setNome("");
+      setDescricao("");
+      setLink("");
+      setProfessor("");
+      setArquivo(null);
+      setData(new Date(0));
+    }
+    
     return (
         <LayoutUser usuario={'funcionario'} className="text-black">
 
@@ -81,7 +161,6 @@ export default function Materiais() {
                 <FileInput setArquivo={setArquivo}/>
                 <Botao onClick={adicao} className="w-36 bg-blue-400 ml-9 mt-4 h-10" cor={'blue'}>Enviar</Botao>
             </div>
-
         </LayoutUser>
     )
 }

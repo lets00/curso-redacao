@@ -10,49 +10,100 @@ import ModalRootTurma from "@/components/modals/ModalRootTurma";
 import ModalExcluir from "@/components/modals/ModalExcluir";
 import ModalRootALunos from "@/components/modals/ModalRootAlunos";
 import Turma from "@/core/Turma";
+import { getDocs, query, collection, addDoc, where, updateDoc, doc, getDoc, deleteDoc, DocumentData } from 'firebase/firestore';
+import { db } from '@/backend/config';
 
 export default function RootTurmas() {
 
-    const alunos = [
-        new Aluno('teste 1', new Date('2023-11-31'), 'PE', 'rua teste', '111-111', 'jasha@gmail',
-    'jose', 'carla', 'rgrgrg', 'cpfcpf', 10, ['idTurma3'],false , '123', "idTeste1", false),
-        new Aluno('Maria Luiza', new Date('2023-11-31'), 'RJ', 'rua testew', '222-111', 'mari@gmail',
-    'pedro', 'ana', 'rg2', 'cpf2', 10, ['idTurma1','idTurma3'],true , 'abc', "idTeste2", false),
-        new Aluno('teste 3', new Date('2023-11-31'), 'RJ', 'rua testew', '222-111', 'mari@gmail',
-    'pedro', 'ana', 'rg2', 'cpf2', 15, ['idTurma1'],true , 'abc', "idTeste3", false),
-    ]
-    const [listaTurmas, setListaTurmas] = useState([
-        new Turma('Presencial terça/tarde', 'Linguagem', 'Felipe Alves', 'terça-feira', '14h', 'Presencial', 'idTurma1', false),
-        new Turma('Online terça/tarde', 'Redação', 'Wellington', 'terça-feira', '14h', 'Online', 'idTurma2', false),
-        new Turma('Presencial sábado/tarde', 'Redação', 'Wellington', 'sábado', '14h', 'Presencial', 'idTurma3', false)
-      ])
-
+    const [listaTurmas, setListaTurmas] = useState<Turma[]>([]);
     const dados = ['natural','nome','cpf','pagamento']
     const cabecalho = ['Estado', 'Nome', 'CPF', 'Pagamento']
-    const [select, setSelect] = useState<string[]>([])
-
+    const [select, setSelect] = useState<string[]>([]);
+    const [alunos, setSlunos] = useState([]);
     const [openModal, setOpenModal] = useState(false)
     const [aluno, setAluno] = useState<Aluno>(Aluno.vazio())
     const [tipoModal, setTipoModal] = useState('')
-    const [listagem, setListagem] = useState(alunos)
+    const [listagem, setListagem] = useState<Aluno[]>([]);
     const [filtragem, setFiltragem] = useState(listagem)
     const [filtro, setFiltro] = useState('Todos(as)')
     const [recarregar, setRecarregar] = useState(false)
+    
+
+    useEffect(() => {
+        const carregarTurmas = async () => {
+          try {
+            const turmasRef = collection(db, "Turmas");
+            const turmasQuery = query(turmasRef);
+            const snapshot = await getDocs(turmasQuery);
+            const turmas = snapshot.docs.map((doc) => doc.data() as Turma);
+            setListaTurmas(turmas);
+    
+            const seletorAtualizado = ['Todos(as)', ...turmas.map((turma) => turma.nome)];
+            setSelect(seletorAtualizado);
+          } catch (error) {
+            console.error("Erro ao carregar turmas:", error);
+          }
+        };
+    
+        carregarTurmas();
+      }, []); 
+
+      const aoClicar = async () => {
+        try {
+          if (filtro === "Todos(as)") {
+            const alunosRef = collection(db, "Estudante");
+            const alunosQuery = query(alunosRef);
+            const snapshot = await getDocs(alunosQuery);
+            const alunos = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() })) as Aluno[];
+            setFiltragem(alunos);
+          } else {
+            const turmaSelecionada = listaTurmas.find((turma) => turma.nome === filtro);
+            if (turmaSelecionada) {
+              const alunosRef = collection(db, "Estudante");
+              const alunosQuery = query(alunosRef, where("turma", "array-contains", turmaSelecionada.id));
+              const snapshot = await getDocs(alunosQuery);
+              const alunos = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() })) as Aluno[];
+              setFiltragem(alunos);
+            } else {
+              console.error("Turma não encontrada:", filtro);
+            }
+          }
+      
+          setRecarregar(false);
+        } catch (error) {
+          console.error("Erro ao carregar alunos associados à turma:", error);
+        }
+      };
+    
+      useEffect(() => {
+        if(filtro || listaTurmas || recarregar){
+          aoClicar();
+        }
+      }, [filtro, listaTurmas, recarregar]);
+    
+
+    async function adicao(turmaNova: Turma){
+        try{
+            const turmaData = {
+                nome: turmaNova.nome,
+                disciplina: turmaNova.disciplina,
+                dia: turmaNova.dia,
+                professor: turmaNova.professor,
+                horario: turmaNova.horario,
+                modalidade: turmaNova.modalidade,
+            };
+
+            const docref = await addDoc(collection(db, "Turmas"), turmaData);
+            console.log("Turma adicionada com o ID:", docref.id);
+            
+            setOpenModal(false);
+            setRecarregar(true);
+        } catch (error){
+            console.error("Erro ao adicionar a Turma ao Firestore", error);
+        }
+    }
 
     
-    const aoClicar = () => {
-        if(filtro == "Todos(as)"){
-            setFiltragem(listagem);
-        } else {
-            const alunosFiltrados = listagem.filter((aluno) =>
-                aluno.turma.some((turmaId) =>
-                    listaTurmas.find((turma) => turma.id === turmaId && turma.nome === filtro)
-                )
-            );
-            setFiltragem(alunosFiltrados);
-        }
-        setRecarregar(false)
-      }
     function alunoSelecionado(aluno: Aluno){
         setAluno(aluno)
         setTipoModal("editar")
@@ -67,38 +118,96 @@ export default function RootTurmas() {
         setTipoModal('selecionado')
         setOpenModal(true)
     }
-    function exclusao(id: any){
-        const materiaisFiltrados = listagem.filter((aluno) => aluno.id !== id);
-        setListagem(materiaisFiltrados);
-        setOpenModal(false);
-        setRecarregar(true);
+
+    const excluirAlunoFirestore = async (alunoId: string) => {
+      try {
+        const alunoRef = doc(db, 'Estudante', alunoId);
+        await deleteDoc(alunoRef);
+        console.log('Aluno excluído com sucesso do Firestore');
+        setRecarregar(true)
+      } catch (error) {
+        console.error('Erro ao excluir aluno do Firestore:', error);
+      }
+    };
+
+    const exclusao = async (id: any) => {
+    try {
+      await excluirAlunoFirestore(id);
+
+      const alunosFiltrados = listagem.filter((aluno) => aluno.id !== id);
+      setListagem(alunosFiltrados);
+
+      setOpenModal(false);
+      setRecarregar(true);
+    } catch (error) {
+      console.error('Erro ao excluir aluno:', error);
     }
-    function edicao(alunoEditado: Aluno){
-        const indexToEdit = listagem.findIndex((aluno) => aluno.id === alunoEditado.id);
+  };
+    
+    function edicao(alunoEditado: Aluno) {
+        const alunoId = alunoEditado.id;
+      
+        const atualizarAlunoFirestore = async () => {
+          try {
+            const alunoDocRef = doc(db, 'Estudante', alunoId);
+            await updateDoc(alunoDocRef, {
+              nome: alunoEditado.nome,
+              data: alunoEditado.data,
+              natural: alunoEditado.natural,
+              endereco: alunoEditado.endereco,
+              celular: alunoEditado.celular,
+              email: alunoEditado.email,
+              pai: alunoEditado.pai,
+              mae: alunoEditado.mae,
+              rg: alunoEditado.rg,
+              cpf: alunoEditado.cpf,
+              mensalidade: alunoEditado.mensalidade,
+              turma: alunoEditado.turma,
+              pagamento: alunoEditado.pagamento,
+              senha: alunoEditado.senha,
+            });
+      
+            console.log('Aluno atualizado no Firestore');
+          } catch (error) {
+            console.error('Erro ao atualizar aluno no Firestore', error);
+          }
+        };
+      
+        atualizarAlunoFirestore();
+
+        const indexToEdit = listagem.findIndex((aluno) => aluno.id === alunoId);
         if (indexToEdit !== -1) {
-            const listaAtualizada = [...listagem];
-            listaAtualizada[indexToEdit] = alunoEditado;
-            setListagem(listaAtualizada);
-            setOpenModal(false);
+          const listaAtualizada = [...listagem];
+          listaAtualizada[indexToEdit] = alunoEditado;
+          setListagem(listaAtualizada);
+          setOpenModal(false);
         } else {
-            setOpenModal(false);
+          setOpenModal(false);
         }
         setRecarregar(true);
-    }
+      }
 
     useEffect(() => {
-        if (recarregar || filtro) {
-            aoClicar();
-        }
-    }, [recarregar, filtro,]);
-
-    useEffect(() => {
-        setListaTurmas([]
-          //Pode apagar o [] 
-          //Obter lista de turmas do banco( )
-        )
-          setSelect(['Todos(as)', ...listaTurmas.map((turma: { nome: any }) => turma.nome)])
+        const carregarTurmas = async () => {
+            try {
+                const turmasSnapshot = await getDocs(collection(db, "Turmas"));
+                const turmasData = turmasSnapshot.docs.map(doc => ({
+                    id: doc.id,
+                    ...doc.data(),
+                })) as Turma[];
+                
+                setListaTurmas(turmasData);
+    
+                const seletorAtualizado = ['Todos(as)', ...turmasData.map(turma => turma.nome)];
+                setSelect(seletorAtualizado);
+            } catch (error) {
+                console.error("Erro ao carregar turmas do Firestore", error);
+            }
+        };
+    
+        carregarTurmas();
     }, []);
+    
 
     return (
         <LayoutUser usuario={'root'} className="text-black">
@@ -106,9 +215,8 @@ export default function RootTurmas() {
                 <Titulo>Turmas</Titulo>
                 <Botao onClick={() => turmaSelecionada()} className="mx-8 px-10">Gerenciar Turmas</Botao>
             </div>
-            <Select seletor={select}
-                    titulo="Turma"
-                    setFiltro={setFiltro}/>
+            <Select seletor={select} titulo="Turma" setFiltro={setFiltro} />
+                    
             <TabelaRoot objeto={filtragem}
                     propriedadesExibidas={dados}
                     cabecalho={cabecalho}

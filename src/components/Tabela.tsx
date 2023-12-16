@@ -15,8 +15,7 @@ interface TabelaProps {
 export default function Tabela(props: TabelaProps){
 
     const exibirAcoes = props.objetoExcluido || props.objetoSelecionado
-
-    function renderizarCabecalho(){
+    function renderizarCabecalho() {
         return (
             <tr>
                 {props.cabecalho.map((coluna: any, index: any) => (
@@ -57,7 +56,7 @@ export default function Tabela(props: TabelaProps){
     function renderizarDados(){
         return props.objeto?.map((objeto: any, index: any) => {
             return (
-                <tr key={objeto.id}
+                <tr key={index}
                     className={`${index % 2 === 0 ? 'bg-slate-100' : 'bg-slate-200'}`}>
                     {props.propriedadesExibidas.map((propriedade: any, propIndex: any) => (
                         <td key={propIndex} className="text-center p-2">
@@ -65,8 +64,8 @@ export default function Tabela(props: TabelaProps){
                                 ? objeto[propriedade]
                                     ? 'Pago'
                                     : 'Não pago'
-                                :objeto[propriedade] instanceof Timestamp ?
-                                format(objeto[propriedade].toDate(), 'dd-MM-yyyy')
+                                :objeto[propriedade] instanceof Date ?
+                                format(objeto[propriedade], 'dd-MM-yyyy')
                                  : (
                                 objeto[propriedade]
                             )}
@@ -87,5 +86,5 @@ export default function Tabela(props: TabelaProps){
                 {renderizarDados()}
             </tbody>
         </table>
-    )
-}
+      );
+    }

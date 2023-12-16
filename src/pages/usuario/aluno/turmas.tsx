@@ -2,20 +2,59 @@ import LayoutUser from "@/components/LayoutUser";
 import Tabela from "@/components/Tabela";
 import Titulo from "@/components/Titulo";
 import Turma from "@/core/Turma";
+import { getAuth, } from "firebase/auth";
+import {db} from '@/backend/config'
+import { useState, useEffect } from "react";
+import { getFirestore, doc, setDoc, collection, query, where, getDocs, getDoc, documentId } from "firebase/firestore";
 
-export default function TurmasAluno() {
-
-    interface UserProfile {
-        turma: string[];
-    }
-
-    const alunoTurmas = [
-        // aqui seria pegar as turmas em que cada userProfile.turma[y] da array turma (do aluno) é igual a uma turmas[x].id de turmas
-        new Turma ('presencial - terça/tarde', 'Redação', 'Felipe Alves','Terça-feira', '14h', 'Presencial', 'idTeste', false),
-        new Turma ('online - sábado/tarde', 'Matemática', 'André Torres','Sábado', '14h', 'Online', 'idTeste2', false)
-    ]
+interface TurmaData {
+  id: string;
+  nome: string;
+  dia: string;
+  horario: string;
+  professor: string;
+}
+  
+export default function TurmasAluno() {   
+    const [alunoTurmas, setAlunoTurmas] = useState<TurmaData[]>([]);
+    const [nomeUsuario, setNomeUsuario] = useState<string>("");
     const dados = ['nome', 'dia', 'horario', 'professor']
     const cabecalho = ['Matéria', 'Dia', 'Horário', 'Professor']
+    const auth = getAuth();
+    const user = auth.currentUser;
+  
+    useEffect(() => {
+      const fetchData = async () => {
+        if (user) {
+          const userEmail = user.email;
+  
+          const q = query(collection(db, "Estudante"), where("email", "==", userEmail));
+          const querySnapshot = await getDocs(q);
+  
+          if (!querySnapshot.empty) {
+            const userDoc = querySnapshot.docs[0];
+            const userData = userDoc.data();
+            setNomeUsuario(userData.nome || "");
+  
+            const turmasDoEstudante = userData.turma || [];
+            const turmasData: TurmaData[] = [];
+
+            for (const turmaId of turmasDoEstudante) {
+              const turmaDocRef = doc(db, "Turmas", turmaId);
+              const turmaDocSnap = await getDoc(turmaDocRef);
+  
+              if (turmaDocSnap.exists()) {
+                const turmaData = turmaDocSnap.data() as TurmaData;
+                turmasData.push(turmaData);
+              }
+            }
+            setAlunoTurmas(turmasData);
+          }
+        }
+      };
+  
+      fetchData();
+    }, [user]);
 
     return (
         <LayoutUser divisoes usuario={'aluno'} className="text-black">
@@ -25,7 +64,7 @@ export default function TurmasAluno() {
                     <div className="
                         flex justify-center items-center
                         rounded-full p-4 ml-4 mr-0 bg-slate-300"/>
-                    <Titulo className="font-Montserrant">Nome do Aluno</Titulo>
+                    <Titulo className="font-Montserrant">{nomeUsuario}</Titulo>
                 </div>
             </section>
 

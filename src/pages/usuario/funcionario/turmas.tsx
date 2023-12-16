@@ -4,72 +4,97 @@ import Tabela from "@/components/Tabela";
 import Titulo from "@/components/Titulo";
 import { useEffect, useState } from "react";
 import Aluno from "@/core/Aluno";
-import Turma from "@/core/Turma";
+import { db } from "@/backend/config";
+import {collection, query, where, getDocs, DocumentData, deleteDoc, doc, updateDoc} from "firebase/firestore";
 
 export default function FuncionarioTurmas() {
+  const dados = ["natural", "nome", "cpf", "pagamento"];
+  const cabecalho = ["Estado", "Nome", "CPF", "Pagamento"];
+  const [select, setSelect] = useState<string[]>([])
+  const [aluno, setAluno] = useState<Aluno>(Aluno.vazio());
+  const [listagem, setListagem] = useState<Aluno[]>([]);
+  const [filtragem, setFiltragem] = useState<DocumentData[]>(listagem);
+  const [filtro, setFiltro] = useState("Todos(as)");
+  const [turmas, setTurmas] = useState<string[]>([]);
+  const [listaTurmas, setListaTurmas] = useState<Aluno[]>([]);
 
-    const turmas = [
-        new Aluno('Joao Carlos', new Date(2004-10-10), 'PE', 'rua teste', '111-111', 'jasha@gmail',
-    'jose', 'carla', 'rgrgrg', 'cpfcpf', 15, ['idTurma1'],false , '123', "idTeste", false),
-        new Aluno('Maria Luiza', new Date(2004-10-10), 'RJ', 'rua testew', '222-111', 'mari@gmail',
-    'pedro', 'ana', 'rg2', 'cpf2', 10, ['idTurma1','idTurma2', 'idTurma3'],true , 'abc', "idTeste2", false),
-    new Aluno('teste 3', new Date(2004-10-10), 'RJ', 'rua testew', '222-111', 'mari@gmail',
-    'pedro', 'ana', 'rg2', 'cpf2', 10, ['idTurma2'],true , 'abc', "idTeste3", false),
-    ]
-    const [listaTurmas, setListaTurmas] = useState([
-        new Turma('Presencial terça/tarde', 'Linguagem', 'Felipe Alves', 'terça-feira', '14h', 'Presencial', 'idTurma1', false),
-        new Turma('Online terça/tarde', 'Redação', 'Wellington', 'terça-feira', '14h', 'Online', 'idTurma2', false),
-        new Turma('Presencial sábado/tarde', 'Redação', 'Wellington', 'sábado', '14h', 'Presencial', 'idTurma3', false)
-      ])
+  useEffect(() => {
+    const carregarTurmas = async () => {
+        try {
+            const turmasSnapshot = await getDocs(collection(db, "Turmas"));
+            const turmasData = turmasSnapshot.docs.map(doc => ({
+                id: doc.id,
+                ...doc.data(),
+            })) as Aluno[];
+            
+            setListaTurmas(turmasData);
 
-    const dados = ['natural','nome','cpf','pagamento']
-    const cabecalho = ['Estado', 'Nome', 'CPF', 'Pagamento']
-    //aqui o seletor vai mostrar apenas as turmas que existem no BD
-    const [select, setSelect] = useState<string[]>([])
-    const [listagem, setListagem] = useState(turmas)
-    const [filtragem, setFiltragem] = useState(listagem)
-    const [filtro, setFiltro] = useState('Todos(as)')
-    
-    const aoClicar = () => {
-        if (filtro === "Todos(as)") {
-            setFiltragem(listagem);
-        } else {
-            const alunosFiltrados = listagem.filter((aluno) =>
-                aluno.turma.some((turmaId) =>
-                    listaTurmas.find((turma) => turma.id === turmaId && turma.nome === filtro)
-                )
-            );
-            setFiltragem(alunosFiltrados);
+            const seletorAtualizado = ['Todos(as)', ...turmasData.map(turma => turma.nome)];
+            setSelect(seletorAtualizado);
+        } catch (error) {
+            console.error("Erro ao carregar turmas do Firestore", error);
         }
     };
 
-    useEffect(() => {
-        aoClicar();
-    }, [filtro])
+    carregarTurmas();
+}, []);
 
-    useEffect(() => {
-        setListaTurmas([]
-          //Pode apagar o [] 
-          //Obter lista de turmas do banco( )
-        )
-          setSelect(['Todos(as)', ...listaTurmas.map((turma: { nome: any }) => turma.nome)])
-    }, []);
 
-    return (
-        <LayoutUser usuario={'funcionario'} className="text-black">
-            <div className="flex place-content-between">
-                <Titulo>Turmas</Titulo>
-            </div>
-            <Select seletor={select}
-                    titulo="Turma"
-                    setFiltro={setFiltro}/>
-            <Tabela objeto={filtragem}
-                    propriedadesExibidas={dados}
-                    cabecalho={cabecalho}
-                    //objetoSelecionado={alunoSelecionado}
-                    //objetoExcluido={alunoExcluido}
-                    />
+  const aoClicar = async () => {
+    try {
+      if (filtro === "Todos(as)") {
+        const alunosRef = collection(db, "Estudante");
+        const alunosQuery = query(alunosRef);
+        const snapshot = await getDocs(alunosQuery);
+        const alunos = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+        setFiltragem(alunos); 
+      } else {
+        const turmaSelecionada = listaTurmas.find((turma) => turma.nome === filtro);
+        if (turmaSelecionada) {
+          const alunosRef = collection(db, "Estudante");
+          const alunosQuery = query(alunosRef, where("turma", "array-contains", turmaSelecionada.id));
+          const snapshot = await getDocs(alunosQuery);
+          const alunos = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() })) as Aluno[];
+          setFiltragem(alunos);
+        } else {
+          console.error("Turma não encontrada:", filtro);
+        }
+      }
+    } catch (error) {
+      console.error("Erro ao carregar alunos:", error);
+    }
+  };
 
-        </LayoutUser>
-    )
+
+  useEffect(() => {
+    aoClicar();
+  }, [filtro]);
+
+  return (
+    <LayoutUser usuario={"funcionario"} className="text-black">
+      <div className="flex place-content-between">
+        <Titulo>Turmas</Titulo>
+      </div>
+      <Select seletor={select} titulo="Turma" setFiltro={setFiltro} />
+
+      <Tabela
+        objeto={filtragem}
+        propriedadesExibidas={dados}
+        cabecalho={cabecalho}
+        //objetoSelecionado={alunoSelecionado}
+       //objetoExcluido={excluirAluno}
+      />
+      {aluno.id && (
+        <div>
+          <h2>Detalhes do Aluno</h2>
+          <p>Estado: {aluno.natural}</p>
+          <p>Nome: {aluno.nome}</p>
+          <p>CPF: {aluno.cpf}</p>
+          <p>Pagamento: {aluno.pagamento}</p>
+          <p>Turma: {aluno.turma}</p>
+        </div>
+      )}
+    </LayoutUser>
+  );
 }
+

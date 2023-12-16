@@ -4,6 +4,9 @@ import { useState } from "react";
 import {Botao} from "../Botao";
 import { IconeVoltar } from "../Icones";
 import Select from "../Select";
+import { addDoc, updateDoc, doc, getDoc, DocumentData, collection, Firestore } from 'firebase/firestore';
+import { db } from '@/backend/config';
+import {  getAuth, createUserWithEmailAndPassword } from "firebase/auth"; 
 
 interface ModalRootTurmaProps {
     turma: Turma
@@ -21,6 +24,54 @@ export default function ModalRootTurma(props: ModalRootTurmaProps){
     const [horario, setHorario] = useState(props.turma?.horario ?? '')
     const [modalidade, setModalidade] = useState(props.turma?.modalidade ?? '')
 
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+      
+        const formData = {
+          nome,
+          disciplina,
+          professor,
+          dia,
+          horario,
+          modalidade,
+        };
+      
+        try {
+          if (props.turma?.id) {
+            const turmaRef = doc(db, 'Turmas', props.turma.id);
+            await updateDoc(turmaRef, formData);
+      
+            const turmaAtualizada = { ...props.turma, ...formData } as Turma;
+            props.editar?.(turmaAtualizada);
+          } else {
+            const docRef = await addDoc(collection(db, 'Turmas'), formData);
+            console.log('Turma adicionada com o ID:', docRef.id);
+
+            const disciplinaRef = await addDoc(collection(db, 'Disciplina'), {
+              nome_disciplina: disciplina,
+          });
+
+          console.log('Disciplina adicionada com o ID:', disciplinaRef.id);
+      
+            const turmaSnapshot = await getDoc(doc(db, 'Turmas', docRef.id));
+            const novaTurma = turmaSnapshot.data() as Turma;
+      
+            props.adicao?.(novaTurma);
+          }
+      
+          setNome('');
+          setDisciplina('');
+          setProfessor('');
+          setDia('');
+          setHorario('');
+          setModalidade('');
+      
+          props.setSelecionou(false);
+        } catch (error) {
+          console.error('Erro ao salvar a turma no Firebase:', error);
+        }
+      };
+
     return(
         <div>
             <div className="grid grid-rows-3 grid-flow-col bg-pink-300 rounded-lg p-3 pr-0 pl-5 ml-3 my-3">
@@ -33,15 +84,7 @@ export default function ModalRootTurma(props: ModalRootTurmaProps){
             </div>
             <div className="flex place-content-between gap-2">
                 <Botao className="p-10 px-3 rounded-3xl flex gap-2 items-center ml-5" onClick={() => {props.setSelecionou(false)}}> {IconeVoltar} Voltar à seleção</Botao>
-                <Botao className="p-10"
-                    onClick={() => {
-                        if (id) {
-                            props.editar?.(new Turma(nome, disciplina, professor, dia, horario, modalidade, id, false)); props.setSelecionou(false)
-                          } else {
-                            props.adicao?.(new Turma(nome, disciplina, professor, dia, horario, modalidade, '4', false)); props.setSelecionou(false )
-                            //aqui coloquei um id "4" só pra poder criar um turma sem nenhum atributo vazio
-                          }
-                    } }>
+                <Botao className="p-10" onClick={handleSubmit}>
                 {id ? 'Alterar':'Criar turma'}</Botao>
             </div>
         </div>

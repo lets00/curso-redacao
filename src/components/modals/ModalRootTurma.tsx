@@ -2,6 +2,8 @@ import Turma from "@/core/Turma";
 import Select from "../Select";
 import { useEffect, useState } from "react";
 import ModalTurma from "./ModalTurma";
+import { getDocs, collection, addDoc, updateDoc, doc, getDoc, deleteDoc, DocumentData } from 'firebase/firestore';
+import { db } from '@/backend/config';
 
 interface ModalRootTurmaProps {
     turmas: Turma[]
@@ -17,7 +19,10 @@ export default function ModalRootTurma(props: ModalRootTurmaProps){
     const [selecionou, setSelecionou] = useState<Boolean>(false)
     const [excluir, setExcluir] = useState<Boolean>(false)
     const [turma, setTurma] = useState<Turma>(Turma.vazio())
-    const [seletor, setSeletor] = useState(props.turmasSeletor)
+    const [seletor, setSeletor] = useState(props.turmasSeletor) 
+    const [editando, setEditando] = useState<Boolean>(false);
+    const [modoEdicao, setModoEdicao] = useState(false);
+
 
     function selecionarTurma(){
         const turmaSelecionada = props.turmas.find((turma) => turma.nome === filtro);
@@ -29,63 +34,102 @@ export default function ModalRootTurma(props: ModalRootTurmaProps){
         }
         setSelecionou(true)
     }
-    function excluirTurma(){
-        const turmaSelecionada = props.turmas.find((turma) => turma.nome === filtro);
-        if (turmaSelecionada) {
-            setTurma(turmaSelecionada);
-        } else {
-            setTurma(Turma.vazio());
+
+    async function excluirTurma(id: any) {
+        try {
+          console.log('ID da Turma a ser excluída:', id);
+          const turmaRef = doc(db, 'Turmas', id.toString());
+          await deleteDoc(turmaRef);
+          console.log(`Turma excluída do Firebase.`);
+        } catch (error) {
+          console.error('Erro ao excluir a turma no Firebase:', error);
         }
-        setExcluir(true)
+        setExcluir(true);
+      }
+      
+
+      async function exclusao() {
+        try {
+            const turmaSelecionada = props.turmas.find((turma) => turma.nome === filtro);
+    
+            if (turmaSelecionada) {
+                await excluirTurma(turmaSelecionada.id);
+                const turmaFiltrada = props.turmas.filter((turma) => turma.id !== turmaSelecionada.id);
+                props.setTurmas(turmaFiltrada);
+    
+                const turmaSeletorAtualizado = seletor.filter((nome: any) => nome !== filtro);
+                setSeletor(turmaSeletorAtualizado);
+                props.setSelect?.(turmaSeletorAtualizado);
+                setExcluir(false);
+                setSelecionou(false);
+            } else {
+                alert("Turma não encontrada");
+            }
+        } catch (error) {
+            console.error('Erro ao excluir a turma no Firebase:', error);
+        }
     }
+    
+    async function edicao(turmaEditada: Turma) {
+        try {
+            console.log('Iniciando edição da turma. ID:', turmaEditada.id);
+            if (turmaEditada.id) {
+                if (modoEdicao) {
+                    const turmaRef = doc(db, 'Turmas', turmaEditada.id.toString());
+                    console.log('Antes de updateDoc');
+                    const turmaEditadaData = { ...turmaEditada } as { [key: string]: any };
 
-    function exclusao() {
-        const turmaFiltrada = props.turmas.filter((turma) => turma.nome !== filtro);
-        if (turmaFiltrada.length > 0) {
-          props.setTurmas(turmaFiltrada);
-        } else {
-          alert("Turma não encontrada");
+                    await updateDoc(turmaRef, turmaEditadaData);
+                    console.log('Turma atualizada no Firebase.');
+
+                    const turmasAtualizadas = props.turmas.map((turma) =>
+                        turma.id === turmaEditada.id ? turmaEditada : turma
+                    );
+                    props.setTurmas(turmasAtualizadas);
+
+                    setModoEdicao(false);
+                    setSelecionou(false);
+                } else {
+                    setModoEdicao(true);
+                }
+            }
+        } catch (error) {
+            console.error('Erro ao editar a turma no Firebase:', error);
         }
+    }        
+    
 
-        const turmaSeletorAtualizado = seletor.filter((nome: any) => nome !== filtro);
-        setSeletor(turmaSeletorAtualizado);
-        props.setSelect?.(turmaSeletorAtualizado);
-        setExcluir(false);
-        setSelecionou(false);
-      }
-
-    function edicao(turmaEditada: Turma) {
-        const indexToEdit = props.turmas.findIndex((turma) => turma.nome === filtro);
-      
-        if (indexToEdit !== -1) {
-          const listaAtualizada = [...props.turmas];
-          listaAtualizada[indexToEdit] = turmaEditada;
-          props.setTurmas(listaAtualizada);
-      
-          const seletorAtualizado = ['Todos(as)', ...listaAtualizada.map((turma) => turma.nome)];
-          setSeletor(seletorAtualizado);
-          props.setSelect?.(seletorAtualizado);
-        } else {
-          alert("Turma não encontrada");
-        }
-        setSelecionou(false);
-      }
-
-    function adicao(turmaNova: Turma){
+    async function adicao(turmaNova: Turma) {
         if (!turmaNova.nome || !turmaNova.disciplina || !turmaNova.dia || !turmaNova.horario) {
-            alert("Preencha todos os campos obrigatórios.");
+            alert('Preencha todos os campos obrigatórios.');
             return;
-          }
+        }
+    
         if (props.turmas.some(turma => turma.nome === turmaNova.nome)) {
             alert("Já existe uma turma com esse nome.");
-        return;
+            return;
         }
-
-        props.setTurmas([...props.turmas,turmaNova]);
-        setSeletor([...seletor,turmaNova.nome])
-        props.setSelect?.([...seletor,turmaNova.nome])
-        
+    
+        try {
+            const docRef = await addDoc(collection(db, 'Turmas'), turmaNova);
+            console.log('Turma adicionada com o ID:', docRef.id);
+    
+            const disciplinaDocRef = await addDoc(collection(db, 'Disciplina'), {
+                nome: turmaNova.disciplina,
+                turmaId: docRef.id,
+            });
+    
+            console.log('Disciplina adicionada com o ID:', disciplinaDocRef.id);
+    
+            props.setTurmas([...props.turmas, turmaNova]);
+            setSeletor([...seletor, turmaNova.nome]);
+            props.setSelect?.([...seletor, turmaNova.nome]);
+        } catch (error) {
+            console.error('Erro ao adicionar a turma no Firebase:', error);
+        }
     }
+    
+
 
     return (
         <div className="flex text-black gap-3 -ml-3 -mt-2">

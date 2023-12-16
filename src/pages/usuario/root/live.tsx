@@ -7,103 +7,176 @@ import Titulo from "@/components/Titulo";
 import Live from "@/core/Live";
 import Turma from "@/core/Turma";
 import { format } from "date-fns";
-import { useEffect, useState } from "react";
+import { useState, useEffect } from "react";
+import {db} from "@/backend/config"
+import { collection, addDoc, getDocs, deleteDoc, doc, updateDoc } from "firebase/firestore";
 
 export default function RootLive() {
 
-    const [lives, setLives] = useState([
-        new Live("Live de Repertório","online terça/tarde", "Wellington", new Date(2023, 10, 10), "www.google.com", "Id1", false),
-    ])
-    const [listaTurmas, setListaTurmas] = useState([
-        new Turma('Presencial terça/tarde', 'Linguagem', 'Felipe Alves', 'terça-feira', '14h', 'Presencial', 'idTurma1', false),
-        new Turma('Online terça/tarde', 'Redação', 'Wellington', 'terça-feira', '14h', 'Online', 'idTurma2', false),
-        new Turma('Presencial sábado/tarde', 'Redação', 'Wellington', 'sábado', '14h', 'Presencial', 'idTurma3', false)
-      ])
-
+//CONFERIR
+    const [modoEdicao, setModoEdicao] = useState(false);
+    const [lives, setLives] = useState<Live[]>([]);
+    const [listaTurmas, setListaTurmas] = useState<Turma[]>([]);
     const [nome, setNome] = useState('')
     const [link, setLink] = useState('')
-    const [professor, setProfessor] = useState('Professor Teste')
+    const [professor, setProfessor] = useState('')
     const [data, setData] = useState<Date>(new Date(0))
     const [turmas, setTurmas] = useState<string[]>([])
     const liveVazia = Live.vazio()
     const [live, setLive] = useState<Live>(liveVazia)
-
-    let turmasUnicas: string[] = [];
-
-    function adicao(){
-        if (!nome || turmas.length === 0 || !link || data.getTime() == 0) {
-            alert("Preencha todos os campos obrigatórios.");
-            return;
-          }
-
-        const existeDuplicata = turmas.some((turmaSelecionada) =>
-            lives.some(
-            (live) =>
-                live.nome === nome &&
-                live.turma.includes(turmaSelecionada) &&
-                live.data.getTime() === data.getTime() &&
-                live.link === link
-            )
-        );
-
-        if (existeDuplicata) {
-            alert("Já existe uma Live com os mesmos atributos, verifique as turmas selecionadas ou realtere a data.");
-            return;
-        }
-        
-        if(live.id === liveVazia.id){
-            const novasLives = turmas.map((turmaSelecionada) => {
-            return new Live(nome, turmaSelecionada, professor, data, link, "id" + Math.random(), false);
-            });
-    
-            setLives([...lives, ...novasLives]);
-            alert("Lives criadas com sucesso!")
-            setNome('');
-            setLink('');
-            setData(new Date(0))
-        } else {
-            if(turmas.length > 1){
-                alert("Insira a alteração a apenas uma turma")
-            } else {
-                const indexToEdit = lives.findIndex((liveCopia) => liveCopia.id === live.id);
-    
-                if (indexToEdit !== -1) {
-                    const listaAtualizada = [...lives];
-                    listaAtualizada[indexToEdit] = new Live(nome, turmas[0], professor, data, link, live.id, false);;
-                    setLives(listaAtualizada);
-                    alert("Live atualizada!")
-                    setNome('');
-                    setLink('');    
-                    setData(new Date(0))
-                    setLive(liveVazia)
-                } else {
-                    alert("Live não encontrada")
-                }
-            }
-        }
-    }
-
-    function edicao(live: Live){
-        setNome(live.nome)
-        setLink(live.link)
-        setData(live.data)
-        setLive(live)
-    }
-
-    function exclusao(live: Live){
-        const livesFiltrados = lives.filter((liveCopia) => liveCopia.id !== live.id);
-        setLives(livesFiltrados);
-        setLive(liveVazia)
-    }
+    const turmasUnicas = listaTurmas.map((turma: { nome: any }) => turma.nome);
 
     useEffect(() => {
-        setListaTurmas([]
-          //Pode apagar o [] 
-          //Obter lista de turmas do banco( )
-        )
-          turmasUnicas = listaTurmas.map((turma: { nome: any }) => turma.nome);
-    }, []);
+        const fetchLives = async () => {
+          try {
+            const livesSnapshot = await getDocs(collection(db, "Live"));
+            const livesData = livesSnapshot.docs.map((doc) => doc.data() as Live);
+            setLives(livesData);
+          } catch (error) {
+            console.error("Erro ao buscar lives no Firestore:", error);
+          }
+        };
+    
+        const fetchTurmas = async () => {
+          try {
+            const turmasSnapshot = await getDocs(collection(db, "Turmas"));
+            const turmasData = turmasSnapshot.docs.map((doc) => doc.data() as Turma);
+            setListaTurmas(turmasData);
+          } catch (error) {
+            console.error("Erro ao buscar turmas no Firestore:", error);
+          }
+        };
+    
+        fetchLives();
+        fetchTurmas();
+      }, []);
+  
+      async function adicao() {
+        if (!nome || turmas.length === 0 || !link || data.getTime() == 0) {
+          alert("Preencha todos os campos obrigatórios.");
+          return;
+        }
+      
+        try {
+          if (live.id) {
+            await atualizacao();
+          } else {
+            const novoId = "id" + Math.random();
+            for (const turmaSelecionada of turmas) {
+              const liveData = {
+                nome,
+                turma: turmaSelecionada,
+                professor,
+                data,
+                link,
+                id: novoId,
+                status: false,
+              };
+      
+              await addDoc(collection(db, "Live"), liveData);
+      
+              setLives((prevLives: Live[]) => [
+                ...prevLives,
+                new Live(
+                  nome,
+                  turmaSelecionada,
+                  professor,
+                  data,
+                  link,
+                  novoId,
+                  false
+                ),
+              ]);
+            }
+      
+            alert("Lives criadas com sucesso!");
+      
+            setNome('');
+            setLink('');
+            setProfessor('');
+            setData(new Date(0));
+            setTurmas([]);
+          }
+        } catch (error) {
+          console.error("Erro ao adicionar/atualizar a live:", error);
+          alert(
+            "Ocorreu um erro ao criar/atualizar a live. Tente novamente mais tarde."
+          );
+        }
+      }
+      
+      
 
+      function edicao(live: Live) {
+        setNome(live.nome);
+        setLink(live.link);
+        setData(live.data);
+        setTurmas([live.turma]); 
+        setModoEdicao(true);
+        setLive(live);
+      }
+    
+
+    async function exclusao(live: Live) {
+        try {
+            if (!live.id){
+                console.error("ID do funcionário não definido.");
+                return;
+            }
+
+          await deleteDoc(doc(db, "Live", live.id));
+      
+          const livesFiltrados = lives.filter((liveCopia) => liveCopia.id !== live.id);
+          setLives(livesFiltrados);
+          setLive(liveVazia);
+      
+          alert("Live excluída com sucesso!");
+        } catch (error) {
+          console.error("Erro ao excluir a live:", error);
+          alert("Ocorreu um erro ao excluir a live. Tente novamente mais tarde.");
+        }
+      }
+
+      async function atualizacao() {
+        try {
+          if (!live.id) {
+            console.error("ID da live não definido.");
+            return;
+          }
+      
+          await updateDoc(doc(db, "Live", live.id), {
+            nome,
+            turma: turmas[0], 
+            professor,
+            data,
+            link,
+          });
+      
+          const updatedLives = lives.map((liveCopia) => {
+            if (liveCopia.id === live.id) {
+              return {
+                ...liveCopia,
+                nome,
+                professor,
+                data,
+                link,
+              };
+            }
+            return liveCopia;
+          });
+      
+          setModoEdicao(false);
+          setLive(liveVazia);
+
+      
+          alert("Live atualizada com sucesso!");
+        } catch (error) {
+          console.error("Erro ao atualizar a live:", error);
+          alert("Ocorreu um erro ao atualizar a live. Tente novamente mais tarde.");
+        }
+      }
+      
+    
     return (
         <LayoutUser usuario={'root'} className="text-black">
 
@@ -113,7 +186,7 @@ export default function RootLive() {
                 <div>
                     <EntradaPerfil texto="Título" placeholder="Digite o título da live" className={'ml-9 mt-2 w-full'} valor={nome} valorMudou={setNome}/>
                     <EntradaPerfil texto="Link" placeholder="Link para acessar a live" className={'ml-9 mt-2 w-full'} valor={link} valorMudou={setLink}/>
-                    <DatePicker titulo="Data Selecionada" classname="ml-9" setData={setData} dataMin={new Date()} valor={data}/>
+                    <DatePicker titulo="Data Selecionada" classname="ml-9" setData={setData}  valor={data} dataMin={new Date()}/>
                     <Botao onClick={adicao} className="w-36 bg-blue-400 ml-9 mt-4" cor={'blue'}>Marcar</Botao>
                 </div>
                 
@@ -130,9 +203,11 @@ export default function RootLive() {
                                         {live.professor}
                                     </h3>
                                 </div>
+                                {live.data instanceof Date && (
                                 <h4 className="text-gray-600 mt-2 font-semibold">
-                                    {format(live.data, 'dd-MM-yyyy')} {live.nome} 
+                                {format(live.data, 'dd-MM-yyyy')} {live.nome}
                                 </h4>
+                                )}
                                 <h4 className="text-gray-600 font-semibold">
                                     {live.turma} 
                                 </h4>

@@ -7,6 +7,11 @@ import Pagamento from "@/core/Pagamento";
 import Aluno from "@/core/Aluno";
 import Turma from "@/core/Turma";
 import Select from "../Select";
+import { addDoc, updateDoc, doc, getDoc, deleteDoc, DocumentData, collection, Firestore } from 'firebase/firestore';
+import { db } from '@/backend/config';
+import {  getAuth, createUserWithEmailAndPassword } from "firebase/auth"; 
+import { getFirestore} from 'firebase/firestore';
+import { initializeApp } from "firebase/app";
 
 interface ModalRootPagamentoProps {
     aluno: Aluno
@@ -27,6 +32,8 @@ export default function ModalRootPagamento(props: ModalRootPagamentoProps){
     const [idTurma, setIdTurma] = useState<string>('')
     const [datasPagamentosTurma, setDatasPagamentosTurma] = useState<string[]>([]);
     const [excluir, setExcluir] = useState(false)
+    const [pago, setPago] = useState(false);
+    const [openModal, setOpenModal] = useState(false)
 
     const turmasDoAluno: string[] = props.listaTurmas
     .filter(turma => turma.id && props.aluno.turma.includes(turma.id))
@@ -54,6 +61,7 @@ export default function ModalRootPagamento(props: ModalRootPagamentoProps){
             setDatasPagamentosTurma(datasFormatadas);
             aplicarFiltro2(turmaSelecionada);
         }
+
     };
 
     function aplicarFiltro2(turmaSelecionada: Turma){
@@ -69,14 +77,17 @@ export default function ModalRootPagamento(props: ModalRootPagamentoProps){
             setDescricao(pagamentoEncontrado?.descricao || '');
             setDataPago(pagamentoEncontrado?.dataPago || new Date(0));
             setPrazo(pagamentoEncontrado?.prazo || new Date(0))
-            setId(pagamentoEncontrado?.id || "id" + Math.random())
+            setId(pagamentoEncontrado?.id || "");
     }
     
-    function adicao(pagamentoNovo: Pagamento){
+    async function adicao(pagamentoNovo: Pagamento){
+        const db = getFirestore();
+        const pagamentosCollection = collection(db, 'Pagamento');
         if (!valor || dataPago === new Date(1969, 12, 31) || prazo === new Date(1969, 12, 31)) {
             alert("Preencha todos os campos obrigatórios.");
             return;
           }
+          
         if (filtro2 == 'Novo pag.' || filtro2 ==''){
             if ( props.pagamentos.some(
                 pagamento => pagamento.idTurma === idTurma && pagamento.idAluno === props.aluno.id && pagamento.prazo === prazo
@@ -95,20 +106,46 @@ export default function ModalRootPagamento(props: ModalRootPagamentoProps){
           novosPagamentos[index] = pagamentoNovo;
           props.setPagamentos(novosPagamentos);
         }
+
+        try {
+            const docRef = await addDoc(pagamentosCollection, {
+              idAluno: pagamentoNovo.idAluno,
+              idTurma: pagamentoNovo.idTurma,
+              descricao: pagamentoNovo.descricao,
+              valor: pagamentoNovo.valor,
+              prazo: pagamentoNovo.prazo,
+              dataPago: pagamentoNovo.dataPago,
+            });
+        
+            console.log('Pagamento adicionado com ID: ', docRef.id);
+            setOpenModal(false);
+          } catch (e) {
+            console.error('Erro ao adicionar pagamento: ', e);
+            alert('Erro ao salvar o pagamento. Tente novamente mais tarde.');
+            return;
+          }
+
         props.setRecarregar(true);
     }
 
     function exclusao() {
-        const pagamentosFiltrados = props.pagamentos.filter((pagamento) => pagamento.id !== id);
-        if (pagamentosFiltrados.length > 0) {
-          props.setPagamentos(pagamentosFiltrados);
+        if (id) {
+            console.log("ID do aluno antes da exclusão:", id);
+    
+            const pagamentosFiltrados = props.pagamentos.filter((pagamento) => pagamento.id !== id);
+            if (pagamentosFiltrados.length > 0) {
+                props.setPagamentos(pagamentosFiltrados);
+            } else {
+                alert("Pagamento não encontrado");
+            }
+    
+            setExcluir(false);
+            props.setRecarregar(true);
         } else {
-          alert("Pagamento não encontrado");
+            console.error("ID do aluno indefinido.");
         }
-        setExcluir(false);
-        props.setRecarregar(true);
-      }
-
+    }
+    
     useEffect(() => {
         aoClicar();
     }, [filtro1]);

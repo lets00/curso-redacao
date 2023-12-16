@@ -1,4 +1,4 @@
-export default class Material{
+export default class Comentario{
     #id: string | null
     #idMaterial: string
     #texto: string
@@ -15,7 +15,7 @@ export default class Material{
         this.#excluido = excluido
     }
     static vazio() {
-        return new Material('','',0,'','',false)
+        return new Comentario('','',0,'','',false)
     }
 
     get id(){

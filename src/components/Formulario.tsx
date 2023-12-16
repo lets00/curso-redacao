@@ -2,8 +2,8 @@ import Entrada from "./Entrada";
 import { useState } from "react";
 import Aluno from "@/core/Aluno";
 import { Botao } from "./Botao";
-import DatePicker from "./DatePicker"; 
-import {db} from '../backend/config'
+import DatePicker from "./DatePicker";
+import {db} from "@/backend/config"
 import { collection, addDoc } from "firebase/firestore";
 import { createUserWithEmailAndPassword, getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth"; 
 
@@ -62,7 +62,7 @@ interface FormularioProps{
             const userCredential = await createUserWithEmailAndPassword(auth, email, senha);
             const user = userCredential.user;
 
-          const docRef = await addDoc(collection(db, "alunos"), formData);
+          const docRef = await addDoc(collection(db, "Estudante"), formData);
     
           console.log("Dados do aluno salvos com ID:", docRef.id);
     
