@@ -8,6 +8,7 @@ import ProtectedRoute from "@/components/ProtectedRoute";
 import ImageUploader from "@/components/ImageUploader";
 import PerfilDados from "@/components/EntradaPerfil";
 import { differenceInDays, addMonths } from 'date-fns'; 
+import { db } from '@/backend/config';
 
 interface UserProfile {
     modalidade: string;
@@ -35,15 +36,15 @@ export default function AlunoPage() {
   const [celularEditavel, setCelularEditavel] = useState(userProfile?.celular ?? '');
   const [enderecoEditavel, setEnderecoEditavel] = useState(userProfile?.endereco ?? '');
  
+  const auth = getAuth();
+  const user = auth.currentUser;
+  console.log("User email:", user?.email);
+
   useEffect(() => {
-    const auth = getAuth();
-    const user = auth.currentUser;
-    console.log(user?.uid)
 
     if (user) {
-        const firestore = getFirestore();
-        const alunosRef = collection(firestore, "Estudante");
-        const q = query(alunosRef, where("email", "==", user.email));
+        
+      const q = query(collection(db, "Estudante"), where("email", "==", user.email));
 
         getDocs(q)
             .then(async (querySnapshot) => {
@@ -60,7 +61,7 @@ export default function AlunoPage() {
     if (turmaIds && turmaIds.length > 0) {
         const turmaId = turmaIds[0];
 
-        const turmaDocRef = doc(firestore, "Turmas", turmaId);
+        const turmaDocRef = doc(db, "Turmas", turmaId);
         console.log("turmaDocRef:", turmaDocRef.path);
 
         const turmaSnapshot = await getDoc(turmaDocRef);
@@ -119,16 +120,16 @@ export default function AlunoPage() {
   
   useEffect(() => {
     if (userProfile) {
-      const dataAtual = new Date(); // Data atual
-      const dataAtualPagamento = new Date(dataAtual.getFullYear(), dataAtual.getMonth(), mensalidade); // Data do pagamento deste mês
-      let dataProximoPagamento = addMonths(dataAtualPagamento, 1); // Data do próximo pagamento
+      const dataAtual = new Date(); 
+      const dataAtualPagamento = new Date(dataAtual.getFullYear(), dataAtual.getMonth(), mensalidade);
+      let dataProximoPagamento = addMonths(dataAtualPagamento, 1); 
   
-      if (dataAtual.getDate() < mensalidade) { // Se o dia atual for menor ou igual ao dia de pagamento deste mês, o próximo pagamento será neste mês
+      if (dataAtual.getDate() < mensalidade) { 
         dataProximoPagamento = dataAtualPagamento;
       }
   
       const diasRestantes = differenceInDays(dataProximoPagamento, dataAtual);
-      let porcentagem = ((31 - diasRestantes) / 31) * 100; // Calcula a porcentagem inversamente proporcional aos dias restantes
+      let porcentagem = ((31 - diasRestantes) / 31) * 100; 
   
       if (porcentagem > 100) {
         porcentagem = 100;
@@ -197,8 +198,8 @@ export default function AlunoPage() {
                 {userProfile &&(
                 <div className="bg-white rounded-md w-1/2 h-auto m-2 mr-1 mt-0 p-6
                                 grid grid-cols-2">
-                    <PerfilDados texto="Modalidade" valor={userProfile.modalidade} somenteLeitura={true} />
-                    <PerfilDados texto="Nome" valor={userProfile.nome} somenteLeitura={editar} valorMudou={setNomeEditavel} />
+            <PerfilDados texto="Modalidade" valor={userProfile.modalidade} somenteLeitura={true} />
+            <PerfilDados texto="Nome" valor={userProfile.nome} somenteLeitura={editar} valorMudou={setNomeEditavel} />
             <PerfilDados texto="Número" valor={userProfile.celular} somenteLeitura={editar} valorMudou={setCelularEditavel} />
             <PerfilDados texto="RG" valor={userProfile.rg} somenteLeitura={editar} valorMudou={setRgEditavel} />
             <PerfilDados texto="CPF" valor={userProfile.cpf} somenteLeitura={editar} valorMudou={setCpfEditavel} />

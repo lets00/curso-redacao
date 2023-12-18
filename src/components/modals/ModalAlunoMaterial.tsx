@@ -24,7 +24,6 @@ export default function ModalAlunoMaterial(props: ModalAlunoMaterial){
     const idUsuario = (props.aluno?.id ?? '')
 
     const handleTextoChange = (e: any) => {
-        // Atualize o estado 'texto' quando o usuário digitar no campo de entrada de texto
         setTexto(e.target.value);
       };
 

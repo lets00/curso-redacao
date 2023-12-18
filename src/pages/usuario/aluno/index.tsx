@@ -10,11 +10,12 @@ import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { getFirestore, collection, getDocs, where, getDoc,addDoc, updateDoc, deleteDoc, doc, query } from "firebase/firestore";
 import { db } from '@/backend/config';
 import Turma from "@/core/Turma";
+import Link from 'next/link';
 
 
 export default function AlunoIndex() {
 
-  const [disciplinaSelecionada, setDisciplinaSelecionada] = useState<string | null>(null);
+    const [disciplinaSelecionada, setDisciplinaSelecionada] = useState<string | null>(null);
     const [materiais, setMateriais] = useState<Material[]>([]);
     const dados = ['nome', 'descricao', 'data']
     const cabecalho = ['Título', 'Descrição', 'Data de publicação', `Avaliar & Enviar redações`]
@@ -26,9 +27,10 @@ export default function AlunoIndex() {
     const [aluno, setAluno] = useState<Aluno | null>(null);
     const [azul, setAzul] = useState("");
     const [turmasDoAluno, setTurmasDoAluno] = useState<Turma[]>([]);
-    const [materiaisFiltrados, setMateriaisFiltrados] = useState<Material[]>([]);
     const [nomeUsuario, setNomeUsuario] = useState<string>("");
-    const [materiaisFiltradosDisciplina, setMateriaisFiltradosDisciplina] = useState<Material[]>([]);
+    const [materiaisDisciplinaSelecionada, setMateriaisDisciplinaSelecionada] = useState<Material[]>([]);
+    const [arquivo, setArquivo] = useState<string | null>(null);
+
     const auth = getAuth();
     const user = auth.currentUser; 
 
@@ -87,8 +89,7 @@ export default function AlunoIndex() {
         }
     
         setMateriais(materiaisData);
-        setMateriaisFiltrados(materiaisData);
-        setMateriaisFiltradosDisciplina(materiaisData);
+        setMateriaisDisciplinaSelecionada(materiaisData);
       };
     
       if (disciplinaSelecionada && turmasDoAluno.length > 0) {
@@ -101,31 +102,35 @@ export default function AlunoIndex() {
 
     //Filtro da lista
     const aoClicarDisciplina = async (disciplina: string) => {
-      if (aluno) {
+      if (user) {
         setDisciplinaSelecionada(disciplina);
         setAzul(disciplina);
+
         const materiaisData: Material[] = [];
-    
+        
         for (const turma of turmasDoAluno) {
-          if (disciplinaSelecionada) {
+          if (disciplina) {
             console.log("Disciplina Selecionada:", disciplinaSelecionada);
             const qMateriais = query(
               collection(db, "Material"),
-              where("disciplina", "==", disciplinaSelecionada),
+              where("disciplina", "==", disciplina),
               where("turma", "==", turma.nome)
             );
-            const querySnapshotMateriais = await getDocs(qMateriais);
-    
-            querySnapshotMateriais.forEach((materialDoc) => {
-              const materialData = materialDoc.data() as Material;
-              console.log("Materiais Data:", materiaisData);
-              materiaisData.push(materialData);
-            });
+
+            try {
+          const querySnapshotMateriais = await getDocs(qMateriais);
+
+          querySnapshotMateriais.forEach((materialDoc) => {
+            const materialData = materialDoc.data() as Material;
+            materiaisData.push(materialData);
+          });
+        } catch (error) {
+          console.error('Erro ao buscar materiais:', error);
+        }
           }
         }
     
-        setMateriaisFiltrados(materiaisData);
-        setMateriaisFiltradosDisciplina(materiaisData);
+        setMateriaisDisciplinaSelecionada(materiaisData);
         setAzul(disciplina);
       }
     };
@@ -134,23 +139,20 @@ export default function AlunoIndex() {
 
     //Lista
     function materialSelecionado(material: Material) {
-        if (aluno) {
-          setMaterial(material);
-          // Filtrar os comentários com base no idMaterial
-          const comentariosFiltrados = comentarios.filter(
-            (comentario) => comentario.idMaterial === material.id && comentario.idUsuario === aluno.id
-          );
-          // Verificar se há algum comentário correspondente
-          if (comentariosFiltrados.length > 0) {
-            // Definir o estado setComentario com o primeiro comentário encontrado
-            setComentario(comentariosFiltrados[0]);
-          } else {
-            // Se não houver nenhum comentário correspondente, definir setComentario com um novo Comentario.vazio()
-            setComentario(Comentario.vazio());
-          }
-          setOpenModal(true);
-        }
+      if (aluno) {
+        setMaterial(material);
+       
+        const comentarioCorrespondente = comentarios.find(
+          (comentario) =>
+            comentario.idMaterial === material.id && comentario.idUsuario === aluno.id
+        );
+  
+        setComentario(comentarioCorrespondente || Comentario.vazio());
+    
+
+        setOpenModal(true);
       }
+    }
 
     //Comentário
     async function salvarComentario(comentarioNovo: Comentario) {
@@ -248,7 +250,7 @@ export default function AlunoIndex() {
                     <h3 className="font-Monteserrant font-semibold">Materiais</h3>
                     {turmasDoAluno.map(turma => (
                         <button
-                            key={turma.id}
+                            key={turma.id || turma.disciplina} 
                             onClick={() => aoClicarDisciplina(turma.disciplina)}
                             className={`border-b-2 hover:border-blue-400 mr-4 ${turma.nome == azul ? 'border-blue-400' : ''}`}
                         >
@@ -256,16 +258,32 @@ export default function AlunoIndex() {
                         </button>
                     ))}
                 </div>
-                <Tabela objeto={materiaisFiltradosDisciplina}
-                        propriedadesExibidas={dados}
-                        cabecalho={cabecalho}
-                        objetoSelecionado={materialSelecionado}
-                        linkDoObjeto></Tabela>
+              <Tabela
+                objeto={materiaisDisciplinaSelecionada}
+                propriedadesExibidas={dados}
+                cabecalho={cabecalho}
+                objetoSelecionado={materialSelecionado}
+                linkDoObjeto
+                linkDoMaterial={(material) => material.arquivo}
+              />
             </section>
             
-            <Modal isOpen={openModal} isNotOpen={() => setOpenModal(!openModal)} cor='white' titulo='Avalie o material'
-            subtitulo={material.nome}><ModalAlunoMaterial material={material} comentario={comentario} aluno={aluno} salvarComentario={salvarComentario} editarComentario={editarComentario} excluirComentario={excluirComentario}/></Modal>
-
+            <Modal
+        isOpen={openModal}
+        isNotOpen={() => setOpenModal(!openModal)}
+        cor="white"
+        titulo="Avalie o material"
+        subtitulo={material.nome}
+      >
+        <ModalAlunoMaterial
+          material={material}
+          comentario={comentario}
+          aluno={aluno}
+          salvarComentario={salvarComentario}
+          editarComentario={editarComentario}
+          excluirComentario={excluirComentario}
+        />
+      </Modal>
         </LayoutUser>
     )
 }

@@ -97,8 +97,8 @@ export default function Tabela(props: TabelaProps){
                           ? 'Pago'
                           : 'Não pago'
                         : renderizarPagamento(objeto, propriedade)
-                      : objeto[propriedade] instanceof Date
-                      ? format(objeto[propriedade], 'dd-MM-yyyy').toString()
+                      : objeto[propriedade] instanceof Timestamp
+                      ? format(objeto[propriedade]?.toDate(), 'dd-MM-yyyy').toString()
                       : objeto[propriedade]}
                   </td>
                 ))}
@@ -109,6 +109,7 @@ export default function Tabela(props: TabelaProps){
         </>
       );
     }
+    
     
       
       

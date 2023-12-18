@@ -15,8 +15,8 @@ export default function RootMateriais() {
     const [materiais, setMateriais] = useState<Material[]>([]);
     const [comentarios, setComentarios] = useState([]);
     const [alunos, setAlunos] = useState([])
-    const dados = ['nome', 'data', 'professor']
-    const cabecalho = ['Título', 'Data de publicação', 'Quem publicou', `Ver feedback & Excluir`]
+    const dados = ['nome', 'professor', 'turma']
+    const cabecalho = ['Título', 'Quem publicou', 'Turma', `Ver feedback & Excluir`]
     const [select, setSelect] = useState<{ value: string; label: string }[]>([]);
     const [material, setMaterial] = useState<Material>(Material.vazio())
     const [openModal, setOpenModal] = useState(false)
@@ -81,7 +81,9 @@ export default function RootMateriais() {
     };
 
     useEffect(() => {
-        aoClicar();
+        if(filtro || listagem){
+            aoClicar();
+        }
     }, [filtro, listagem]);
 
     function materialSelecionado(material: Material){
@@ -123,9 +125,6 @@ export default function RootMateriais() {
           console.error('Erro ao excluir material:', error);
         }
       };
-    useEffect(() => {
-        aoClicar();
-    }, [filtro, exclusao])
 
     return (
         <LayoutUser usuario={'root'} className="text-black">

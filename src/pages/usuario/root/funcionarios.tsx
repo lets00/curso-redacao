@@ -12,7 +12,6 @@ import {Botao} from "@/components/Botao";
 
 export default function RootFuncionarios() {
 
-
     const dados = ['nome','cpf', 'email']
     const cabecalho = ['Nome', 'CPF', 'Email', "Ações"]
 
@@ -56,33 +55,32 @@ export default function RootFuncionarios() {
         setTipoModal('selecionado'); 
         setOpenModal(true);
     } 
+
     
-    async function exclusao(funcionarioId: string | null) {
+    const excluirFuncionarioFirestore = async (funcionarioId: string) => {
         try {
-            console.log("ID do Funcionário:", funcionarioId);
-
-            if (!funcionarioId) {
-                console.error("ID do funcionário não definido.");
-                setOpenModal(false);
-                return;
-            }
-    
-            const funcionarioRef = doc(db, 'Funcionario', funcionarioId);
-    
-            await deleteDoc(funcionarioRef);
-    
-            const listaAtualizada = listagem.filter((funcionario) => funcionario.id !== funcionarioId);
-            setListagem(listaAtualizada);
-            setOpenModal(false);
-    
-            console.log("Funcionário excluído com sucesso!");
-            setRecarregar(true)
+          const funcionarioRef = doc(db, 'Funcionario', funcionarioId);
+          await deleteDoc(funcionarioRef);
+          console.log('Funcionário excluído com sucesso do Firestore');
         } catch (error) {
-            console.error("Erro ao excluir o funcionário no Firestore", error);
-            setOpenModal(false);
+          console.error('Erro ao excluir funcionário do Firestore:', error);
         }
-    }
-
+      };
+      
+      const exclusaoFuncionario = async (id: string) => {
+        try {
+          await excluirFuncionarioFirestore(id);
+      
+          const funcionariosFiltrados = listagem.filter((funcionario) => funcionario.id !== id);
+          setListagem(funcionariosFiltrados);
+      
+          setOpenModal(false);
+          setRecarregar(true);
+        } catch (error) {
+          console.error('Erro ao excluir funcionário:', error);
+        }
+      };
+      
     async function edicao(funcionarioEditado: Funcionario) {
         try {
 
@@ -178,7 +176,7 @@ export default function RootFuncionarios() {
             <Modal isOpen={openModal} isNotOpen={() => setOpenModal(!openModal)} cor='white' titulo={tipoModal == 'selecionado' ? 'Criar novo funcionário': 'Tem certeza que deseja excluir:'}
             subtitulo={tipoModal == 'excluir' && funcionario ? funcionario.nome : ''}
             > {tipoModal == 'selecionado' ?
-            <ModalRootFuncionario funcionario={funcionario} setOpenModal={setOpenModal} editar={edicao} adicao={adicao}/>:<ModalExcluir objeto={funcionario} exclusao={() => exclusao(funcionario?.id)} />
+            <ModalRootFuncionario funcionario={funcionario} setOpenModal={setOpenModal} editar={edicao} adicao={adicao}/>:<ModalExcluir objeto={funcionario} exclusao={() => exclusaoFuncionario(funcionario?.id || '')} />
         } </Modal>
 
         </LayoutUser>

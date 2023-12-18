@@ -14,8 +14,8 @@ import { db } from '@/backend/config';
 
 export default function ListarMateriais() {
     const [comentarios, setComentarios] = useState([]);
-    const dados = ['nome', 'descricao', 'data'];
-    const cabecalho = ['Nome', 'Descrição', 'Data de publicação', 'Opções'];
+    const dados = ['nome', 'descricao', 'turma'];
+    const cabecalho = ['Nome', 'Descrição', 'Turma' ,'Opções'];
     const [select, setSelect] = useState<{ value: string; label: string }[]>([]);
     const [alunos, setAlunos] = useState([]);
     const [material, setMaterial] = useState<Material>(Material.vazio());
@@ -60,7 +60,9 @@ export default function ListarMateriais() {
     };
 
     useEffect(() => {
-        aoClicar();
+        if(filtro || listagem){
+            aoClicar();
+        }
     }, [filtro, listagem]);
 
     useEffect(() => {
