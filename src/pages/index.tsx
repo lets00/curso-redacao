@@ -9,7 +9,7 @@ export default function Home(){
         
         <section>
           <InitialSection ordem={true} titulo='Sabe o que vamos estudar por aqui?' img='/images/Estudaraqui.jpg' className='font-bold'>Olha só esses 3 jeitinhos que você pode estar estudando com a gente:</InitialSection>
-          <InitialSection ordem={false} titulo='Presencial' img='/images/IMG_3834.jpg'>
+          <InitialSection ordem={false} titulo='Presencial' img='/images/IMG_3834.JPG'>
 
             <div className=' max-h-40 hover:max-h-[700px] transition-all duration-1000 delay-100 ease-in-out overflow-hidden '>
               <h3>
@@ -33,7 +33,7 @@ export default function Home(){
 
             <div className='flex justify-center pt-3'>
               <svg className="w-6 h-6 text-gray-800" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 8">
-                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 5.326 5.7a.909.909 0 0 0 1.348 0L13 1"/>
+                <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="m1 1 5.326 5.7a.909.909 0 0 0 1.348 0L13 1"/>
               </svg>
             </div>
           </InitialSection>
@@ -49,7 +49,7 @@ export default function Home(){
                 </h4>
               </div>
             </div>
-          <InitialSection ordem={true} titulo='Online' img='/images/IMG_3810.jpg'>
+          <InitialSection ordem={true} titulo='Online' img='/images/IMG_3810.JPG'>
 
             <div className=' max-h-[140px] hover:max-h-[400px] transition-all duration-1000 delay-100 ease-in-out overflow-hidden '>
               <h3>
@@ -71,7 +71,7 @@ export default function Home(){
 
             <div className='flex justify-center pt-3'>
               <svg className="w-6 h-6 text-gray-800" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 8">
-                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 5.326 5.7a.909.909 0 0 0 1.348 0L13 1"/>
+                <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="m1 1 5.326 5.7a.909.909 0 0 0 1.348 0L13 1"/>
               </svg>
             </div>
           </InitialSection>

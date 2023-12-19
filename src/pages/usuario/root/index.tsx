@@ -114,7 +114,7 @@ export default function RootAlunos() {
         const dataAtual = new Date();
       
         alunos.forEach((aluno) => {
-          const turmasAluno = aluno.turma.length; // Número de turmas do aluno
+          const turmasAluno = aluno.turma.length; 
       
           const pagamentosAluno = pagamentos.filter(
             (pagamento) => pagamento.idAluno === aluno.id
@@ -127,16 +127,15 @@ export default function RootAlunos() {
           );
       
           const prazosOrdenados = pagamentosAluno
-            .filter((pagamento) => turmasPagas.includes(pagamento.idTurma)) // Filtrando apenas os pagamentos das turmas do aluno
-            .sort((a, b) => a.prazo.getTime() - b.prazo.getTime()) // Ordenando os pagamentos pela data de prazo (do mais antigo ao mais recente)
+            .filter((pagamento) => turmasPagas.includes(pagamento.idTurma)) 
+            .sort((a, b) => a.prazo.getTime() - b.prazo.getTime()) 
       
-          const prazosMaisFuturos = prazosOrdenados.slice(-turmasAluno); // Selecionando os X prazos mais futuros, onde X é o número de turmas
+          const prazosMaisFuturos = prazosOrdenados.slice(-turmasAluno); 
       
           const prazoAtualizado =
             turmasAluno > 0 && todasTurmasPagas &&
             prazosMaisFuturos.every((pagamento) => pagamento.prazo >= dataAtual);
       
-          // Atualizando o status de pagamento do aluno
           const indexAluno = listagem.findIndex((item) => item.id === aluno.id);
           if (indexAluno !== -1) {
             const listaAtualizada = [...listagem];

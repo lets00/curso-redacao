@@ -8,7 +8,6 @@ import ProtectedRoute from "@/components/ProtectedRoute";
 import ImageUploader from "@/components/ImageUploader";
 import PerfilDados from "@/components/EntradaPerfil";
 import { differenceInDays, addMonths } from 'date-fns'; 
-import { db } from '@/backend/config';
 
 interface UserProfile {
     modalidade: string;
@@ -36,15 +35,15 @@ export default function AlunoPage() {
   const [celularEditavel, setCelularEditavel] = useState(userProfile?.celular ?? '');
   const [enderecoEditavel, setEnderecoEditavel] = useState(userProfile?.endereco ?? '');
  
-  const auth = getAuth();
-  const user = auth.currentUser;
-  console.log("User email:", user?.email);
-
   useEffect(() => {
+    const auth = getAuth();
+    const user = auth.currentUser;
+    console.log(user?.uid)
 
     if (user) {
-        
-      const q = query(collection(db, "Estudante"), where("email", "==", user.email));
+        const firestore = getFirestore();
+        const alunosRef = collection(firestore, "Estudante");
+        const q = query(alunosRef, where("email", "==", user.email));
 
         getDocs(q)
             .then(async (querySnapshot) => {
@@ -61,7 +60,7 @@ export default function AlunoPage() {
     if (turmaIds && turmaIds.length > 0) {
         const turmaId = turmaIds[0];
 
-        const turmaDocRef = doc(db, "Turmas", turmaId);
+        const turmaDocRef = doc(firestore, "Turmas", turmaId);
         console.log("turmaDocRef:", turmaDocRef.path);
 
         const turmaSnapshot = await getDoc(turmaDocRef);
@@ -88,9 +87,6 @@ export default function AlunoPage() {
             });
     }
 }, []);
-
-
-
 
   const handleImageUpload = async (base64Image: string) => {
     const auth = getAuth();
@@ -121,7 +117,7 @@ export default function AlunoPage() {
   useEffect(() => {
     if (userProfile) {
       const dataAtual = new Date(); 
-      const dataAtualPagamento = new Date(dataAtual.getFullYear(), dataAtual.getMonth(), mensalidade);
+      const dataAtualPagamento = new Date(dataAtual.getFullYear(), dataAtual.getMonth(), mensalidade); 
       let dataProximoPagamento = addMonths(dataAtualPagamento, 1); 
   
       if (dataAtual.getDate() < mensalidade) { 

@@ -21,6 +21,7 @@ export default function Login(){
             const alunosRef = collection(firestore, "Estudante");
             const alunosQuery = query(alunosRef, where("email", "==", email));
             const alunosSnapshot = await getDocs(alunosQuery);
+            
     
             if (!alunosSnapshot.empty) {
                 const alunoData = alunosSnapshot.docs[0].data();
@@ -95,7 +96,7 @@ export default function Login(){
 
             </div>
             <div className="bg-gray-700 w-1/2 p-28 flex flex-col justify-center">
-                
+            <form>
                 <div className="flex flex-col">
                     
                     <label className="font-Montserrant text-gray-300"> E-mail </label>
@@ -103,6 +104,7 @@ export default function Login(){
                            placeholder='Digite seu e-mail'
                            value={email}
                            onChange={(e) => setEmail(e.target.value)} 
+                           autoComplete="username"
                          />
                         
                 </div>
@@ -113,6 +115,7 @@ export default function Login(){
                            type="password" 
                            value={senha}
                            onChange={(e) => setSenha(e.target.value)} 
+                           autoComplete="current-password"
           />
                 </div>
                 <div className="flex items-center mb-6">
@@ -126,12 +129,14 @@ export default function Login(){
                     <button className='text-gray-400 border-b border-blue-400'>Esqueci a senha</button>
                 </div>
                 <hr className='my-1 border-gray-500 w-full'/>
+                
                 <button
                 className='flex w-full bg-white hover:bg-slate-200 text-slate-800 font-semibold rounded-lg px-4 py-3 items-center justify-center gap-5'
                 onClick={loginComGoogle}
                 >
                 <Image src='/images/pesquisa.png' width='23' height='23' alt='imagemDoCurso'></Image>Entrar com Google
                 </button>
+                </form>
                 </div>
         </div>
         </AuthProvider>
